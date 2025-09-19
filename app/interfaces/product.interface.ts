@@ -11,3 +11,8 @@ export interface Product {
   created_at: string; // ISO 8601 date string
   updated_at: string; // ISO 8601 date string
 }
+
+export interface Category {
+  id: string;
+  nombre: string;
+}

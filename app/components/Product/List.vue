@@ -1,18 +1,29 @@
 <script setup lang="ts">
-import type { Product } from '~/interfaces/product.interface';
+import type { Category, Product } from '~/interfaces/product.interface';
 
 interface Props {
   products: Product[];
+  selectedCategory?: Category;
 }
 
-defineProps<Props>();
+const $props = defineProps<Props>();
+
+const filteredProducts = computed(() => {
+  if ($props.selectedCategory?.id) {
+    return $props.products.filter(product => product.categoria_id === $props.selectedCategory?.id);
+  }
+  return $props.products;
+});
 
 </script>
 
 <template>
-  <section class="grid grid-cols-3 gap-4 p-4">
-    <template v-for="product in products" :key="product.id">
-      <ProductCard :product="product" />
-    </template>
-  </section>
+  <article class="p-4">
+    <h1 class="text-lg font-bold text-[#2B2C2C]">{{ selectedCategory?.nombre }}</h1>
+    <section class="grid grid-cols-3 gap-[10px]">
+      <template v-for="product in filteredProducts" :key="product.id">
+        <ProductCard :product="product" />
+      </template>
+    </section>
+  </article>
 </template>

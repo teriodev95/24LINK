@@ -1,32 +1,23 @@
 <script setup lang="ts">
-import type { Product } from '~/interfaces/product.interface';
+import { useSupabaseApi } from '~/composables/useSupabaseApi';
+import type { Product, Category } from '~/interfaces/product.interface';
 
+const api = useSupabaseApi()
+const selectedCategory = ref<Category>();
 
+const { data: categories, pending: _categoriesPending, error: _categoriesError } = await api.fetchLazy<Category[]>('/categorias?activa=eq.true&select=id,nombre', {
+  key: 'categories'
+})
 
-const config = useRuntimeConfig()
-
-const categoryList = ['Cerveza', 'Books', 'Clothing', 'Home & Kitchen', 'Sports', 'Toys'];
-const selectedCategory = ref<string>('');
-const { data: products, pending, error } = await useFetch<Product[]>('/productos', {
-  baseURL: 'https://db.el24.cc/rest/v1',
-  query: {
-    activo: 'eq.true',
-    select: '*'
-  },
-  headers: {
-    'apikey': config.public.supabaseApiKey,
-    'Authorization': `Bearer ${config.supabaseAuthToken || config.public.supabaseApiKey}`,
-    'Content-Type': 'application/json'
-  },
-  key: 'products',
-  lazy: true
+const { data: products, pending: _pending, error: _error } = await api.fetchLazy<Product[]>('/productos?activo=eq.true&select=*', {
+  key: 'products'
 })
 </script>
 
 <template>
   <div>
-    <CategoryFilter :category-list="categoryList" :selected-category="selectedCategory"
-      @action:select-category="(category) => { selectedCategory = category; }" />
-    <ProductList v-if="products" :products="products" />
+    <CategoryFilter v-if="categories" :category-list="categories" :selected-category="selectedCategory"
+      @action:select-category="(category) => selectedCategory = category" />
+    <ProductList v-if="products" :products="products" :selected-category="selectedCategory" />
   </div>
 </template>
