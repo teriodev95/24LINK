@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="bg-s">
+  <div class="p-2">
     <NuxtPage />
   </div>
 </template>

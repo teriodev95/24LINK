@@ -16,5 +16,28 @@ export default defineNuxtConfig({
     public: {
       supabaseApiKey: process.env.NUXT_SUPABASE_API_KEY
     }
-  }
+  },
+  image: {
+		domains: ["https://db.el24.cc"],
+		dir: "public",
+		format: ["webp"],
+		quality: 80,
+	},
+  fonts: {
+		families: [
+			{
+				name: "Fira Sans",
+				provider: "google",
+				weights: [300, 400, 500, 600, 700, 800],
+				styles: ["normal"],
+				subsets: ["latin"],
+				global: true,
+			},
+		],
+		defaults: {
+			fallbacks: {
+				"sans-serif": ["Arial", "Helvetica", "sans-serif"],
+			},
+		},
+	},
 })
