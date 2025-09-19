@@ -1,5 +1,9 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
-  <div class="text-7xl text-red-600">
-    24H
+  <div class="bg-s">
+    <NuxtPage />
   </div>
 </template>

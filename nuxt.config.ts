@@ -7,5 +7,14 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/fonts',
     '@nuxtjs/tailwindcss'
-  ]
+  ],
+  runtimeConfig: {
+    // Private keys (only available on server-side)
+    supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,
+
+    // Public keys (exposed to client-side)
+    public: {
+      supabaseApiKey: process.env.NUXT_SUPABASE_API_KEY
+    }
+  }
 })
