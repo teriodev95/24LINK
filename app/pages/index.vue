@@ -16,6 +16,7 @@ const { data: products, pending: _pending, error: _error } = await api.fetchLazy
 
 <template>
   <div>
+    <ProductFilter />
     <CategoryFilter v-if="categories" :category-list="categories" :selected-category="selectedCategory"
       @action:select-category="(category) => selectedCategory = category" />
     <ProductList v-if="products" :products="products" :selected-category="selectedCategory" />

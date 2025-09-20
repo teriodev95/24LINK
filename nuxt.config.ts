@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/image',
     '@nuxt/fonts',
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+		'@pinia/nuxt'
   ],
   runtimeConfig: {
     // Private keys (only available on server-side)
