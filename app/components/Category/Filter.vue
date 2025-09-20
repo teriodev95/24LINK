@@ -23,9 +23,9 @@ const emit = defineEmits<Emits>()
 </script>
 
 <template>
-  <section class="flex space-x-4 overflow-x-auto py-4 px-2">
+  <section class="flex space-x-4 overflow-x-auto py-4 px-2 w-full">
     <button v-for="(category, index) in sortedCategories" :key="index"
-      class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap min-w-max shadow-[0_5px_15px_0_rgba(0,0,0,0.15)] transition-colors duration-200"
+      class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap flex-1 shadow-[0_5px_15px_0_rgba(0,0,0,0.15)] transition-colors duration-200"
       :class="[selectedCategory?.id === category.id ? 'bg-[#CCD1DD]' : 'bg-white']"
       @click="emit('action:selectCategory', category)">
       {{ category.nombre }}
