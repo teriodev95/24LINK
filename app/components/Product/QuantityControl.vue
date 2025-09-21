@@ -68,7 +68,6 @@ const decrement = () => {
 
 <template>
   <div class="absolute right-0 top-0" :class="{ 'left-0': isExpanded }">
-    {{ quantity }}
     <button v-if="!isExpanded"
       class="rounded-full bg-white size-8 shadow-[0_5px_15px_0_rgba(0,0,0,0.15)] flex items-center justify-center"
       :class="[hasProductInCart ? 'text-sm' : 'text-2xl']" @click="emit('expand')">

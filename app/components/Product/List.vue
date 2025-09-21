@@ -5,6 +5,7 @@ import type { Category, Product } from '~/interfaces/product.interface';
 interface Props {
   products: Product[];
   selectedCategory?: Category;
+  searchQuery?: string;
 }
 
 const $props = defineProps<Props>();
@@ -12,10 +13,22 @@ const $props = defineProps<Props>();
 const expandedProductId = ref<string | null>(null);
 
 const filteredProducts = computed(() => {
-  if ($props.selectedCategory?.id) {
-    return $props.products.filter(product => product.categoria_id === $props.selectedCategory?.id);
+  let products = $props.products;
+
+  // Filter by category
+  if ($props.selectedCategory?.id && $props.selectedCategory.id !== 'all') {
+    products = products.filter(product => product.categoria_id === $props.selectedCategory?.id);
   }
-  return $props.products;
+
+  // Filter by search query
+  if ($props.searchQuery?.trim()) {
+    const query = $props.searchQuery.toLowerCase().trim();
+    products = products.filter(product =>
+      product.nombre.toLowerCase().includes(query)
+    );
+  }
+
+  return products;
 });
 
 const handleExpand = (productId: string) => {
@@ -33,7 +46,8 @@ const handleCollapse = () => {
     <h1 class="text-lg font-bold text-[#2B2C2C]">{{ selectedCategory?.nombre }}</h1>
     <section class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
       <template v-for="product in filteredProducts" :key="product.id">
-        <ProductCard :product="product" :is-expanded="expandedProductId === product.id" @action:expand="handleExpand" @action:collapse="handleCollapse" />
+        <ProductCard :product="product" :is-expanded="expandedProductId === product.id" @action:expand="handleExpand"
+          @action:collapse="handleCollapse" />
       </template>
     </section>
   </article>

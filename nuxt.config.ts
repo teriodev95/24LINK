@@ -3,12 +3,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
-    '@nuxt/eslint',
-    '@nuxt/image',
-    '@nuxt/fonts',
-    '@nuxtjs/tailwindcss',
-		'@pinia/nuxt'
-  ],
+		 '@nuxt/eslint',
+		 '@nuxt/image',
+		 '@nuxt/fonts',
+		 '@nuxtjs/tailwindcss',
+		 '@pinia/nuxt',
+		 "nuxt-lucide-icons",
+		],
   runtimeConfig: {
     // Private keys (only available on server-side)
     supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,
@@ -19,26 +20,26 @@ export default defineNuxtConfig({
     }
   },
   image: {
-		domains: ["https://db.el24.cc"],
-		dir: "public",
-		format: ["webp"],
-		quality: 80,
-	},
+								domains: ["https://db.el24.cc"],
+								dir: "public",
+								format: ["webp"],
+								quality: 80,
+				},
   fonts: {
-		families: [
-			{
-				name: "Fira Sans",
-				provider: "google",
-				weights: [300, 400, 500, 600, 700, 800],
-				styles: ["normal"],
-				subsets: ["latin"],
-				global: true,
-			},
-		],
-		defaults: {
-			fallbacks: {
-				"sans-serif": ["Arial", "Helvetica", "sans-serif"],
-			},
-		},
-	},
+								families: [
+												{
+																name: "Fira Sans",
+																provider: "google",
+																weights: [300, 400, 500, 600, 700, 800],
+																styles: ["normal"],
+																subsets: ["latin"],
+																global: true,
+												},
+								],
+								defaults: {
+												fallbacks: {
+																"sans-serif": ["Arial", "Helvetica", "sans-serif"],
+												},
+								},
+				},
 })
