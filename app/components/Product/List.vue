@@ -80,11 +80,20 @@ const handleCollapse = () => {
   expandedProductId.value = null;
 };
 
+watch(() => $props.selectedCategory, () => {
+  handleCollapse();
+});
+
 </script>
 
 <template>
   <!-- Grouped by categories -->
   <div v-if="processedData.type === 'grouped'" class="space-y-3 px-6">
+    <EmptyState v-if="processedData.data.length === 0">
+      <template #icon>
+        <LucideCircleSlash2 :size="48" />
+      </template>
+    </EmptyState>
     <article v-for="group in processedData.data" :key="group.category.id">
       <h2 class="text-lg font-bold text-[#2B2C2C] mb-1">{{ group.category.nombre }}</h2>
       <section class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
@@ -101,7 +110,12 @@ const handleCollapse = () => {
     <h1 v-if="selectedCategory?.nombre" class="text-lg font-bold text-[#2B2C2C] mb-1">
       {{ selectedCategory.nombre }}
     </h1>
-    <section class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
+    <EmptyState v-if="processedData.data.length === 0">
+      <template #icon>
+        <LucideCircleSlash2 :size="48" />
+      </template>
+    </EmptyState>
+    <section v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
       <template v-for="product in processedData.data" :key="product.id">
         <ProductCard :product="product" :is-expanded="expandedProductId === product.id" @action:expand="handleExpand"
           @action:collapse="handleCollapse" />
