@@ -3,7 +3,10 @@ import { useSupabaseApi } from '~/composables/useSupabaseApi';
 import type { Product, Category } from '~/interfaces/product.interface';
 
 const api = useSupabaseApi()
-const selectedCategory = ref<Category>();
+const selectedCategory = ref<Category>({
+  id: 'all',
+  nombre: 'Todas'
+});
 const searchQuery = ref<string>('');
 
 const { data: categories, pending: categoriesPending, error: categoriesError } = await api.fetchLazy<Category[]>('/categorias?activa=eq.true&select=id,nombre', {
@@ -25,7 +28,10 @@ const shouldShowFilteredProducts = computed(() =>
 </script>
 
 <template>
-  <div>
+  <div class="h-screen relative">
+
+    <BtnCart />
+
     <!-- Loading state -->
     <div v-if="isLoading" class="flex justify-center items-center py-8">
       <span class="text-gray-500">Cargando productos...</span>
@@ -37,35 +43,21 @@ const shouldShowFilteredProducts = computed(() =>
     </div>
 
     <!-- Main content when data is available -->
-    <template v-else-if="hasData">
+    <div v-else-if="hasData" class="space-y-4">
       <ProductSearch v-model="searchQuery" />
 
-      <CategoryFilter
-        :category-list="categories!"
-        :selected-category="selectedCategory"
-        @action:select-category="(category) => selectedCategory = category"
-      />
+      <CategoryFilter :category-list="categories!" :selected-category="selectedCategory"
+        @action:select-category="(category) => selectedCategory = category" />
 
-      <!-- Show all products grouped by categories -->
-      <ProductListAll
-        v-if="shouldShowAllProducts"
-        :products="products!"
-        :categorys="categories!"
-        :search-query="searchQuery"
-      />
-
-      <!-- Show filtered products by selected category -->
-      <ProductList
-        v-else-if="shouldShowFilteredProducts"
-        :products="products!"
-        :selected-category="selectedCategory"
-        :search-query="searchQuery"
-      />
+      <!-- Unified product list component -->
+      <ProductList v-if="shouldShowAllProducts || shouldShowFilteredProducts" :products="products!"
+        :categories="categories!" :selected-category="selectedCategory" :search-query="searchQuery"
+        :group-by-category="shouldShowAllProducts" />
 
       <!-- No category selected state -->
       <div v-else class="flex justify-center items-center py-8">
         <span class="text-gray-500">Selecciona una categoría para ver los productos</span>
       </div>
-    </template>
+    </div>
   </div>
 </template>

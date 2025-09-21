@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="p-2">
+  <div class="bg-[#FFFFFF]">
     <NuxtPage />
   </div>
 </template>
