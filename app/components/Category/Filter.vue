@@ -19,7 +19,7 @@ const selectCategory = (category: Category) => {
 </script>
 
 <template>
-  <section class="flex gap-x-[10px] overflow-x-auto px-4 py-2 w-full scroll">
+  <section class="flex gap-x-[10px] overflow-x-auto p-2 w-full scroll">
     <button
       class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap flex-1 drop-shadow-lg transition-colors duration-200"
       :class="[selectedCategory?.id === 'all' ? 'bg-[#CCD1DD]' : 'bg-white']"
@@ -28,8 +28,7 @@ const selectCategory = (category: Category) => {
     </button>
     <button v-for="(category, index) in sortedCategories" :key="index"
       class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap flex-1 drop-shadow-lg transition-colors duration-200"
-      :class="[selectedCategory?.id === category.id ? 'bg-[#CCD1DD]' : 'bg-white']"
-      @click="selectCategory(category)">
+      :class="[selectedCategory?.id === category.id ? 'bg-[#CCD1DD]' : 'bg-white']" @click="selectCategory(category)">
       {{ category.nombre }}
     </button>
   </section>
