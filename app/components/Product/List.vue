@@ -1,83 +1,45 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useProductFiltering } from '~/composables/useProductFiltering';
-import type { Category, Product } from '~/interfaces/product.interface';
+const productsStore = useProductsStore()
+const { expandedProductId, expand, collapse } = useProductExpansion()
 
-interface Props {
-  products: Product[];
-  categories?: Category[];
-  selectedCategory?: Category;
-  searchQuery?: string;
-  groupByCategory?: boolean;
-}
-
-const props = defineProps<Props>();
-const expandedProductId = ref<string | null>(null);
-
-const { processedData } = useProductFiltering({
-  products: props.products,
-  categories: props.categories,
-  selectedCategory: props.selectedCategory,
-  searchQuery: props.searchQuery,
-  groupByCategory: props.groupByCategory
-});
-
-const handleExpand = (productId: string) => {
-  expandedProductId.value = productId;
-};
-
-const handleCollapse = () => {
-  expandedProductId.value = null;
-};
-
-watch(() => props.selectedCategory, () => {
-  handleCollapse();
-});
-
+watch(() => productsStore.selectedCategory, collapse)
 </script>
 
 <template>
   <!-- Grouped by categories -->
-  <div v-if="processedData.type === 'grouped'" class="space-y-3 px-6">
-    <EmptyState v-if="processedData.data.length === 0">
+  <div v-if="productsStore.processedData.type === 'grouped'" class="space-y-3 px-6">
+    <EmptyState v-if="productsStore.processedData.data.length === 0">
       <template #icon>
         <LucideCircleSlash2 :size="48" />
       </template>
     </EmptyState>
-    <article v-for="group in processedData.data" :key="group.category.id">
+    <article v-for="group in productsStore.processedData.data" :key="group.category.id">
       <h2 class="text-lg font-bold text-[#2B2C2C] mb-1">{{ group.category.nombre }}</h2>
-      <section class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
-        <template v-for="product in group.products" :key="product.id">
-          <ProductCard
-            :product="product"
-            :is-expanded="expandedProductId === product.id"
-            @action:expand="handleExpand"
-            @action:collapse="handleCollapse"
-          />
-        </template>
-      </section>
+      <ProductGrid
+        :products="group.products"
+        :expanded-product-id="expandedProductId"
+        @action:expand="expand"
+        @action:collapse="collapse"
+      />
     </article>
   </div>
 
   <!-- Filtered by category -->
   <article v-else class="px-6">
-    <h1 v-if="selectedCategory?.nombre" class="text-lg font-bold text-[#2B2C2C] mb-1">
-      {{ selectedCategory.nombre }}
+    <h1 v-if="productsStore.selectedCategory?.nombre" class="text-lg font-bold text-[#2B2C2C] mb-1">
+      {{ productsStore.selectedCategory.nombre }}
     </h1>
-    <EmptyState v-if="processedData.data.length === 0">
+    <EmptyState v-if="productsStore.processedData.data.length === 0">
       <template #icon>
         <LucideCircleSlash2 :size="48" />
       </template>
     </EmptyState>
-    <section v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-[10px]">
-      <template v-for="product in processedData.data" :key="product.id">
-        <ProductCard
-          :product="product"
-          :is-expanded="expandedProductId === product.id"
-          @action:expand="handleExpand"
-          @action:collapse="handleCollapse"
-        />
-      </template>
-    </section>
+    <ProductGrid
+      v-else
+      :products="productsStore.processedData.data"
+      :expanded-product-id="expandedProductId"
+      @action:expand="expand"
+      @action:collapse="collapse"
+    />
   </article>
 </template>
