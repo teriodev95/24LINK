@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import type { Product } from '~/interfaces/product.interface'
-import { useCartStore } from '~/stores/cart';
-
-interface Emits {
-  (e: 'interaction' | 'expand'): void
-}
 
 interface Props {
   product: Product
@@ -12,82 +7,65 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits<Emits>()
+const emit = defineEmits<{
+  interaction: []
+  expand: []
+}>()
 
-// Cart store
-const cartStore = useCartStore()
+const productRef = toRef(props, 'product')
+const { quantity, hasProductInCart, canAddMore, increment, decrement, setQuantity } = useProductCart(productRef)
+const { isEditing, tempValue, inputRef, startEdit, saveEdit, cancelEdit } = useInlineEdit(
+  quantity,
+  (newQuantity: number) => setQuantity(newQuantity)
+)
 
-// Estado local para edición
-const quantityInput = ref<HTMLInputElement>()
-const isEditing = ref(false)
-const tempQuantity = ref(0)
+const handleInteraction = () => emit('interaction')
 
-// Computed properties
-const quantity = computed(() => cartStore.getQuantity(props.product.id))
-const hasProductInCart = computed(() => cartStore.hasProductInCart(props.product.id))
-const canAddMore = computed(() => cartStore.canAddMore(props.product))
-
-// Handlers
-const startEdit = () => {
-  isEditing.value = true
-  tempQuantity.value = quantity.value
-  emit('interaction')
-  nextTick(() => {
-    quantityInput.value?.focus()
-    quantityInput.value?.select()
-  })
-}
-
-const saveEdit = () => {
-  if (tempQuantity.value >= 0 && tempQuantity.value <= props.product.stock) {
-    cartStore.setQuantity(props.product, tempQuantity.value)
-  }
-  isEditing.value = false
-}
-
-const cancelEdit = () => {
-  tempQuantity.value = quantity.value
-  isEditing.value = false
+const handleStartEdit = () => {
+  startEdit()
+  handleInteraction()
 }
 
 const handleInput = () => {
-  emit('interaction')
+  handleInteraction()
 }
 
-const increment = () => {
-  cartStore.incrementQuantity(props.product)
-  emit('interaction')
+const handleIncrement = () => {
+  increment()
+  handleInteraction()
 }
 
-const decrement = () => {
-  cartStore.decrementQuantity(props.product.id)
-  emit('interaction')
+const handleDecrement = () => {
+  decrement()
+  handleInteraction()
 }
-
 </script>
 
 <template>
   <div class="absolute right-0 top-0" :class="{ 'left-0': isExpanded }">
+    <!-- Collapsed state -->
     <button v-if="!isExpanded"
       class="rounded-full bg-white size-8 shadow-[0_5px_15px_0_rgba(0,0,0,0.15)] flex items-center justify-center"
       :class="[hasProductInCart ? 'text-sm' : 'text-2xl']" @click="emit('expand')">
       {{ hasProductInCart ? quantity : '+' }}
     </button>
 
+    <!-- Expanded state -->
     <div v-else class="bg-white rounded-full shadow-[0_5px_15px_0_rgba(0,0,0,0.15)] flex items-center h-8 px-2">
-      <UIButtonControl variant="decrement" :disabled="quantity === 0" @click="decrement" />
+      <UIQuantityButton variant="decrement" :disabled="quantity === 0" @click="handleDecrement" />
 
-      <input v-if="isEditing" ref="quantityInput" v-model.number="tempQuantity" type="number" :min="0"
-        :max="props.product.stock" step="1"
-        class="px-2 text-sm font-medium flex-1 text-center bg-transparent border-none outline-none w-8" @blur="saveEdit"
-        @keydown.enter="saveEdit" @keydown.escape="cancelEdit" @input="handleInput" @keydown="emit('interaction')"
-        @focus="emit('interaction')">
+      <!-- Inline edit input -->
+      <input v-if="isEditing" ref="inputRef" v-model.number="tempValue" type="number" :min="0" :max="product.stock"
+        step="1" class="px-2 text-sm font-medium flex-1 text-center bg-transparent border-none outline-none w-8"
+        @blur="saveEdit" @keydown.enter="saveEdit" @keydown.escape="cancelEdit" @input="handleInput"
+        @keydown="handleInteraction" @focus="handleInteraction">
 
-      <span v-else class="px-2 text-sm font-medium flex-1 text-center cursor-pointer" @click="startEdit">
+      <!-- Display quantity -->
+      <span v-else class="px-2 text-sm font-medium flex-1 text-center cursor-pointer" @click="handleStartEdit">
         {{ quantity }}
       </span>
 
-      <UIButtonControl variant="increment" :disabled="!canAddMore" @click="increment" />
+      <UIQuantityButton variant="increment" :disabled="!canAddMore" @click="handleIncrement" />
     </div>
   </div>
 </template>
