@@ -1,0 +1,9 @@
+
+body {
+  background-color: red;
+}
+
+
+.text-red {
+  @apply text-red-900
+}

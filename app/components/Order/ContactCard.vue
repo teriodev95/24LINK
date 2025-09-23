@@ -26,12 +26,10 @@ const selectedAddress = ref(adressList[0])
 </script>
 
 <template>
-  <section class="p-4 border space-y-4 rounded-lg">
-    <h2 class="text-[#001954] font-bold">Datos del Contacto</h2>
-
+  <UIFormSection title="Datos del Contacto">
     <form action="" class="space-y-2">
-      <label for="name" class="text-sm font-normal text-[#001954]">Télefono Celular 📱</label>
-      <input id="phone" type="number" placeholder="Telefono"
+      <label for="phone" class="text-sm font-normal text-[#001954]">Télefono Celular 📱</label>
+      <input id="phone" type="tel" placeholder="Telefono"
         class="w-full p-2 border border-gray-300 rounded py-4 px-[18px]">
     </form>
 
@@ -43,14 +41,15 @@ const selectedAddress = ref(adressList[0])
           <LucidePlus class="m-auto" />
         </button>
 
-        <button v-for="address in adressList" :key="address.id"
-          class="p-2 text-left rounded-lg space-y-1 h-14 whitespace-nowrap border drop-shadow-lg"
-          :class="[selectedAddress?.id === address.id ? 'bg-[#CCD1DD]' : 'bg-white']"
-          @click="selectedAddress = address">
-          <p class="text-sm font-bold text-[#001954]">{{ address.street }}</p>
-          <p class="text-sm font-normal text-[#001954]">{{ address.colony }}</p>
-        </button>
+        <UISelectionButton
+          v-for="address in adressList"
+          :key="address.id"
+          :item="{ title: address.street, description: address.colony }"
+          :is-selected="selectedAddress?.id === address.id"
+          custom-class="whitespace-nowrap h-14"
+          @select="selectedAddress = address"
+        />
       </div>
     </div>
-  </section>
+  </UIFormSection>
 </template>
