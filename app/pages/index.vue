@@ -30,7 +30,7 @@ const label = computed(() => {
     <!-- Main content when data is available -->
     <div v-else-if="productsStore.hasData" class="space-y-4">
 
-      <p class="text-red">¡Productos disponibles!</p>
+      <p class="title-red">¡Productos disponibles!</p>
 
       <ProductSearch />
 

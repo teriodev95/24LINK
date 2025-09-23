@@ -28,7 +28,7 @@ const selectedDeliveryMethod = ref<DeliveryMethod>(deliveryMethods[0] || { type:
 <template>
   <UIFormSection title="Pago y entrega">
     <div class="space-y-2">
-      <h3 class="text-sm font-normal text-[#001954]">Método de pago 💰</h3>
+      <h3 class="text-secondary">Método de pago 💰</h3>
 
       <div class="flex overflow-scroll space-x-2">
         <UISelectionButton v-for="method in paymentMethods" :key="method.type" :item="method"
@@ -38,7 +38,7 @@ const selectedDeliveryMethod = ref<DeliveryMethod>(deliveryMethods[0] || { type:
     </div>
 
     <div class="space-y-2">
-      <h3 class="text-sm font-normal text-[#001954]">Método de entrega 🚚</h3>
+      <h3 class="text-secondary">Método de entrega 🚚</h3>
 
       <div class="flex gap-x-2">
         <UISelectionButton v-for="method in deliveryMethods" :key="method.type" :item="method"

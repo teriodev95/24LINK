@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+@layer components {
+  .title-red {
+    @apply text-red-600 text-2xl font-bold;
+  }
+
+  .text-primary {
+    @apply text-[#001954] font-bold;
+  }
+
+  .text-secondary {
+    @apply text-sm font-normal text-[#001954];
+  }
+}
