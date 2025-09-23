@@ -1,13 +1,21 @@
 <script setup lang="ts">
+
 const productsStore = useProductsStore()
+const cartStore = useCartStore()
 
 await productsStore.fetchData()
+
+const hasItems = computed(() => cartStore.totalItems > 0)
+const label = computed(() => {
+  const count = cartStore.totalItems
+  return count === 1 ? '1 Producto' : `${count} Productos`
+})
 </script>
 
 <template>
   <div class="h-screen relative">
-
-    <BtnCart />
+    <UIButtonAction v-if="hasItems" type="link" :label="label" to="/detalles-orden"
+      class-name="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" />
 
     <!-- Loading state -->
     <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">

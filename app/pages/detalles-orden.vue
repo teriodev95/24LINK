@@ -9,6 +9,10 @@
     </nav>
 
     <OrderContactCard />
+    <OrderPaymentCard />
+    <OrderProductList />
+    <OrderDetailsCard />
+    <UIButtonAction label="Ordenar" type="link" to="/" class-name="w-full" />
   </main>
 </template>
 
