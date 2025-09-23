@@ -1,6 +1,6 @@
 <template>
   <main class="p-2 space-y-4">
-    <nav class="flex justify-between justify-center gap-2">
+    <nav class="flex justify-between  gap-2">
       <NuxtLink to="/">
         <LucideChevronLeft />
       </NuxtLink>

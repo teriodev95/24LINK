@@ -1,5 +1,5 @@
 <template>
-  <section class="p-4 border space-y-4 rounded-lg">
+  <section class="p-4 border border-[#E6E6E6]  space-y-4 rounded-lg">
     <h2 class="text-primary">{{ title }}</h2>
     <slot />
   </section>
