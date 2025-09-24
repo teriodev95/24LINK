@@ -15,6 +15,6 @@ defineProps<Props>()
   <div class="space-y-2">
     <label :for="id" class="text-secondary">{{ label }}</label>
     <input :id="id" :type="type" :placeholder="placeholder"
-      class="w-full p-2 border border-gray-300 rounded py-4 px-[18px]">
+      class="w-full p-2 bg-[#F9F9F9] border border-gray-300 rounded py-4 px-[18px]">
   </div>
 </template>
