@@ -66,7 +66,7 @@ defineExpose({
       <div class="relative">
         <!-- Marker Pin -->
         <div class="w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-          <div class="w-2 h-2 bg-white rounded-full" />
+          <div class="w-2 h-2 bg-white rounded-fulnpl" />
         </div>
         <!-- Tooltip -->
         <div
