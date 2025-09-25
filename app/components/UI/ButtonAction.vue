@@ -2,28 +2,43 @@
 interface Props {
   label: string
   type: 'link' | 'button'
+  variant?: 'primary' | 'secondary'
   className?: string
   to?: string
 }
 
-defineProps<Props>()
-// 
+interface Emits {
+  (e: 'click'): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'primary',
+  className: '',
+  to: '#'
+})
+
+defineEmits<Emits>()
+
+const variantClasses = computed(() => {
+  const baseClasses = 'flex justify-center items-center gap-3 rounded-3xl w-44 h-12'
+
+  const variants = {
+    primary: 'bg-[#001954] hover:bg-[#002266] text-white',
+    secondary: 'border border-[#001954] text-[#001954] hover:bg-[#E6E6E6] bg-white'
+  }
+
+  return `${baseClasses} ${variants[props.variant]} ${props.className}`
+})
 </script>
 
 <template>
-  <NuxtLink v-if="type === 'link'" :to="to"
-    class="flex justify-center items-center gap-3 bg-[#001954] rounded-3xl w-44 h-12 text-white" :class="className">
+  <NuxtLink v-if="type === 'link'" :to="to" :class="variantClasses">
     <span>{{ label }}</span>
-    <slot name="icon">
-      <lucide-shopping-cart />
-    </slot>
+    <slot name="icon" />
   </NuxtLink>
 
-  <button v-else class="flex justify-center items-center gap-3 bg-[#001954] rounded-3xl w-44 h-12 text-white"
-    :class="className">
+  <button v-else :class="variantClasses" @click="$emit('click')">
     <span>{{ label }}</span>
-    <slot name="icon">
-      <lucide-shopping-cart />
-    </slot>
+    <slot name="icon" />
   </button>
 </template>

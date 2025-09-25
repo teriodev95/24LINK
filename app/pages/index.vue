@@ -3,7 +3,7 @@
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
 
-//await productsStore.fetchData()
+await productsStore.fetchData()
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 const label = computed(() => {

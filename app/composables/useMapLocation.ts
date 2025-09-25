@@ -9,7 +9,6 @@ interface TileProvider {
 }
 
 export const useMapLocation = () => {
-  const isDragging = ref(false)
   const userLocation = ref<Position>({ lat: 0, lng: 0 })
   const markerPosition = ref<Position>({ lat: 0, lng: 0 })
   const zoom = ref(13)
@@ -36,8 +35,6 @@ export const useMapLocation = () => {
   })
 
   const tooltipContent = computed(() => {
-    if (isDragging.value) return '...'
-
     const lat = markerPosition.value.lat?.toFixed(6) || '0'
     const lng = markerPosition.value.lng?.toFixed(6) || '0'
 
@@ -80,19 +77,12 @@ export const useMapLocation = () => {
     })
   }
 
-  const onMapClick = (event: { latlng: Position }): void => {
-    const { lat, lng } = event.latlng
-    markerPosition.value = { lat, lng }
-  }
-
-  const onMarkerDragEnd = (event: { target: { getLatLng: () => Position } }): void => {
-    isDragging.value = false
-    const { lat, lng } = event.target.getLatLng()
+  const onMapMove = (event: { target: { getCenter: () => Position } }): void => {
+    const { lat, lng } = event.target.getCenter()
     markerPosition.value = { lat, lng }
   }
 
   return {
-    isDragging,
     userLocation: readonly(userLocation),
     markerPosition: readonly(markerPosition),
     zoom,
@@ -100,7 +90,6 @@ export const useMapLocation = () => {
     mapCenter,
     tooltipContent,
     getUserPosition,
-    onMapClick,
-    onMarkerDragEnd
+    onMapMove
   }
 }

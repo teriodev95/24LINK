@@ -1,18 +1,11 @@
 <template>
   <main class="p-2 space-y-4">
-    <nav class="flex justify-between  gap-2">
-      <NuxtLink to="/">
-        <LucideChevronLeft />
-      </NuxtLink>
-      <button>Volver</button>
-      <span />
-    </nav>
-
+    <UINavbar title="Volver" to="/" />
     <OrderContactCard />
     <OrderPaymentCard />
     <OrderProductList />
     <OrderDetailsCard />
-    <UIButtonAction label="Ordenar" type="link" to="/" class-name="w-full" />
+    <UIButtonAction label="Ordenar" type="link" to="/ubicacion" class-name="w-full" />
   </main>
 </template>
 

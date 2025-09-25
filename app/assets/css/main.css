@@ -12,4 +12,12 @@
   .text-secondary {
     @apply text-sm font-normal text-[#001954];
   }
+
+  .text-label {
+    @apply text-sm font-medium text-[#001954];
+  }
+
+  .text-label-secondary {
+    @apply text-xs text-[#001954];
+  }
 }

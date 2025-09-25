@@ -2,6 +2,7 @@
 interface Props {
   id: string
   label: string
+  secondaryLabel?: string
   modelValue: string
   type?: string
   placeholder?: string
@@ -13,7 +14,10 @@ defineProps<Props>()
 
 <template>
   <div class="space-y-2">
-    <label :for="id" class="text-secondary">{{ label }}</label>
+    <label :for="id" class="text-label">
+      {{ label }}
+      <span class="text-label-secondary" />
+    </label>
     <input :id="id" :type="type" :placeholder="placeholder"
       class="w-full p-2 bg-[#F9F9F9] border border-gray-300 rounded py-4 px-[18px]">
   </div>
