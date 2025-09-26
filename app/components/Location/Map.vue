@@ -3,7 +3,6 @@ const mapRef = ref(null)
 const selectedLocation = ref(false)
 
 const {
-  markerPosition,
   zoom,
   tileProvider,
   mapCenter,
@@ -37,15 +36,11 @@ watch(selectedLocation, () => {
   toggleMapInteraction()
 })
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await getUserPosition()
   nextTick(() => {
     toggleMapInteraction()
   })
-})
-
-defineExpose({
-  markerPosition
 })
 </script>
 
@@ -58,15 +53,15 @@ defineExpose({
     </LMap>
 
     <div class="absolute top-0 left-0 right-0 z-10 px-2 py-6">
-      <UINavbar title="Volver" to="/detalles-orden" />
+      <UINavbar title="Selecciona una dirección" to="/detalles-orden" />
     </div>
 
     <!-- Static Center Marker -->
     <div v-show="!selectedLocation" class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
       <div class="relative">
         <!-- Marker Pin -->
-        <div class="w-8 h-8 bg-red-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-          <div class="w-2 h-2 bg-white rounded-fulnpl" />
+        <div class="text-6xl flex items-end justify-center transform -translate-y-[30px]">
+          📍
         </div>
         <!-- Tooltip -->
         <div
@@ -80,7 +75,7 @@ defineExpose({
     <LocationForm v-if="selectedLocation" @action:location-selection="selectedLocation = false" />
 
     <div v-else class="absolute left-4 right-4 bottom-4 p-4">
-      <UIButtonAction type="button" label="Seleccionar" class-name="w-full" @click="selectedLocation = true" />
+      <UIButtonAction label="Seleccionar" class-name="w-full" @click="selectedLocation = true" />
     </div>
   </div>
 </template>

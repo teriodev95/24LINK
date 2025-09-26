@@ -11,7 +11,7 @@ defineProps<Props>()
     <NuxtLink :to="to" class="cursor-pointer">
       <LucideChevronLeft />
     </NuxtLink>
-    <button>{{ title }}</button>
+    <span class="text-primary">{{ title }}</span>
     <span />
   </nav>
 </template>

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 interface Props {
   label: string
-  type: 'link' | 'button'
+  role?: 'link' | 'button'
   variant?: 'primary' | 'secondary'
   className?: string
+  disabled?: boolean
   to?: string
+  type?: 'button' | 'submit'
 }
 
 interface Emits {
@@ -14,7 +16,10 @@ interface Emits {
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   className: '',
-  to: '#'
+  to: '#',
+  type: 'button',
+  role: 'button',
+  disabled: false
 })
 
 defineEmits<Emits>()
@@ -32,12 +37,12 @@ const variantClasses = computed(() => {
 </script>
 
 <template>
-  <NuxtLink v-if="type === 'link'" :to="to" :class="variantClasses">
+  <NuxtLink v-if="role === 'link'" :to="to" :class="variantClasses">
     <span>{{ label }}</span>
     <slot name="icon" />
   </NuxtLink>
 
-  <button v-else :class="variantClasses" @click="$emit('click')">
+  <button v-else :type="type" :class="variantClasses" :disabled="disabled" @click="$emit('click')">
     <span>{{ label }}</span>
     <slot name="icon" />
   </button>

@@ -1,28 +1,5 @@
 <script setup lang="ts">
-interface PaymentMethod {
-  type: string
-  title: string
-  description: string
-
-}
-
-interface DeliveryMethod {
-  type: string
-  title: string
-}
-
-const paymentMethods: PaymentMethod[] = [
-  { type: 'card', title: 'Tarjeta', description: 'Solicita la terminal' },
-  { type: 'cash', title: 'Efectivo', description: 'Paga con efectivo' },
-  { type: 'mixed', title: 'Mixto', description: 'Pago mixto (tarjeta y efectivo)' }
-]
-const deliveryMethods: DeliveryMethod[] = [
-  { type: 'outside', title: 'Encontrarse afuera' },
-  { type: 'inside', title: 'Entregar en la puerta' }
-]
-const selectedPaymentMethod = ref<PaymentMethod>(paymentMethods[0] || { type: '', title: '', description: '' })
-const selectedDeliveryMethod = ref<DeliveryMethod>(deliveryMethods[0] || { type: '', title: '' })
-
+const orderStore = useOrderStore()
 </script>
 
 <template>
@@ -31,9 +8,9 @@ const selectedDeliveryMethod = ref<DeliveryMethod>(deliveryMethods[0] || { type:
       <h3 class="text-secondary">Método de pago 💰</h3>
 
       <div class="flex overflow-scroll space-x-2">
-        <UISelectionButton v-for="method in paymentMethods" :key="method.type" :item="method"
-          :is-selected="selectedPaymentMethod?.type === method.type" custom-class="whitespace-nowrap"
-          @select="selectedPaymentMethod = method" />
+        <UISelectionButton v-for="method in orderStore.paymentMethods" :key="method.type" :item="method"
+          :is-selected="orderStore.selectedPaymentMethod?.type === method.type" custom-class="whitespace-nowrap"
+          @select="orderStore.setSelectedPaymentMethod(method)" />
       </div>
     </div>
 
@@ -41,8 +18,8 @@ const selectedDeliveryMethod = ref<DeliveryMethod>(deliveryMethods[0] || { type:
       <h3 class="text-secondary">Método de entrega 🚚</h3>
 
       <div class="flex gap-x-2">
-        <UISelectionButton v-for="method in deliveryMethods" :key="method.type" :item="method"
-          :is-selected="selectedDeliveryMethod?.type === method.type" @select="selectedDeliveryMethod = method" />
+        <UISelectionButton v-for="method in orderStore.deliveryMethods" :key="method.type" :item="method"
+          :is-selected="orderStore.selectedDeliveryMethod?.type === method.type" @select="orderStore.setSelectedDeliveryMethod(method)" />
       </div>
     </div>
   </UIFormSection>
