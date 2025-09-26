@@ -5,17 +5,18 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-				css: ['@/assets/css/main.css'],
-				vite: {
-								plugins: [tailwindcss()],
-				},
+	css: ['@/assets/css/main.css'],
+	vite: {
+		plugins: [tailwindcss()],
+	},
   modules: [
-		 '@nuxt/eslint',
-		 '@nuxt/image',
-		 '@nuxt/fonts',
-		 '@pinia/nuxt',
-		 "nuxt-lucide-icons",
-		 "@nuxtjs/leaflet",
+		'@nuxt/eslint',
+		'@nuxt/image',
+		'@nuxt/fonts',
+		'@pinia/nuxt',
+		"nuxt-lucide-icons",
+		"@nuxtjs/leaflet",
+		"nuxt-toast",
 		],
   runtimeConfig: {
     // Private keys (only available on server-side)
