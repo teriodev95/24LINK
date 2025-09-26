@@ -50,6 +50,14 @@ export const useOrderStore = defineStore('order', () => {
   const selectedPaymentMethod = computed(() => _selectedPaymentMethod.value)
   const deliveryMethods = computed(() => _deliveryMethods.value)
   const selectedDeliveryMethod = computed(() => _selectedDeliveryMethod.value)
+  const canPlaceOrder = computed(() => {
+    return !!(
+      _phone.value &&
+      _selectedAddress.value &&
+      _selectedPaymentMethod.value &&
+      _selectedDeliveryMethod.value
+    )
+  })
 
   // Setters
   const setPhone = (phone: string) => {
@@ -113,6 +121,7 @@ export const useOrderStore = defineStore('order', () => {
     selectedPaymentMethod,
     deliveryMethods,
     selectedDeliveryMethod,
+    canPlaceOrder,
     // Setters
     setPhone,
     setAddressList,
