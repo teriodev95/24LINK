@@ -37,9 +37,9 @@ const selectedAddress = ref(adressList[0])
       <h3 class="text-secondary">Dirección de entrega 🚚</h3>
 
       <div class="flex overflow-scroll space-x-2">
-        <button class="rounded-lg w-14 h-14 p-2 drop-shadow-lg bg-white flex-shrink-0">
+        <NuxtLink to="/ubicacion" class="rounded-lg w-14 h-14 p-2 drop-shadow-lg bg-white flex-shrink-0">
           <LucidePlus class="m-auto" />
-        </button>
+        </NuxtLink>
 
         <UISelectionButton v-for="address in adressList" :key="address.id"
           :item="{ title: address.street, description: address.colony }"

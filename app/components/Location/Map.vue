@@ -57,8 +57,8 @@ defineExpose({
       <LTileLayer :url="tileProvider.url" :attribution="tileProvider.attribution" />
     </LMap>
 
-    <div class="absolute top-0 left-0 right-0 z-10 p-4">
-      <UINavbar title="Volver" to="/" />
+    <div class="absolute top-0 left-0 right-0 z-10 px-2 py-6">
+      <UINavbar title="Volver" to="/detalles-orden" />
     </div>
 
     <!-- Static Center Marker -->

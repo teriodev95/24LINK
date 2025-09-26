@@ -5,7 +5,7 @@
     <OrderPaymentCard />
     <OrderProductList />
     <OrderDetailsCard />
-    <UIButtonAction label="Ordenar" type="link" to="/ubicacion" class-name="w-full" />
+    <UIButtonAction label="Ordenar" type="button" class-name="w-full" />
   </main>
 </template>
 

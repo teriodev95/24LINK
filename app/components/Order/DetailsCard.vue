@@ -6,11 +6,11 @@ const cartStore = useCartStore()
     <div class="space-y-4">
       <p class="flex justify-between">
         <span class="text-secondary">Total en productos</span>
-        <span>{{ formatCurrency(cartStore.totalAmount) }}</span>
+        <span class="text-primary">{{ formatCurrency(cartStore.totalAmount) }}</span>
       </p>
       <p class="flex justify-between">
         <span class="text-secondary">Tarifa de entrega</span>
-        <span>{{ formatCurrency(50) }}</span>
+        <span class="text-primary">{{ formatCurrency(50) }}</span>
       </p>
 
       <hr class="border-t-2 border-[#898989]">
