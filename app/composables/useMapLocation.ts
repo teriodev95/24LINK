@@ -11,7 +11,7 @@ interface TileProvider {
 export const useMapLocation = () => {
   const userLocation = ref<Position>({ lat: 0, lng: 0 })
   const markerPosition = ref<Position>({ lat: 0, lng: 0 })
-  const zoom = ref(13)
+  const zoom = ref(20)
   const isLocationLoaded = ref(false)
 
   const defaultLocation: Position = {

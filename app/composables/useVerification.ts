@@ -5,6 +5,8 @@ export const useVerification = () => {
   const errors = ref<{ phone?: string; pin?: string }>({})
   const isPhoneVerified = ref(false)
   const isPinVerified = ref(false)
+  const api = useSupabaseApi()
+  
 
   const verifyPhone = async (phoneNumber: string): Promise<boolean> => {
     isLoading.value = true
@@ -39,7 +41,8 @@ export const useVerification = () => {
 
     try {
       // TODO: Implementar llamada a la API
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await api.fetch('/usuarios?telefono=eq.4431122534&pin=eq.1545&select=id,nombre,telefono,created_at', { key: 'login' })
+      console.log('Respuesta de la API:', response.data.value)
 
       pin.value = pinCode
       isPinVerified.value = true
