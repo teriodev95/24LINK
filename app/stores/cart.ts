@@ -7,8 +7,35 @@ interface CartItem {
   product: Product
 }
 
+const CART_STORAGE_KEY = 'cart-items'
+
+const loadCartFromStorage = (): Map<string, CartItem> => {
+  if (typeof window === 'undefined') return new Map()
+
+  try {
+    const stored = localStorage.getItem(CART_STORAGE_KEY)
+    if (!stored) return new Map()
+
+    const parsed = JSON.parse(stored)
+    return new Map(Object.entries(parsed))
+  } catch {
+    return new Map()
+  }
+}
+
+const saveCartToStorage = (items: Map<string, CartItem>): void => {
+  if (typeof window === 'undefined') return
+
+  try {
+    const cartObject = Object.fromEntries(items.entries())
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartObject))
+  } catch {
+    // Silently handle storage errors
+  }
+}
+
 export const useCartStore = defineStore('cart', () => {
-  const items = ref(new Map<string, CartItem>())
+  const items = ref(loadCartFromStorage())
 
   const getQuantity = (productId: string): number => {
     return items.value.get(productId)?.quantity || 0
@@ -47,6 +74,7 @@ export const useCartStore = defineStore('cart', () => {
         quantity: currentQuantity + 1,
         product
       })
+      saveCartToStorage(items.value)
     }
   }
 

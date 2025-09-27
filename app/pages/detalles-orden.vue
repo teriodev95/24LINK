@@ -11,8 +11,10 @@ onMounted(() => {
     <UINavbar title="Enviar pedido" to="/" />
     <OrderContactCard />
     <OrderPaymentCard />
-    <OrderProductList />
-    <OrderDetailsCard />
+    <ClientOnly>
+      <OrderProductList />
+      <OrderDetailsCard />
+    </ClientOnly>
     <UIButtonAction label="Ordenar" class-name="w-full" :disabled="!orderStore.canPlaceOrder" />
   </main>
 </template>

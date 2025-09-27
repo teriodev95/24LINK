@@ -43,7 +43,9 @@ watch(() => props.isExpanded, (newExpanded) => {
     <p>{{ product.nombre }}</p>
     <p class="text-[#717272]">MXM {{ formatCurrency(product.precio) }}</p>
 
-    <ProductQuantityControl :product="product" :is-expanded="isExpanded || false" @interaction="handleInteraction"
-      @expand="handleExpand" />
+    <ClientOnly>
+      <ProductQuantityControl :product="product" :is-expanded="isExpanded || false" @interaction="handleInteraction"
+        @expand="handleExpand" />
+    </ClientOnly>
   </div>
 </template>
