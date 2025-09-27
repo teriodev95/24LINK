@@ -8,12 +8,17 @@ export function useSupabaseApi() {
   const config = useRuntimeConfig()
 
   // Headers por defecto para Supabase
-  const getHeaders = (additionalHeaders: Record<string, string> = {}) => ({
-    'apikey': config.public.supabaseApiKey,
-    'Authorization': `Bearer ${config.supabaseAuthToken || config.public.supabaseApiKey}`,
-    'Content-Type': 'application/json',
-    ...additionalHeaders
-  })
+  const getHeaders = (additionalHeaders: Record<string, string> = {}) => {
+    // En el servidor usamos el token de auth, en el cliente usamos la API key
+    const authToken = import.meta.server ? config.supabaseAuthToken : config.public.supabaseApiKey
+
+    return {
+      'apikey': config.public.supabaseApiKey,
+      'Authorization': `Bearer ${authToken || config.public.supabaseApiKey}`,
+      'Content-Type': 'application/json',
+      ...additionalHeaders
+    }
+  }
 
   // useFetch wrapper con configuración de Supabase
   async function fetch<T = unknown>(

@@ -1,14 +1,19 @@
 <script setup lang="ts">
-
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
-
-await productsStore.fetchData()
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 const label = computed(() => {
   const count = cartStore.totalItems
   return count === 1 ? '1 Producto' : `${count} Productos`
+})
+
+
+onBeforeMount(async () => {
+  // Solo cargar datos si no los tenemos ya
+  if (!productsStore.hasData) {
+    await productsStore.fetchData()
+  }
 })
 </script>
 
@@ -22,17 +27,22 @@ const label = computed(() => {
       </UIButtonAction>
     </ClientOnly>
 
+    <p>
+      {{ productsStore.hasData }}
+
+    </p>
+
     <!-- Loading state -->
     <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">
       <span class="text-gray-500">Cargando productos...</span>
     </div>
-
     <!-- Error state -->
     <div v-else-if="productsStore.error" class="flex justify-center items-center py-8">
       <span class="text-red-500">{{ productsStore.error }}</span>
     </div>
 
     <!-- Main content when data is available -->
+
     <div v-else-if="productsStore.hasData" class="space-y-4">
       <ProductSearch />
 

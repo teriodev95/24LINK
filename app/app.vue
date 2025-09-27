@@ -1,5 +1,12 @@
 <script setup lang="ts">
 
+const productsStore = useProductsStore()
+
+onBeforeMount(async () => {
+  if (!productsStore.hasData) {
+    await productsStore.fetchData()
+  }
+})
 </script>
 
 <template>
