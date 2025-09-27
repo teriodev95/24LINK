@@ -5,7 +5,7 @@ const hasSearchQuery = computed(() => productsStore.searchQuery.length > 0);
 </script>
 
 <template>
-  <section class="relative pt-2 px-2">
+  <section class="relative px-2">
     <input :value="productsStore.searchQuery" type="text" placeholder="Busca en 24HrsFiesta"
       class="w-full rounded-3xl text-center border border-[#1F2020] py-3 px-12 pr-12"
       @input="productsStore.setSearchQuery(($event.target as HTMLInputElement).value)">

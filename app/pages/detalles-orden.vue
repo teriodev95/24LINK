@@ -15,6 +15,7 @@ onMounted(() => {
       <OrderProductList />
       <OrderDetailsCard />
     </ClientOnly>
-    <UIButtonAction label="Ordenar" class-name="w-full" :disabled="!orderStore.canPlaceOrder" />
+    <UIButtonAction role="link" label="Ordenar" to="/verificacion" class-name="w-full"
+      :disabled="!orderStore.canPlaceOrder" />
   </main>
 </template>

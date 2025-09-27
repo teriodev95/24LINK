@@ -2,7 +2,7 @@
 
 const productsStore = useProductsStore()
 
-onBeforeMount(async () => {
+onMounted(async () => {
   if (!productsStore.hasData) {
     await productsStore.fetchData()
   }

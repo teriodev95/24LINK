@@ -8,13 +8,9 @@ const label = computed(() => {
   return count === 1 ? '1 Producto' : `${count} Productos`
 })
 
+await productsStore.fetchData()
 
-onBeforeMount(async () => {
-  // Solo cargar datos si no los tenemos ya
-  if (!productsStore.hasData) {
-    await productsStore.fetchData()
-  }
-})
+
 </script>
 
 <template>
@@ -26,11 +22,6 @@ onBeforeMount(async () => {
         </template>
       </UIButtonAction>
     </ClientOnly>
-
-    <p>
-      {{ productsStore.hasData }}
-
-    </p>
 
     <!-- Loading state -->
     <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">

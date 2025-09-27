@@ -32,7 +32,9 @@ const variantClasses = computed(() => {
     secondary: 'border border-[#001954] text-[#001954] hover:bg-[#E6E6E6] bg-white'
   }
 
-  return `${baseClasses} ${variants[props.variant]} ${props.className}`
+  const disabledClasses = props.disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+
+  return `${baseClasses} ${variants[props.variant]} ${props.className} ${disabledClasses}`
 })
 </script>
 
