@@ -16,7 +16,6 @@ onMounted(() => {
       <OrderProductList :products="cartStore.cartItems" />
       <OrderDetailsCard />
     </ClientOnly>
-    <UIButtonAction role="link" label="Ordenar" to="/status-pedido" class-name="w-full"
-      :disabled="!orderStore.canPlaceOrder" />
+    <UIButtonAction label="Ordenar" class-name="w-full" :disabled="!orderStore.canPlaceOrder" />
   </main>
 </template>

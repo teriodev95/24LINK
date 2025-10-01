@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { mockOrder } from '~/constants'
+
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
 
@@ -34,6 +36,8 @@ await productsStore.fetchData()
 
     <div v-else-if="productsStore.hasData" class="space-y-4">
       <ProductSearch />
+
+      <OrderList :orders="[mockOrder, mockOrder, mockOrder]" />
 
       <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
 

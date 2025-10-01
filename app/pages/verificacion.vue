@@ -22,7 +22,7 @@ function handleSendPin() {
 
 <template>
   <main class="p-2 space-y-8">
-    <UINavbar title="Verificación" to="/detalles-orden" />
+    <UINavbar title="Verificación" to="/" />
 
     <VerificationCard v-if="!showPinStep" type="phone" @verified="handlePhoneVerified" @send-pin="handleSendPin" />
 

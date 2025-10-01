@@ -4,7 +4,7 @@ import { mockOrder } from '~/constants';
 
 <template>
   <main class="p-2 space-y-4">
-    <UINavbar title="Seguimiento de tu pedido" to="/detalles-orden" />
+    <UINavbar title="Seguimiento de tu pedido" to="/" />
 
     <OrderProductList :products="mockOrder.productos" />
     <OrderDetailsCard show-payment-method />
