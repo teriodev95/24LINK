@@ -4,14 +4,14 @@ const cartStore = useCartStore()
 
 <template>
   <UIFormSection title="Productos">
-    <div v-for="item in cartStore.cartItems" :key="item.productId"
+    <div v-for="producto in cartStore.cartItems" :key="producto.id"
       class="grid grid-cols-7 items-center gap-2 text-center">
       <figure>
-        <NuxtImg :src="item.product.imagen_url" height="72" />
+        <NuxtImg :src="producto.imagen_url" height="72" />
       </figure>
-      <span class="col-span-3 text-sm text-left">{{ item.product.nombre }}</span>
-      <span>x {{ item.quantity }}</span>
-      <span class="text-primary col-span-2">{{ formatCurrency(item.product.precio * item.quantity) }}</span>
+      <span class="col-span-3 text-sm text-left">{{ producto.nombre }}</span>
+      <span>x {{ producto.cantidad }}</span>
+      <span class="text-primary col-span-2">{{ formatCurrency(producto.precio_unitario * producto.cantidad) }}</span>
     </div>
   </UIFormSection>
 </template>

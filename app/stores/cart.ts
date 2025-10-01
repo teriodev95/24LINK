@@ -1,114 +1,148 @@
 import { defineStore } from 'pinia'
-import type { Product } from '~/interfaces/product.interface'
+import type { Cart, CartProduct, Product } from '~/interfaces'
 
-interface CartItem {
-  productId: string
-  quantity: number
-  product: Product
-}
+const CART_STORAGE_KEY = 'cart-data'
+const SHIPPING_COST = 50 // Costo fijo de envío
 
-const CART_STORAGE_KEY = 'cart-items'
-
-const loadCartFromStorage = (): Map<string, CartItem> => {
-  if (typeof window === 'undefined') return new Map()
+const loadCartFromStorage = (): Cart => {
+  if (typeof window === 'undefined') return { productos: [], subtotal: 0, costo_envio: 0, total: 0 }
 
   try {
     const stored = localStorage.getItem(CART_STORAGE_KEY)
-    if (!stored) return new Map()
+    if (!stored) return { productos: [], subtotal: 0, costo_envio: 0, total: 0 }
 
-    const parsed = JSON.parse(stored)
-    return new Map(Object.entries(parsed))
+    return JSON.parse(stored)
   } catch {
-    return new Map()
+    return { productos: [], subtotal: 0, costo_envio: 0, total: 0 }
   }
 }
 
-const saveCartToStorage = (items: Map<string, CartItem>): void => {
+const saveCartToStorage = (cart: Cart): void => {
   if (typeof window === 'undefined') return
 
   try {
-    const cartObject = Object.fromEntries(items.entries())
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartObject))
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart))
   } catch {
     // Silently handle storage errors
   }
 }
 
+const calculateCartTotals = (productos: CartProduct[]): Pick<Cart, 'subtotal' | 'costo_envio' | 'total'> => {
+  const subtotal = productos.reduce((total, producto) => total + (producto.precio_unitario * producto.cantidad), 0)
+  const costo_envio = productos.length > 0 ? SHIPPING_COST : 0
+  const total = subtotal + costo_envio
+
+  return { subtotal, costo_envio, total }
+}
+
 export const useCartStore = defineStore('cart', () => {
-  const items = ref(loadCartFromStorage())
+  const cart = ref(loadCartFromStorage())
 
   const getQuantity = (productId: string): number => {
-    return items.value.get(productId)?.quantity || 0
+    const producto = cart.value.productos.find(p => p.id === productId)
+    return producto?.cantidad || 0
   }
 
   const hasProductInCart = (productId: string): boolean => {
-    return items.value.has(productId)
+    return cart.value.productos.some(p => p.id === productId)
   }
 
   const canAddMore = (product: Product): boolean => {
-    const currentQuantity = items.value.get(product.id)?.quantity || 0
+    if (!product.id) return false
+    const currentQuantity = getQuantity(product.id)
     return currentQuantity < product.stock
   }
 
   const totalItems = computed((): number => {
-    return Array.from(items.value.values()).reduce((total, item) => total + item.quantity, 0)
+    return cart.value.productos.reduce((total, producto) => total + producto.cantidad, 0)
   })
 
-  const cartItems = computed((): CartItem[] => {
-    return Array.from(items.value.values())
-  })
-
-  const totalAmount = computed((): number => {
-    return Array.from(items.value.values()).reduce((total, item) => {
-      return total + (item.product.precio * item.quantity)
-    }, 0)
-  })
+  const updateCartTotals = (): void => {
+    const totals = calculateCartTotals(cart.value.productos)
+    cart.value.subtotal = totals.subtotal
+    cart.value.costo_envio = totals.costo_envio
+    cart.value.total = totals.total
+    saveCartToStorage(cart.value)
+  }
 
   const incrementQuantity = (product: Product): void => {
-    const currentItem = items.value.get(product.id)
-    const currentQuantity = currentItem?.quantity || 0
+    if (!product.id) return
 
-    if (currentQuantity < product.stock) {
-      items.value.set(product.id, {
-        productId: product.id,
-        quantity: currentQuantity + 1,
-        product
-      })
-      saveCartToStorage(items.value)
+    const existingProduct = cart.value.productos.find(p => p.id === product.id)
+
+    if (existingProduct) {
+      if (existingProduct.cantidad < product.stock) {
+        existingProduct.cantidad++
+        updateCartTotals()
+      }
+    } else {
+      const cartProduct: CartProduct = {
+        id: product.id,
+        nombre: product.nombre,
+        imagen_url: product.imagen_url,
+        cantidad: 1,
+        precio_unitario: product.precio
+      }
+      cart.value.productos.push(cartProduct)
+      updateCartTotals()
     }
   }
 
   const decrementQuantity = (productId: string): void => {
-    const currentItem = items.value.get(productId)
-    if (!currentItem) return
+    const productIndex = cart.value.productos.findIndex(p => p.id === productId)
+    if (productIndex === -1) return
 
-    if (currentItem.quantity > 1) {
-      items.value.set(productId, {
-        ...currentItem,
-        quantity: currentItem.quantity - 1
-      })
+    const producto = cart.value.productos[productIndex]
+    if (!producto) return
+
+    if (producto.cantidad > 1) {
+      producto.cantidad--
     } else {
-      items.value.delete(productId)
+      cart.value.productos.splice(productIndex, 1)
     }
+    updateCartTotals()
   }
 
   const setQuantity = (product: Product, quantity: number): void => {
+    if (!product.id) return
+
+    const productIndex = cart.value.productos.findIndex(p => p.id === product.id)
+
     if (quantity <= 0) {
-      items.value.delete(product.id)
+      if (productIndex !== -1) {
+        cart.value.productos.splice(productIndex, 1)
+      }
     } else if (quantity <= product.stock) {
-      items.value.set(product.id, {
-        productId: product.id,
-        quantity,
-        product
-      })
+      if (productIndex !== -1) {
+        const existingProduct = cart.value.productos[productIndex]
+        if (existingProduct) {
+          existingProduct.cantidad = quantity
+        }
+      } else {
+        const cartProduct: CartProduct = {
+          id: product.id,
+          nombre: product.nombre,
+          imagen_url: product.imagen_url,
+          cantidad: quantity,
+          precio_unitario: product.precio
+        }
+        cart.value.productos.push(cartProduct)
+      }
     }
+    updateCartTotals()
   }
 
   const clearCart = (): void => {
-    items.value.clear()
+    cart.value = { productos: [], subtotal: 0, costo_envio: 0, total: 0 }
+    saveCartToStorage(cart.value)
   }
 
+  // Computed para compatibilidad con el código existente
+  const cartItems = computed(() => cart.value.productos)
+  const totalAmount = computed(() => cart.value.total)
+
   return {
+    cart: readonly(cart),
     getQuantity,
     hasProductInCart,
     canAddMore,
