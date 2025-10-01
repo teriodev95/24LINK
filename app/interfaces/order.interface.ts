@@ -1,3 +1,5 @@
+import type { CartProduct } from "./cart.interfaces"
+
 export interface Address {
   id: string
   street: string
@@ -22,17 +24,9 @@ export interface Order {
   id: string;
   estado: OrderStatus;
   fecha: string;
-  productos: Product[];
+  productos: CartProduct[];
   total: number;
   subtotal: number;
   costo_envio: number;
   metodo_pago: Method;
-}
-
-interface Product {
-  id?: string;
-  nombre: string;
-  imagen_url: string;
-  cantidad: number;
-  precio_unitario: number;
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const orderStore = useOrderStore()
+const cartStore = useCartStore()
 
 onMounted(() => {
   orderStore.initializeDefaults()
@@ -12,7 +13,7 @@ onMounted(() => {
     <OrderContactCard />
     <OrderPaymentCard />
     <ClientOnly>
-      <OrderProductList />
+      <OrderProductList :products="cartStore.cartItems" />
       <OrderDetailsCard />
     </ClientOnly>
     <UIButtonAction role="link" label="Ordenar" to="/status-pedido" class-name="w-full"
