@@ -1,21 +1,5 @@
 import { defineStore } from 'pinia'
-
-interface Address {
-  id: string
-  street: string
-  colony: string
-}
-
-interface PaymentMethod {
-  type: string
-  title: string
-  description: string
-}
-
-interface DeliveryMethod {
-  type: string
-  title: string
-}
+import type { Address, DeliveryMethod, PaymentMethod } from '~/interfaces'
 
 export const useOrderStore = defineStore('order', () => {
   const _phone = ref<string>('')

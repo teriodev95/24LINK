@@ -11,7 +11,7 @@ function handlePhoneVerified(success: boolean) {
 
 function handlePinVerified(success: boolean) {
   if (success) {
-    router.push('/')
+    router.push('/detalles-orden')
   }
 }
 

@@ -1,5 +1,12 @@
 <script setup lang="ts">
 const cartStore = useCartStore()
+
+interface Props {
+  showPaymentMethod?: boolean
+}
+
+defineProps<Props>()
+
 </script>
 <template>
   <UIFormSection title="Detalles del pago">
@@ -11,6 +18,12 @@ const cartStore = useCartStore()
       <p class="flex justify-between">
         <span class="text-secondary">Tarifa de entrega</span>
         <span class="text-primary">{{ formatCurrency(50) }}</span>
+      </p>
+
+      <p v-if="showPaymentMethod" class="flex justify-between">
+        <span class="text-primary text-xs">Método de pago</span>
+        <span class="text-primary text-xs">💳 Tarjeta</span>
+
       </p>
 
       <hr class="border-t-2 border-[#898989]">
