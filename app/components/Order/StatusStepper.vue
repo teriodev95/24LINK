@@ -71,7 +71,9 @@ const isCurrentStep = (step: StepData): boolean => {
 const getStepClasses = (step: StepData): string => {
   const stepIndex = statusOrder[step.status]
 
-  if (isStepCompleted(stepIndex)) {
+  if (step.status === 'cancelado' && isCurrentStep(step)) {
+    return 'bg-red-500 border-red-500'
+  } else if (isStepCompleted(stepIndex)) {
     return 'bg-green-500 border-green-500'
   } else if (isCurrentStep(step)) {
     return 'bg-green-500 border-green-500'
@@ -109,9 +111,6 @@ const getStepClasses = (step: StepData): string => {
         <p class="mt-1 text-sm text-gray-600">
           {{ step.description }}
         </p>
-        <div v-if="step.status === 'en_ruta'">
-          hola
-        </div>
       </div>
     </div>
   </UISection>
