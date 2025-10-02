@@ -9,7 +9,7 @@ defineProps<Props>()
 
 </script>
 <template>
-  <UIFormSection title="Detalles del pago">
+  <UISection title="Detalles del pago">
     <div class="space-y-4">
       <p class="flex justify-between">
         <span class="text-secondary">Total en productos</span>
@@ -33,5 +33,5 @@ defineProps<Props>()
         <span class="text-lg font-bold">{{ formatCurrency(cartStore.cart.total) }}</span>
       </p>
     </div>
-  </UIFormSection>
+  </UISection>
 </template>

@@ -3,7 +3,7 @@ const orderStore = useOrderStore()
 </script>
 
 <template>
-  <UIFormSection title="Datos del Contacto">
+  <UISection title="Datos del Contacto">
     <form action="" class="space-y-2">
       <label for="phone" class="text-secondary">Télefono Celular 📱</label>
       <input id="phone" type="tel" placeholder="Telefono" :value="orderStore.phone"
@@ -25,5 +25,5 @@ const orderStore = useOrderStore()
           @select="orderStore.setSelectedAddress(address)" />
       </div>
     </div>
-  </UIFormSection>
+  </UISection>
 </template>

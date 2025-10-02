@@ -18,6 +18,10 @@
     @apply text-sm font-normal text-[#001954];
   }
 
+  .text-tertiary {
+    @apply text-base font-normal text-[#717272];
+  }
+
   .text-label {
     @apply text-sm font-medium text-[#001954];
   }

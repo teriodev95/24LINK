@@ -2,7 +2,7 @@ import type { Order } from "~/interfaces";
 
 export const mockOrder: Order = {
   id: "ORD-12346",
-  estado: "creado",
+  estado: "cancelado",
   fecha: "2025-10-01T15:30:00Z",
 
   productos: [

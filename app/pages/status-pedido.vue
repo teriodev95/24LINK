@@ -6,7 +6,12 @@ import { mockOrder } from '~/constants';
   <main class="p-2 space-y-4">
     <UINavbar title="Seguimiento de tu pedido" to="/" />
 
+    <OrderStatusStepper :current-status="mockOrder.estado" />
+
     <OrderProductList :products="mockOrder.productos" />
-    <OrderDetailsCard show-payment-method />
+
+    <ClientOnly>
+      <OrderDetailsCard show-payment-method />x
+    </ClientOnly>
   </main>
 </template>

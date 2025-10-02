@@ -9,7 +9,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <UIFormSection title="Productos">
+  <UISection title="Productos">
     <div v-for="product in products" :key="product.id" class="grid grid-cols-7 items-center gap-2 text-center">
       <figure>
         <NuxtImg :src="product.imagen_url" height="72" />
@@ -18,5 +18,5 @@ defineProps<Props>()
       <span>x {{ product.cantidad }}</span>
       <span class="text-primary col-span-2">{{ formatCurrency(product.precio_unitario * product.cantidad) }}</span>
     </div>
-  </UIFormSection>
+  </UISection>
 </template>

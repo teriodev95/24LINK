@@ -3,7 +3,7 @@ const orderStore = useOrderStore()
 </script>
 
 <template>
-  <UIFormSection title="Pago y entrega">
+  <UISection title="Pago y entrega">
     <div class="space-y-2">
       <h3 class="text-secondary">Método de pago 💰</h3>
 
@@ -23,5 +23,5 @@ const orderStore = useOrderStore()
           @select="orderStore.setSelectedDeliveryMethod(method)" />
       </div>
     </div>
-  </UIFormSection>
+  </UISection>
 </template>

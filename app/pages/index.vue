@@ -33,7 +33,6 @@ await productsStore.fetchData()
     </div>
 
     <!-- Main content when data is available -->
-
     <div v-else-if="productsStore.hasData" class="space-y-4">
       <ProductSearch />
 
