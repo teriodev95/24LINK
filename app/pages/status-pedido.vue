@@ -11,7 +11,7 @@ import { mockOrder } from '~/constants';
     <OrderProductList :products="mockOrder.productos" />
 
     <ClientOnly>
-      <OrderDetailsCard show-payment-method />x
+      <OrderDetailsCard show-payment-method />
     </ClientOnly>
   </main>
 </template>
