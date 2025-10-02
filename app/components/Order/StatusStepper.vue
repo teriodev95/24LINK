@@ -111,6 +111,14 @@ const getStepClasses = (step: StepData): string => {
         <p class="mt-1 text-sm text-gray-600">
           {{ step.description }}
         </p>
+        <div v-if="step.status === 'en_ruta'">
+          <a href="tel:4438453190" class="btn-call">
+            <span>📞</span> Llamar al Repartidor
+          </a>
+          <a href="https://wa.me/4438453190" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
+            <span>💬</span> Abrir WhatsApp
+          </a>
+        </div>
       </div>
     </div>
   </UISection>
