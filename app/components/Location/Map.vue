@@ -9,6 +9,8 @@ const {
   tooltipContent,
   isLocationLoaded,
   isLoadingLocation,
+  locationError,
+  hasPermission,
   getUserPosition,
   onMapMove,
   resetLocation
@@ -40,13 +42,32 @@ watch(selectedLocation, () => {
 })
 
 onBeforeMount(async () => {
+  console.log('🚀 Map.vue: Iniciando componente de mapa')
+  console.log('🔍 Map.vue: Estados iniciales:', {
+    isLocationLoaded: isLocationLoaded.value,
+    isLoadingLocation: isLoadingLocation.value,
+    hasPermission: hasPermission.value,
+    locationError: locationError.value
+  })
+
   await getUserPosition()
+
+  console.log('📍 Map.vue: Proceso de ubicación completado')
+  console.log('📊 Map.vue: Estados finales:', {
+    isLocationLoaded: isLocationLoaded.value,
+    isLoadingLocation: isLoadingLocation.value,
+    hasPermission: hasPermission.value,
+    locationError: locationError.value
+  })
+
   nextTick(() => {
+    console.log('🔧 Map.vue: Configurando interacciones del mapa')
     toggleMapInteraction()
   })
 })
 
 onBeforeUnmount(() => {
+  console.log('👋 Map.vue: Desmontando componente y reseteando ubicación')
   resetLocation()
 })
 </script>
@@ -58,6 +79,18 @@ onBeforeUnmount(() => {
       <div class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4" />
         <p class="text-gray-600">Obteniendo tu ubicación...</p>
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div v-if="locationError && isLocationLoaded && !isLoadingLocation" class="absolute top-20 left-4 right-4 z-50">
+      <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
+        <p class="text-sm">
+          ⚠️ {{ locationError }}. Usando ubicación de Ciudad de México.
+        </p>
+        <p v-if="!hasPermission" class="text-xs mt-1">
+          💡 Puedes habilitar la ubicación en la configuración de tu navegador.
+        </p>
       </div>
     </div>
 
