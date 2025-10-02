@@ -13,6 +13,7 @@ export const useMapLocation = () => {
   const markerPosition = ref<Position>({ lat: 0, lng: 0 })
   const zoom = ref(20)
   const isLocationLoaded = ref(false)
+  const isLoadingLocation = ref(false)
 
   const defaultLocation: Position = {
     lat: 19.4326, // Mexico City as default
@@ -45,9 +46,13 @@ export const useMapLocation = () => {
     return new Promise((resolve) => {
       if (!navigator.geolocation) {
         console.warn('Geolocation is not supported by this browser.')
+        isLoadingLocation.value = false
+        isLocationLoaded.value = true
         resolve()
         return
       }
+
+      isLoadingLocation.value = true
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -56,22 +61,22 @@ export const useMapLocation = () => {
             lng: position.coords.longitude
           }
 
-          if (!markerPosition.value.lat && !markerPosition.value.lng) {
-            markerPosition.value = { ...userLocation.value }
-          }
+          markerPosition.value = { ...userLocation.value }
 
           isLocationLoaded.value = true
+          isLoadingLocation.value = false
           resolve()
         },
         (error) => {
           console.warn('Error getting user location:', error)
           isLocationLoaded.value = true
+          isLoadingLocation.value = false
           resolve()
         },
         {
           enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 600000
+          maximumAge: 0
         }
       )
     })
@@ -82,6 +87,13 @@ export const useMapLocation = () => {
     markerPosition.value = { lat, lng }
   }
 
+  const resetLocation = () => {
+    userLocation.value = { lat: 0, lng: 0 }
+    markerPosition.value = { lat: 0, lng: 0 }
+    isLocationLoaded.value = false
+    isLoadingLocation.value = false
+  }
+
   return {
     userLocation: readonly(userLocation),
     markerPosition: readonly(markerPosition),
@@ -89,7 +101,10 @@ export const useMapLocation = () => {
     tileProvider,
     mapCenter,
     tooltipContent,
+    isLocationLoaded: readonly(isLocationLoaded),
+    isLoadingLocation: readonly(isLoadingLocation),
     getUserPosition,
-    onMapMove
+    onMapMove,
+    resetLocation
   }
 }

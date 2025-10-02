@@ -7,8 +7,11 @@ const {
   tileProvider,
   mapCenter,
   tooltipContent,
+  isLocationLoaded,
+  isLoadingLocation,
   getUserPosition,
-  onMapMove
+  onMapMove,
+  resetLocation
 } = useMapLocation()
 
 const toggleMapInteraction = () => {
@@ -42,12 +45,23 @@ onBeforeMount(async () => {
     toggleMapInteraction()
   })
 })
+
+onBeforeUnmount(() => {
+  resetLocation()
+})
 </script>
 
 <template>
   <div class="fixed inset-0 w-full h-full">
+    <!-- Loading State -->
+    <div v-if="isLoadingLocation" class="absolute inset-0 bg-white z-50 flex items-center justify-center">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+        <p class="text-gray-600">Obteniendo tu ubicación...</p>
+      </div>
+    </div>
 
-    <LMap ref="mapRef" class="w-full h-full z-0" :zoom="zoom" :center="mapCenter" :use-global-leaflet="false"
+    <LMap v-show="isLocationLoaded && !isLoadingLocation" ref="mapRef" class="w-full h-full z-0" :zoom="zoom" :center="mapCenter" :use-global-leaflet="false"
       @moveend="onMapMove">
       <LTileLayer :url="tileProvider.url" :attribution="tileProvider.attribution" />
     </LMap>
@@ -57,7 +71,7 @@ onBeforeMount(async () => {
     </div>
 
     <!-- Static Center Marker -->
-    <div v-show="!selectedLocation" class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+    <div v-show="!selectedLocation && isLocationLoaded && !isLoadingLocation" class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
       <div class="relative">
         <!-- Marker Pin -->
         <div class="text-6xl flex items-end justify-center transform -translate-y-[30px]">
@@ -72,9 +86,9 @@ onBeforeMount(async () => {
     </div>
 
     <!-- Overlay Panel -->
-    <LocationForm v-if="selectedLocation" @action:location-selection="selectedLocation = false" />
+    <LocationForm v-if="selectedLocation && isLocationLoaded && !isLoadingLocation" @action:location-selection="selectedLocation = false" />
 
-    <div v-else class="absolute left-4 right-4 bottom-4 p-4">
+    <div v-else-if="isLocationLoaded && !isLoadingLocation" class="absolute left-4 right-4 bottom-4 p-4">
       <UIButtonAction label="Seleccionar" class-name="w-full" @click="selectedLocation = true" />
     </div>
   </div>
