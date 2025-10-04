@@ -8,11 +8,23 @@ onMounted(async () => {
     await productsStore.fetchData()
   }
 })
+
+useHead({
+  link: [
+    { rel: 'manifest', href: '/manifest.json' }
+  ],
+  meta: [
+    { name: 'theme-color', content: '#001954' }
+  ]
+})
 </script>
 
 <template>
   <div class="p-2  bg-[#FFFFFF] max-w-6xl mx-auto ">
     <Toaster position="top-center" richColors />
     <NuxtPage />
+    <ClientOnly>
+      <InstallPrompt />
+    </ClientOnly>
   </div>
 </template>
