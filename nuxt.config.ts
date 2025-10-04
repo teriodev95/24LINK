@@ -15,8 +15,6 @@ export default defineNuxtConfig({
 		'@nuxt/fonts',
 		'@pinia/nuxt',
 		"nuxt-lucide-icons",
-		"@nuxtjs/leaflet",
-		"nuxt-toast",
 		],
   runtimeConfig: {
     // Private keys (only available on server-side)
@@ -24,7 +22,11 @@ export default defineNuxtConfig({
 
     // Public keys (exposed to client-side)
     public: {
-      supabaseApiKey: process.env.NUXT_SUPABASE_API_KEY
+      supabaseApiKey: process.env.NUXT_SUPABASE_API_KEY,
+      mapboxToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN,
+      deliveryBaseCost: Number(process.env.NUXT_PUBLIC_DELIVERY_BASE_COST) || 30,
+      deliveryCostPerKm: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_KM) || 7,
+      deliveryCostPerMinute: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_MINUTE) || 1.5
     }
   },
 image: {

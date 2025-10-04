@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const cartStore = useCartStore()
+const orderStore = useOrderStore()
 
 interface Props {
   showPaymentMethod?: boolean
@@ -7,7 +8,26 @@ interface Props {
 
 defineProps<Props>()
 
+// Formatear distancia
+const formattedDistance = computed(() => {
+  if (!orderStore.deliveryDistance) return '0 km'
+  const km = orderStore.deliveryDistance / 1000
+  return `${km.toFixed(2)} km`
+})
+
+// Formatear duración
+const formattedDuration = computed(() => {
+  if (!orderStore.deliveryDuration) return '0 min'
+  const minutes = Math.round(orderStore.deliveryDuration / 60)
+  if (minutes < 60) {
+    return `${minutes} min`
+  }
+  const hours = Math.floor(minutes / 60)
+  const remainingMinutes = minutes % 60
+  return `${hours}h ${remainingMinutes}min`
+})
 </script>
+
 <template>
   <UISection title="Detalles del pago">
     <div class="space-y-4">
@@ -15,6 +35,20 @@ defineProps<Props>()
         <span class="text-secondary">Total en productos</span>
         <span class="text-primary">{{ formatCurrency(cartStore.cart.subtotal) }}</span>
       </p>
+
+      <!-- Información de la ruta -->
+      <div v-if="orderStore.deliveryDistance && orderStore.deliveryDuration" class="bg-blue-50 p-3 rounded-lg">
+        <p class="text-xs text-gray-600 mb-2 font-semibold">📍 Información de entrega</p>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="text-gray-700">Distancia</span>
+          <span class="font-semibold text-blue-700">{{ formattedDistance }}</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-gray-700">Tiempo estimado</span>
+          <span class="font-semibold text-blue-700">{{ formattedDuration }}</span>
+        </div>
+      </div>
+
       <p class="flex justify-between">
         <span class="text-secondary">Tarifa de entrega</span>
         <span class="text-primary">{{ formatCurrency(cartStore.cart.costo_envio) }}</span>
@@ -23,7 +57,6 @@ defineProps<Props>()
       <p v-if="showPaymentMethod" class="flex justify-between">
         <span class="text-primary text-xs">Método de pago</span>
         <span class="text-primary text-xs">💳 Tarjeta</span>
-
       </p>
 
       <hr class="border-t-2 border-[#898989]">

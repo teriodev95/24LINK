@@ -18,7 +18,7 @@ export interface DeliveryMethod {
 }
 
 type Method = 'card' | 'cash' | 'mixed'
-export type OrderStatus = 'creado' | 'confirmado' | 'en_ruta' | 'entregado' | 'cancelado';
+export type OrderStatus = 'nuevo' | 'aceptado' | 'en_ruta' | 'completado' | 'cancelado';
 
 export interface Order {
   id: string;

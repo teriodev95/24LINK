@@ -16,28 +16,28 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   steps: () => [
     {
-      status: 'creado',
+      status: 'nuevo',
       title: 'Nuevo 🎯',
       description: 'Tu pedido fue levantado con éxito, a la espera de que se acepte en sucursal',
-      time: '22:42 PM'
+      time: ''
     },
     {
-      status: 'confirmado',
+      status: 'aceptado',
       title: 'Aceptado ✅',
       description: 'Tu pedido fue aceptado en sucursal. En espera de que sea armado y embolsado',
-      time: '22:55 PM'
+      time: ''
     },
     {
       status: 'en_ruta',
-      title: 'En ruta 🛵',
+      title: 'En Ruta 🛵',
       description: 'Tu pedido esta en ruta hacía la dirección indicada',
-      time: '22:57 PM'
+      time: ''
     },
     {
-      status: 'entregado',
+      status: 'completado',
       title: 'Completado 🏁',
       description: 'Tu pedido fue completado con éxito, puedes calificar nuestro servicio haciendo clic aquí',
-      time: '23:30 PM'
+      time: ''
     },
     {
       status: 'cancelado',
@@ -48,11 +48,27 @@ const props = withDefaults(defineProps<Props>(), {
   ]
 })
 
+// Filtrar steps: mostrar cancelado solo si es el estado actual
+const visibleSteps = computed(() => {
+  return props.steps.filter(step => {
+    // Siempre mostrar todos los pasos excepto cancelado
+    if (step.status === 'cancelado') {
+      // Solo mostrar cancelado si es el estado actual
+      return props.currentStatus === 'cancelado'
+    }
+    // Si el pedido está cancelado, no mostrar completado
+    if (step.status === 'completado' && props.currentStatus === 'cancelado') {
+      return false
+    }
+    return true
+  })
+})
+
 const statusOrder: Record<OrderStatus, number> = {
-  'creado': 0,
-  'confirmado': 1,
+  'nuevo': 0,
+  'aceptado': 1,
   'en_ruta': 2,
-  'entregado': 3,
+  'completado': 3,
   'cancelado': 4
 }
 
@@ -72,42 +88,54 @@ const getStepClasses = (step: StepData): string => {
   const stepIndex = statusOrder[step.status]
 
   if (step.status === 'cancelado' && isCurrentStep(step)) {
-    return 'bg-red-500 border-red-500'
+    return 'bg-red-500 border-red-500 animate-pulse'
   } else if (isStepCompleted(stepIndex)) {
     return 'bg-green-500 border-green-500'
   } else if (isCurrentStep(step)) {
-    return 'bg-green-500 border-green-500'
+    return 'bg-green-500 border-green-500 animate-pulse'
   } else {
     return 'bg-white border-gray-300'
+  }
+}
+
+const getContentClasses = (step: StepData): string => {
+  const stepIndex = statusOrder[step.status]
+
+  // Current step: full opacity
+  if (isCurrentStep(step)) {
+    return 'opacity-100'
+  }
+  // Completed steps: full opacity
+  else if (isStepCompleted(stepIndex)) {
+    return 'opacity-100'
+  }
+  // Future steps: dimmed
+  else {
+    return 'opacity-40'
   }
 }
 </script>
 
 <template>
   <UISection class="space-y-4">
-    <div v-for="(step, index) in steps" :key="step.status" class="relative flex items-start">
+    <div v-for="(step, index) in visibleSteps" :key="step.status" class="relative flex items-start">
       <!-- Timeline line -->
-      <div v-if="index < steps.length - 1" class="absolute left-3 top-6 w-0.5 bg-gray-200"
-        :class="{ 'bg-green-500': isStepCompleted(index) }" :style="{ height: 'calc(100% + 1rem)' }" />
+      <div v-if="index < visibleSteps.length - 1" class="absolute left-3 top-6 w-0.5 bg-gray-200"
+        :class="{ 'bg-green-500': isStepCompleted(statusOrder[step.status]) }" :style="{ height: 'calc(100% + 1rem)' }" />
 
       <!-- Status indicator -->
       <div class="relative flex h-6 w-6 flex-shrink-0 items-center justify-center z-10">
         <div class="h-6 w-6 rounded-full border-2 flex items-center justify-center" :class="getStepClasses(step)">
-          <LucideCheck v-if="isStepCompleted(index)" class="h-3 w-3 text-white" />
+          <LucideCheck v-if="isStepCompleted(statusOrder[step.status])" class="h-3 w-3 text-white" />
           <div v-else-if="isCurrentStep(step)" class="h-2 w-2 rounded-full bg-white" />
         </div>
       </div>
 
       <!-- Content -->
-      <div class="ml-4 flex-1">
-        <div class="flex items-center justify-between">
-          <h3 class="text-primary">
-            {{ step.title }}
-          </h3>
-          <span v-if="step.time" class="text-tertiary">
-            {{ step.time }}
-          </span>
-        </div>
+      <div class="ml-4 flex-1 transition-opacity duration-300" :class="getContentClasses(step)">
+        <h3 class="text-primary">
+          {{ step.title }}
+        </h3>
         <p class="mt-1 text-sm text-gray-600">
           {{ step.description }}
         </p>

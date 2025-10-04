@@ -150,6 +150,55 @@ export const useVerification = () => {
       // Guardar en el order store
       orderStore.setPhone(globalPhone.value)
 
+      // Crear o actualizar sesión de usuario
+      const { saveUser } = useAuth()
+      const { $fetch: supabaseFetch } = useSupabaseApi()
+
+      // Buscar o crear usuario en la base de datos
+      try {
+        const existingUsers = await supabaseFetch<Array<{ id: string; telefono: string; nombre: string; tipo: string }>>(`/usuarios?telefono=eq.${globalPhone.value}&select=id,telefono,nombre,tipo`)
+
+        if (existingUsers && existingUsers.length > 0) {
+          // Usuario existente - guardar sesión
+          const user = existingUsers[0]!
+          saveUser({
+            id: user.id,
+            telefono: user.telefono,
+            nombre: user.nombre,
+            tipo: user.tipo
+          })
+          console.log('✅ Sesión de usuario cargada:', user.id)
+        } else {
+          // Crear nuevo usuario
+          const newUserResult = await supabaseFetch<Array<{id: string; telefono: string; nombre: string; tipo: string}>>('/usuarios', {
+            method: 'POST',
+            body: {
+              telefono: globalPhone.value,
+              nombre: 'Cliente',
+              tipo: 'cliente',
+              activo: true,
+              pin: pinCode
+            },
+            additionalHeaders: {
+              'Prefer': 'return=representation'
+            }
+          })
+
+          if (newUserResult && newUserResult.length > 0) {
+            const newUser = newUserResult[0]!
+            saveUser({
+              id: newUser.id,
+              telefono: newUser.telefono,
+              nombre: newUser.nombre,
+              tipo: newUser.tipo
+            })
+            console.log('✅ Nuevo usuario creado y sesión guardada:', newUser.id)
+          }
+        }
+      } catch (err) {
+        console.error('Error al manejar usuario:', err)
+      }
+
       return true
     } catch (error: any) {
       console.error('❌ Error al verificar el PIN:', error)

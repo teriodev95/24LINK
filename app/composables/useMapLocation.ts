@@ -1,17 +1,13 @@
 import useGeolocation from '~/composables/useGeolocation'
+import { TEST_DEFAULT_CENTER, STORE_LOCATION } from '~/constants'
 
 export interface Position {
   lat: number
   lng: number
 }
 
-interface TileProvider {
-  url: string
-  attribution: string
-}
-
 export const useMapLocation = () => {
-  console.log('🗺️ Inicializando useMapLocation...')
+  console.log('🗺️ Inicializando useMapLocation con Mapbox...')
 
   // Usar el composable de geolocalización
   const {
@@ -25,18 +21,7 @@ export const useMapLocation = () => {
 
   // Estados específicos del mapa
   const markerPosition = ref<Position>({ lat: 0, lng: 0 })
-  const zoom = ref(20)
   const isLocationLoaded = ref(false)
-
-  const defaultLocation: Position = {
-    lat: 19.4326, // Mexico City as default
-    lng: -99.1332
-  }
-
-  const tileProvider: TileProvider = {
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-  }
 
   // Convertir LatLng a Position
   const userLocation = computed((): Position => {
@@ -47,8 +32,8 @@ export const useMapLocation = () => {
         lng: geoUserLocation.value.lng
       }
     }
-    console.log('🏙️ Usando ubicación por defecto:', defaultLocation)
-    return defaultLocation
+    console.log('🧪 Usando ubicación de prueba por defecto:', TEST_DEFAULT_CENTER)
+    return TEST_DEFAULT_CENTER
   })
 
   // Estados reactivos del composable de geolocalización
@@ -65,15 +50,15 @@ export const useMapLocation = () => {
     })
 
     if (userLocation.value.lat && userLocation.value.lng && isLocationLoaded.value) {
-      console.log('✅ Usando ubicación del usuario:', [userLocation.value.lat, userLocation.value.lng])
-      return [userLocation.value.lat, userLocation.value.lng]
+      console.log('✅ Usando ubicación del usuario:', [userLocation.value.lng, userLocation.value.lat])
+      return [userLocation.value.lng, userLocation.value.lat]
     }
     if (markerPosition.value.lat && markerPosition.value.lng) {
-      console.log('📌 Usando posición del marcador:', [markerPosition.value.lat, markerPosition.value.lng])
-      return [markerPosition.value.lat, markerPosition.value.lng]
+      console.log('📌 Usando posición del marcador:', [markerPosition.value.lng, markerPosition.value.lat])
+      return [markerPosition.value.lng, markerPosition.value.lat]
     }
-    console.log('🏙️ Usando ubicación por defecto:', [defaultLocation.lat, defaultLocation.lng])
-    return [defaultLocation.lat, defaultLocation.lng]
+    console.log('🧪 Usando centro de prueba por defecto:', [TEST_DEFAULT_CENTER.lng, TEST_DEFAULT_CENTER.lat])
+    return [TEST_DEFAULT_CENTER.lng, TEST_DEFAULT_CENTER.lat]
   })
 
   const tooltipContent = computed(() => {
@@ -92,6 +77,14 @@ export const useMapLocation = () => {
       }
       isLocationLoaded.value = true
       console.log('✅ Marcador sincronizado con ubicación del usuario:', markerPosition.value)
+    } else {
+      // Si no hay ubicación del usuario, usar la de prueba
+      console.log('🧪 No hay ubicación del usuario, usando centro de prueba')
+      markerPosition.value = {
+        lat: TEST_DEFAULT_CENTER.lat,
+        lng: TEST_DEFAULT_CENTER.lng
+      }
+      isLocationLoaded.value = true
     }
   }, { immediate: true })
 
@@ -99,8 +92,25 @@ export const useMapLocation = () => {
   const getUserPosition = async (): Promise<void> => {
     console.log('🗺️ useMapLocation: Iniciando obtención de ubicación...')
 
-    // Llamar al método del composable de geolocalización
-    await geoGetUserLocation()
+    // MODO DESARROLLO: Siempre usar ubicación de prueba
+    // TODO: Cambiar a geoGetUserLocation() en producción
+    console.log('🧪 MODO DESARROLLO: Usando ubicación de prueba fija')
+    markerPosition.value = {
+      lat: TEST_DEFAULT_CENTER.lat,
+      lng: TEST_DEFAULT_CENTER.lng
+    }
+    isLocationLoaded.value = true
+
+    // PRODUCCIÓN: Descomentar para usar geolocalización real
+    // await geoGetUserLocation()
+    // if (!geoUserLocation.value) {
+    //   console.log('🧪 useMapLocation: No se obtuvo ubicación, usando centro de prueba')
+    //   markerPosition.value = {
+    //     lat: TEST_DEFAULT_CENTER.lat,
+    //     lng: TEST_DEFAULT_CENTER.lng
+    //   }
+    //   isLocationLoaded.value = true
+    // }
 
     console.log('📍 useMapLocation: Proceso de geolocalización completado')
     console.log('📊 Estados actuales:', {
@@ -114,10 +124,9 @@ export const useMapLocation = () => {
     })
   }
 
-  const onMapMove = (event: { target: { getCenter: () => Position } }): void => {
-    const { lat, lng } = event.target.getCenter()
-    console.log('🗺️ Mapa movido, nueva posición del marcador:', { lat, lng })
-    markerPosition.value = { lat, lng }
+  const updateMarkerPosition = (position: Position): void => {
+    console.log('🗺️ Actualizando posición del marcador:', position)
+    markerPosition.value = position
   }
 
   const resetLocation = () => {
@@ -136,8 +145,6 @@ export const useMapLocation = () => {
   return {
     userLocation: readonly(userLocation),
     markerPosition: readonly(markerPosition),
-    zoom,
-    tileProvider,
     mapCenter,
     tooltipContent,
     isLocationLoaded: readonly(isLocationLoaded),
@@ -145,7 +152,9 @@ export const useMapLocation = () => {
     locationError: readonly(locationError),
     hasPermission: readonly(hasPermission),
     getUserPosition,
-    onMapMove,
-    resetLocation
+    updateMarkerPosition,
+    resetLocation,
+    STORE_LOCATION,
+    TEST_DEFAULT_CENTER
   }
 }
