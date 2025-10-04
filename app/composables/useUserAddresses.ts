@@ -28,7 +28,7 @@ export function useUserAddresses() {
 
     try {
       const result = await supabaseFetch<DireccionDB[]>(
-        `/direcciones?usuario_id=eq.${userId.value}&select=id,calle,numero_exterior,numero_interior,colonia,referencias`
+        `/direcciones?usuario_id=eq.${userId.value}&select=id,calle,numero_exterior,numero_interior,colonia,referencias&order=created_at.desc`
       )
 
       if (result && Array.isArray(result)) {
