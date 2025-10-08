@@ -30,7 +30,7 @@ await productsStore.fetchData()
 
     <!-- Loading state -->
     <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">
-      <span class="text-gray-500">Cargando productos...</span>
+      <UILoading :size="120" />
     </div>
     <!-- Error state -->
     <div v-else-if="productsStore.error" class="flex justify-center items-center py-8">

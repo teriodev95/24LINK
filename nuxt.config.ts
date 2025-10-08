@@ -16,6 +16,9 @@ export default defineNuxtConfig({
 		'@pinia/nuxt',
 		"nuxt-lucide-icons",
 		],
+  build: {
+    transpile: ['@lottiefiles/dotlottie-vue']
+  },
   runtimeConfig: {
     // Private keys (only available on server-side)
     supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,

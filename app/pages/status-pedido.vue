@@ -43,8 +43,8 @@ const formatPaymentMethod = (method: string) => {
 
     <!-- Loading state -->
     <div v-if="isLoading" class="flex flex-col items-center justify-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#001954] mb-4" />
-      <p class="text-gray-600">Cargando pedido...</p>
+      <UILoading :size="120" />
+      <p class="text-gray-600 mt-4">Cargando pedido...</p>
     </div>
 
     <!-- Error state -->
@@ -78,26 +78,26 @@ const formatPaymentMethod = (method: string) => {
 
       <!-- Delivery info -->
       <UISection title="Información de entrega">
-        <div class="space-y-3">
+        <div class="space-y-4">
           <div>
-            <p class="text-secondary text-sm">Dirección</p>
-            <p class="text-primary font-semibold">
+            <p class="text-[#717272] text-xs uppercase tracking-wide mb-1">Dirección</p>
+            <p class="text-primary font-bold text-base leading-snug">
               {{ order.direccion.calle }} {{ order.direccion.numero_exterior }}
               {{ order.direccion.numero_interior ? `, ${order.direccion.numero_interior}` : '' }}
             </p>
-            <p class="text-secondary text-sm">{{ order.direccion.colonia }}</p>
-            <p v-if="order.direccion.referencias" class="text-secondary text-xs mt-1">
+            <p class="text-primary text-sm mt-0.5">{{ order.direccion.colonia }}</p>
+            <p v-if="order.direccion.referencias" class="text-[#717272] text-xs mt-1">
               Ref: {{ order.direccion.referencias }}
             </p>
           </div>
           <div>
-            <p class="text-secondary text-sm">Contacto</p>
-            <p class="text-primary font-semibold">{{ order.usuario.nombre }}</p>
-            <p class="text-secondary text-sm">{{ order.usuario.telefono }}</p>
+            <p class="text-[#717272] text-xs uppercase tracking-wide mb-1">Contacto</p>
+            <p class="text-primary font-bold text-base">{{ order.usuario.nombre }}</p>
+            <p class="text-primary text-sm">{{ order.usuario.telefono }}</p>
           </div>
           <div v-if="order.instrucciones_entrega">
-            <p class="text-secondary text-sm">Instrucciones</p>
-            <p class="text-secondary text-sm">{{ order.instrucciones_entrega }}</p>
+            <p class="text-[#717272] text-xs uppercase tracking-wide mb-1">Instrucciones</p>
+            <p class="text-primary text-sm">{{ order.instrucciones_entrega }}</p>
           </div>
         </div>
       </UISection>
