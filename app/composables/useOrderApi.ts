@@ -1,20 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
-interface CreateOrderPayload {
-  usuario_id: string
-  direccion_id: string
-  medio_pago: string
-  subtotal: number
-  costo_envio: number
-  total: number
-  productos: Array<{
-    producto_id: string
-    cantidad: number
-    precio_unitario: number
-    subtotal: number
-  }>
-}
-
 export function useOrderApi() {
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const cartStore = useCartStore()

@@ -40,13 +40,14 @@ export const useMapboxDirections = () => {
         throw new Error('No se pudo calcular la ruta')
       }
 
-      route.value = data.routes[0]
+      const routeData = data.routes[0]
+      route.value = routeData
       console.log('✅ Route calculated:', {
-        distance: `${(route.value.distance / 1000).toFixed(2)} km`,
-        duration: `${Math.round(route.value.duration / 60)} min`
+        distance: `${(routeData.distance / 1000).toFixed(2)} km`,
+        duration: `${Math.round(routeData.duration / 60)} min`
       })
 
-      return route.value
+      return routeData
     } catch (error) {
       console.error('❌ Error fetching route:', error)
       routeError.value = error instanceof Error ? error.message : 'Error al calcular la ruta'
