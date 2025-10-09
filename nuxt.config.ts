@@ -15,6 +15,7 @@ export default defineNuxtConfig({
 		'@nuxt/fonts',
 		'@pinia/nuxt',
 		"nuxt-lucide-icons",
+		"@nuxtjs/leaflet",
 		],
   build: {
     transpile: ['@lottiefiles/dotlottie-vue']
