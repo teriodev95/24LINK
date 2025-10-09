@@ -1,29 +1,16 @@
 <script lang="ts" setup>
-interface Order {
-  id: string
-  numero_pedido: string
-  estado: string
-  total: number
-  created_at: string
-  direccion: {
-    calle: string
-    numero_exterior: string
-  }
-}
+import type { Order } from '~/interfaces';
 
 interface Props {
   orders: Order[]
   isLoading?: boolean
 }
-
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isLoading: false
 })
 
 // Formatear dirección
-const formatAddress = (direccion: Order['direccion']) => {
-  return `${direccion.calle} #${direccion.numero_exterior}`
-}
+const formatAddress = (direccion: Order['direccion']) => `${direccion.calle} #${direccion.numero_exterior}`;
 </script>
 
 <template>
@@ -39,12 +26,8 @@ const formatAddress = (direccion: Order['direccion']) => {
 
   <!-- Orders list -->
   <section v-else-if="orders.length > 0" class="flex gap-[10px] overflow-x-auto w-full p-2">
-    <NuxtLink
-      v-for="order in orders"
-      :key="order.id"
-      :to="`/status-pedido?pedido=${order.numero_pedido}`"
-      class="flex whitespace-nowrap items-center justify-between gap-3 rounded-lg py-2.5 px-4 bg-white drop-shadow-lg border-l-2 border-l-[#001954] hover:bg-gray-50 transition-colors"
-    >
+    <NuxtLink v-for="order in orders" :key="order.id" :to="`/status-pedido?pedido=${order.numero_pedido}`"
+      class="flex whitespace-nowrap items-center justify-between gap-3 rounded-lg py-2.5 px-4 bg-white drop-shadow-lg border-l-2 border-l-[#001954] hover:bg-gray-50 transition-colors">
       <span class="text-primary font-bold">{{ formatCurrency(order.total) }}</span>
       <span class="text-secondary text-sm">{{ formatAddress(order.direccion) }}</span>
       <span class="text-secondary text-sm">{{ order.numero_pedido }}</span>

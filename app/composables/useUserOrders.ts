@@ -1,20 +1,11 @@
-interface UserOrder {
-  id: string
-  numero_pedido: string
-  estado: string
-  total: number
-  created_at: string
-  direccion: {
-    calle: string
-    numero_exterior: string
-  }
-}
+import type { Order, RecentOrder } from "~/interfaces"
+
 
 export function useUserOrders() {
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const { userId } = useAuth()
 
-  const orders = ref<UserOrder[]>([])
+  const orders = ref<Order[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -31,14 +22,7 @@ export function useUserOrders() {
       console.log('📦 Cargando pedidos del usuario:', userId.value)
 
       // Obtener pedidos del usuario ordenados por fecha (más nuevos primero)
-      const pedidosData = await supabaseFetch<Array<{
-        id: string
-        numero_pedido: string
-        estado: string
-        total: number
-        created_at: string
-        direccion_id: string
-      }>>(`/pedidos?usuario_id=eq.${userId.value}&select=id,numero_pedido,estado,total,created_at,direccion_id&order=created_at.desc`)
+      const pedidosData = await supabaseFetch<RecentOrder[]>(`/pedidos?usuario_id=eq.${userId.value}&select=id,numero_pedido,estado,total,created_at,direccion_id&order=created_at.desc`)
 
       if (!pedidosData || pedidosData.length === 0) {
         orders.value = []
@@ -47,7 +31,7 @@ export function useUserOrders() {
       }
 
       // Para cada pedido, obtener información de la dirección
-      const ordersWithAddress: UserOrder[] = []
+      const ordersWithAddress: Order[] = []
 
       for (const pedido of pedidosData) {
         // Obtener dirección
@@ -90,7 +74,7 @@ export function useUserOrders() {
   }, { immediate: true })
 
   return {
-    orders: readonly(orders),
+    orders: computed(() => orders.value),
     isLoading: readonly(isLoading),
     error: readonly(error),
     loadUserOrders
