@@ -31,6 +31,8 @@ export function useUserAddresses() {
         `/direcciones?usuario_id=eq.${userId.value}&select=id,calle,numero_exterior,numero_interior,colonia,referencias&order=created_at.desc`
       )
 
+      console.log('Cargando direcciones para usuario:', result)
+
       if (result && Array.isArray(result)) {
         addresses.value = result.map(dir => ({
           id: dir.id,

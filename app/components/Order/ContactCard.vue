@@ -59,14 +59,8 @@ const handleAddressSelection = async (address: Address) => {
     <div class="space-y-2">
       <label for="phone" class="text-secondary">Télefono Celular 📱</label>
       <div class="relative">
-        <input
-          id="phone"
-          type="tel"
-          :value="userPhone || orderStore.phone"
-          readonly
-          disabled
-          class="w-full p-2 border border-gray-300 rounded py-4 px-[18px] bg-gray-100 text-gray-700 cursor-not-allowed"
-        >
+        <input id="phone" type="tel" :value="userPhone || orderStore.phone" readonly disabled
+          class="w-full p-2 border border-gray-300 rounded py-4 px-[18px] bg-gray-100 text-gray-700 cursor-not-allowed">
         <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
           <LucideLock :size="16" class="text-gray-400" />
         </div>
@@ -85,15 +79,15 @@ const handleAddressSelection = async (address: Address) => {
 
       <!-- Addresses list -->
       <div v-else class="flex overflow-scroll gap-2 p-2">
-        <NuxtLink to="/ubicacion" class="rounded-lg w-14 h-14 p-2 drop-shadow-lg bg-white flex-shrink-0">
+        <NuxtLink to="/ubicacion"
+          class="rounded-lg w-14 h-14 p-2 drop-shadow-lg bg-white flex-shrink-0 flex justify-center items-center">
           <LucidePlus class="m-auto" />
         </NuxtLink>
 
         <UISelectionButton v-for="address in orderStore.addressList" :key="address.id"
           :item="{ title: address.street, description: address.colony }"
           :is-selected="orderStore.selectedAddress?.id === address.id" custom-class="whitespace-nowrap h-14"
-          :disabled="isCalculating"
-          @select="handleAddressSelection(address)" />
+          :disabled="isCalculating" @select="handleAddressSelection(address)" />
 
         <!-- Empty state -->
         <div v-if="orderStore.addressList.length === 0" class="text-gray-500 text-sm p-2">
