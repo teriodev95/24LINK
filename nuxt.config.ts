@@ -20,6 +20,14 @@ export default defineNuxtConfig({
   build: {
     transpile: ['@lottiefiles/dotlottie-vue']
   },
+  nitro: {
+    experimental: {
+      wasm: true
+    },
+    rollupConfig: {
+      external: ['leaflet/dist/images/marker-icon-2x.png', 'leaflet/dist/images/marker-icon.png', 'leaflet/dist/images/marker-shadow.png']
+    }
+  },
   runtimeConfig: {
     // Private keys (only available on server-side)
     supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,

@@ -1,5 +1,13 @@
 import { ref } from 'vue'
-import { latLng, type LatLng } from 'leaflet'
+
+// Define LatLng type locally to avoid server-side Leaflet imports
+interface LatLng {
+  lat: number
+  lng: number
+}
+
+// Helper function to create LatLng object
+const createLatLng = (coords: { lat: number, lng: number }): LatLng => coords
 
 export default function useGeolocation() {
   const { $toast } = useNuxtApp()
@@ -32,7 +40,7 @@ export default function useGeolocation() {
     geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords
-        userLocation.value = latLng({ lat: latitude, lng: longitude })
+        userLocation.value = createLatLng({ lat: latitude, lng: longitude })
         console.log(`Precisión de la ubicación: ${accuracy} metros`)
         isLoading.value = false
         hasPermission.value = true
@@ -64,7 +72,7 @@ export default function useGeolocation() {
     geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords
-        userLocation.value = latLng({ lat: latitude, lng: longitude })
+        userLocation.value = createLatLng({ lat: latitude, lng: longitude })
         console.log(`Precisión de la ubicación: ${accuracy} metros`)
         isLoading.value = false
         hasPermission.value = true
