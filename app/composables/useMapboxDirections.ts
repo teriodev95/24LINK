@@ -20,15 +20,37 @@ export const useMapboxDirections = () => {
   const isLoadingRoute = ref(false)
   const routeError = ref<string | null>(null)
 
-  // Obtener ruta desde la tienda hasta el destino
+  // Cache para evitar llamadas duplicadas a la API
+  const routeCache = new Map<string, DirectionsRoute>()
+  const CACHE_EXPIRY = 5 * 60 * 1000 // 5 minutos
+  const cacheTimestamps = new Map<string, number>()
+
+  // Obtener ruta desde la tienda hasta el destino con cache
   const getRoute = async (destination: [number, number]): Promise<DirectionsRoute | null> => {
+    const origin = [STORE_LOCATION.lng, STORE_LOCATION.lat]
+    const cacheKey = `${origin[0]},${origin[1]};${destination[0].toFixed(4)},${destination[1].toFixed(4)}`
+
+    // Verificar cache
+    const cachedRoute = routeCache.get(cacheKey)
+    const cacheTime = cacheTimestamps.get(cacheKey)
+
+    if (cachedRoute && cacheTime && (Date.now() - cacheTime) < CACHE_EXPIRY) {
+      console.log('💾 Using cached route')
+      route.value = cachedRoute
+      return cachedRoute
+    }
+
+    // Evitar múltiples llamadas simultáneas
+    if (isLoadingRoute.value) {
+      console.log('⏳ Route request already in progress, skipping...')
+      return route.value
+    }
+
     isLoadingRoute.value = true
     routeError.value = null
 
     try {
-      const origin = [STORE_LOCATION.lng, STORE_LOCATION.lat]
       const coords = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`
-
       const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${coords}?geometries=geojson&access_token=${config.public.mapboxToken}`
 
       console.log('🛣️ Fetching route from Mapbox Directions API...')
@@ -41,7 +63,19 @@ export const useMapboxDirections = () => {
       }
 
       route.value = data.routes[0]
-      console.log('✅ Route calculated:', {
+
+      // Guardar en cache
+      routeCache.set(cacheKey, route.value)
+      cacheTimestamps.set(cacheKey, Date.now())
+
+      // Limpiar cache antiguo (mantener máximo 20 entradas)
+      if (routeCache.size > 20) {
+        const oldestKey = routeCache.keys().next().value
+        routeCache.delete(oldestKey)
+        cacheTimestamps.delete(oldestKey)
+      }
+
+      console.log('✅ Route calculated and cached:', {
         distance: `${(route.value.distance / 1000).toFixed(2)} km`,
         duration: `${Math.round(route.value.duration / 60)} min`
       })

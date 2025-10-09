@@ -68,24 +68,42 @@ watch(selectedLocation, (isSelected) => {
   toggleMapInteraction(!isSelected)
 })
 
-// Actualizar ruta cuando cambia la posición del marcador (con debounce)
+// Actualizar ruta cuando cambia la posición del marcador (con debounce optimizado)
 let routeTimeout: NodeJS.Timeout | null = null
-watch(markerPosition, async (newPosition) => {
+let lastRouteUpdate = 0
+const ROUTE_UPDATE_DELAY = 800 // Aumentar delay para reducir cálculos
+const MIN_DISTANCE_CHANGE = 0.001 // Mínimo cambio en coordenadas para recalcular
+
+watch(markerPosition, async (newPosition, oldPosition) => {
   if (!map.value || !newPosition.lat || !newPosition.lng || !mounted.value) return
+
+  // Evitar cálculos innecesarios si el cambio es mínimo
+  if (oldPosition &&
+      Math.abs(newPosition.lat - oldPosition.lat) < MIN_DISTANCE_CHANGE &&
+      Math.abs(newPosition.lng - oldPosition.lng) < MIN_DISTANCE_CHANGE) {
+    return
+  }
 
   // Cancelar timeout anterior
   if (routeTimeout) {
     clearTimeout(routeTimeout)
   }
 
-  // Esperar 500ms antes de calcular ruta
+  // Throttling: evitar cálculos muy frecuentes
+  const now = Date.now()
+  const timeSinceLastUpdate = now - lastRouteUpdate
+
+  const delay = timeSinceLastUpdate < ROUTE_UPDATE_DELAY ?
+    ROUTE_UPDATE_DELAY - timeSinceLastUpdate : 0
+
   routeTimeout = setTimeout(async () => {
     if (map.value && map.value.isStyleLoaded()) {
+      lastRouteUpdate = Date.now()
       clearRoute(map.value)
       const destination: [number, number] = [newPosition.lng, newPosition.lat]
       await calculateAndDrawRoute(map.value, destination)
     }
-  }, 500)
+  }, delay)
 }, { deep: true })
 
 const initializeMap = () => {
@@ -126,15 +144,24 @@ const initializeMap = () => {
       console.log('✅ Marcador de tienda agregado y ruta inicial calculada')
     })
 
-    // Escuchar cuando el mapa se mueve (solo cuando no está seleccionada la ubicación)
-    // Usar 'moveend' en lugar de 'move' para actualizar solo cuando termine el movimiento
+    // Escuchar cuando el mapa se mueve con throttling adicional
+    let moveEndTimeout: NodeJS.Timeout | null = null
     map.value.on('moveend', () => {
       if (!selectedLocation.value && map.value) {
-        const center = map.value.getCenter()
-        updateMarkerPosition({
-          lat: center.lat,
-          lng: center.lng
-        })
+        // Añadir un pequeño delay adicional para evitar actualizaciones muy rápidas
+        if (moveEndTimeout) {
+          clearTimeout(moveEndTimeout)
+        }
+
+        moveEndTimeout = setTimeout(() => {
+          if (map.value && !selectedLocation.value) {
+            const center = map.value.getCenter()
+            updateMarkerPosition({
+              lat: center.lat,
+              lng: center.lng
+            })
+          }
+        }, 150) // Pequeño delay para suavizar la experiencia
       }
     })
 
@@ -144,24 +171,27 @@ const initializeMap = () => {
   }
 }
 
-onBeforeMount(async () => {
+// Optimizar carga inicial - no cargar ubicación hasta que sea necesario
+onBeforeMount(() => {
   console.log('🚀 Map.vue: Iniciando componente de mapa')
-
-  await getUserPosition()
-
-  console.log('📍 Map.vue: Proceso de ubicación completado')
+  // Remover la carga automática de ubicación para mejorar rendimiento inicial
 })
 
 onMounted(() => {
   mounted.value = true
   console.log('🔧 Map.vue: Componente montado')
 
-  nextTick(() => {
-    if (isLocationLoaded.value && !isLoadingLocation.value) {
-      setTimeout(() => {
+  // Lazy loading: cargar ubicación y mapa solo cuando sea necesario
+  nextTick(async () => {
+    // Cargar ubicación de forma lazy
+    await getUserPosition()
+
+    // Inicializar mapa con un delay mínimo para mejorar perceived performance
+    setTimeout(() => {
+      if (!isLoadingLocation.value) {
         initializeMap()
-      }, 100)
-    }
+      }
+    }, 50) // Reducir delay para mejor UX
   })
 })
 
@@ -179,18 +209,24 @@ onBeforeUnmount(() => {
   console.log('👋 Map.vue: Desmontando componente y limpiando recursos')
   mounted.value = false
 
+  // Limpiar todos los timeouts
   if (routeTimeout) {
     clearTimeout(routeTimeout)
+    routeTimeout = null
   }
 
+  // Limpiar ruta del mapa
   if (map.value) {
     clearRoute(map.value)
   }
 
+  // Remover marcadores
   if (storeMarker.value) {
     storeMarker.value.remove()
+    storeMarker.value = null
   }
 
+  // Limpiar recursos de Mapbox
   cleanupMapbox()
   resetLocation()
 })

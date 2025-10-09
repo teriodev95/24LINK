@@ -36,7 +36,16 @@ export const useMapbox = () => {
 
     const map = new mapboxgl.Map({
       ...defaultOptions,
-      ...options
+      ...options,
+      // Optimizaciones para móviles
+      cooperativeGestures: false, // Desactivar gestos cooperativos para mejor UX móvil
+      pitchWithRotate: false, // Desactivar pitch para mejor rendimiento
+      dragRotate: false, // Desactivar rotación para mejor rendimiento
+      touchPitch: false, // Desactivar pitch táctil
+      renderWorldCopies: false, // No renderizar copias del mundo
+      antialias: false, // Desactivar antialiasing para mejor rendimiento
+      optimizeForTerrain: false, // Optimizar para terreno plano
+      performanceMetricsCollection: false // Desactivar métricas de rendimiento
     })
 
     map.on('load', () => {
