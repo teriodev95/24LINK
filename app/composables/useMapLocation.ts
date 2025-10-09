@@ -15,6 +15,7 @@ export const useMapLocation = () => {
     locationError: geoLocationError,
     isLoading: geoIsLoading,
     hasPermission: geoHasPermission,
+    getUserLocation: geoGetUserLocation,
     resetGeolocationState: geoResetState
   } = useGeolocation()
 
