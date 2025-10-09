@@ -7,6 +7,11 @@ export interface SupabaseApiOptions {
 export function useSupabaseApi() {
   const config = useRuntimeConfig()
 
+  // Verificar que las variables de entorno estén configuradas
+  if (!config.public.supabaseApiKey) {
+    console.error('❌ NUXT_SUPABASE_API_KEY no está configurada. Crea un archivo .env con las credenciales de Supabase.')
+  }
+
   // Headers por defecto para Supabase
   const getHeaders = (additionalHeaders: Record<string, string> = {}) => {
     // En el servidor usamos el token de auth, en el cliente usamos la API key

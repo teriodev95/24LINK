@@ -115,17 +115,29 @@ export const useProductsStore = defineStore('products', () => {
         api.fetch<Product[]>('/productos?activo=eq.true&select=*', { key: 'products' })
       ])
 
+      console.log('Categories response:', categoriesData)
+      console.log('Products response:', productsData)
+
+      if (categoriesData.error.value) {
+        console.error('Categories error:', categoriesData.error.value)
+        setError('Error al cargar las categorías')
+        return
+      }
+
+      if (productsData.error.value) {
+        console.error('Products error:', productsData.error.value)
+        setError('Error al cargar los productos')
+        return
+      }
+
       if (categoriesData.data.value) {
         setCategories(categoriesData.data.value)
       }
       if (productsData.data.value) {
         setProducts(productsData.data.value)
       }
-
-      if (categoriesData.error.value || productsData.error.value) {
-        setError('Error al cargar los datos')
-      }
-    } catch {
+    } catch (err) {
+      console.error('Fetch error:', err)
       setError('Error al cargar los datos')
     } finally {
       setLoading(false)

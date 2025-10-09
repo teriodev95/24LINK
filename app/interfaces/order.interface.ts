@@ -1,4 +1,3 @@
-import type { CartProduct } from "./cart.interfaces"
 
 export interface Address {
   id: string
@@ -18,15 +17,27 @@ export interface DeliveryMethod {
 }
 
 type Method = 'card' | 'cash' | 'mixed'
-export type OrderStatus = 'creado' | 'confirmado' | 'en_ruta' | 'entregado' | 'cancelado';
+export type OrderStatus = 'nuevo' | 'aceptado' | 'en_ruta' | 'completado' | 'cancelado';
+
+export interface AddressSummary {
+  calle: string
+  numero_exterior: string
+} 
+
+export interface RecentOrder {
+  id: string
+  numero_pedido: string
+  estado: OrderStatus
+  total: number
+  created_at: string
+  direccion_id: string
+}
 
 export interface Order {
-  id: string;
-  estado: OrderStatus;
-  fecha: string;
-  productos: CartProduct[];
-  total: number;
-  subtotal: number;
-  costo_envio: number;
-  metodo_pago: Method;
+  id: string
+  numero_pedido: string
+  estado: OrderStatus
+  total: number
+  created_at: string
+  direccion: AddressSummary
 }

@@ -27,9 +27,9 @@ const saveCartToStorage = (cart: Cart): void => {
   }
 }
 
-const calculateCartTotals = (productos: CartProduct[]): Pick<Cart, 'subtotal' | 'costo_envio' | 'total'> => {
+const calculateCartTotals = (productos: CartProduct[], deliveryCost?: number): Pick<Cart, 'subtotal' | 'costo_envio' | 'total'> => {
   const subtotal = productos.reduce((total, producto) => total + (producto.precio_unitario * producto.cantidad), 0)
-  const costo_envio = productos.length > 0 ? SHIPPING_COST : 0
+  const costo_envio = productos.length > 0 ? (deliveryCost ?? SHIPPING_COST) : 0
   const total = subtotal + costo_envio
 
   return { subtotal, costo_envio, total }
@@ -37,6 +37,7 @@ const calculateCartTotals = (productos: CartProduct[]): Pick<Cart, 'subtotal' | 
 
 export const useCartStore = defineStore('cart', () => {
   const cart = ref(loadCartFromStorage())
+  const orderStore = useOrderStore()
 
   const getQuantity = (productId: string): number => {
     const producto = cart.value.productos.find(p => p.id === productId)
@@ -58,7 +59,7 @@ export const useCartStore = defineStore('cart', () => {
   })
 
   const updateCartTotals = (): void => {
-    const totals = calculateCartTotals(cart.value.productos)
+    const totals = calculateCartTotals(cart.value.productos, orderStore.deliveryCost)
     cart.value.subtotal = totals.subtotal
     cart.value.costo_envio = totals.costo_envio
     cart.value.total = totals.total
@@ -152,6 +153,7 @@ export const useCartStore = defineStore('cart', () => {
     incrementQuantity,
     decrementQuantity,
     setQuantity,
-    clearCart
+    clearCart,
+    updateCartTotals
   }
 })

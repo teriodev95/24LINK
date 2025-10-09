@@ -26,6 +26,12 @@ export const useOrderStore = defineStore('order', () => {
   ])
   const _selectedDeliveryMethod = ref<DeliveryMethod | null>(null)
 
+  // Delivery location and cost
+  const _deliveryLocation = ref<{ lat: number; lng: number } | null>(null)
+  const _deliveryCost = ref<number>(50) // Default cost
+  const _deliveryDistance = ref<number>(0)
+  const _deliveryDuration = ref<number>(0)
+
   // Getters
   const phone = computed(() => _phone.value)
   const addressList = computed(() => _addressList.value)
@@ -34,6 +40,10 @@ export const useOrderStore = defineStore('order', () => {
   const selectedPaymentMethod = computed(() => _selectedPaymentMethod.value)
   const deliveryMethods = computed(() => _deliveryMethods.value)
   const selectedDeliveryMethod = computed(() => _selectedDeliveryMethod.value)
+  const deliveryLocation = computed(() => _deliveryLocation.value)
+  const deliveryCost = computed(() => _deliveryCost.value)
+  const deliveryDistance = computed(() => _deliveryDistance.value)
+  const deliveryDuration = computed(() => _deliveryDuration.value)
   const canPlaceOrder = computed(() => {
     return !!(
       _phone.value &&
@@ -72,6 +82,22 @@ export const useOrderStore = defineStore('order', () => {
     _selectedDeliveryMethod.value = method
   }
 
+  const setDeliveryLocation = (location: { lat: number; lng: number }) => {
+    _deliveryLocation.value = location
+  }
+
+  const setDeliveryCost = (cost: number) => {
+    _deliveryCost.value = cost
+  }
+
+  const setDeliveryDistance = (distance: number) => {
+    _deliveryDistance.value = distance
+  }
+
+  const setDeliveryDuration = (duration: number) => {
+    _deliveryDuration.value = duration
+  }
+
   // Actions
   const initializeDefaults = () => {
     if (_addressList.value.length > 0 && !_selectedAddress.value) {
@@ -105,6 +131,10 @@ export const useOrderStore = defineStore('order', () => {
     selectedPaymentMethod,
     deliveryMethods,
     selectedDeliveryMethod,
+    deliveryLocation,
+    deliveryCost,
+    deliveryDistance,
+    deliveryDuration,
     canPlaceOrder,
     // Setters
     setPhone,
@@ -114,6 +144,10 @@ export const useOrderStore = defineStore('order', () => {
     setSelectedPaymentMethod,
     setDeliveryMethods,
     setSelectedDeliveryMethod,
+    setDeliveryLocation,
+    setDeliveryCost,
+    setDeliveryDistance,
+    setDeliveryDuration,
     // Actions
     initializeDefaults,
     addNewAddress

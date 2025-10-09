@@ -1,7 +1,16 @@
 <script setup lang="ts">
 const router = useRouter()
+const { isAuthenticated } = useAuth()
 
 const showPinStep = ref(false)
+
+// Si ya hay sesión activa, redirigir a detalles de orden
+onMounted(() => {
+  if (isAuthenticated.value) {
+    console.log('✅ Usuario ya autenticado, redirigiendo...')
+    router.push('/detalles-orden')
+  }
+})
 
 function handlePhoneVerified(success: boolean) {
   if (success) {

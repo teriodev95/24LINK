@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { mockOrder } from '~/constants'
-
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
+const { isAuthenticated } = useAuth()
+const { orders, isLoading: isLoadingOrders } = useUserOrders()
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 const label = computed(() => {
   const count = cartStore.totalItems
   return count === 1 ? '1 Producto' : `${count} Productos`
+})
+
+// Determinar a dónde redirigir cuando el usuario quiere ver el carrito
+const checkoutUrl = computed(() => {
+  return isAuthenticated.value ? '/detalles-orden' : '/verificacion'
 })
 
 await productsStore.fetchData()
@@ -16,7 +21,7 @@ await productsStore.fetchData()
 <template>
   <div class="min-h-screen relative pb-12">
     <ClientOnly class="fixed bottom-4 right-4 left-4 z-50">
-      <UIButtonAction v-if="hasItems" role="link" :label="label" to="/verificacion" class-name="mx-auto">
+      <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" class-name="mx-auto">
         <template #icon>
           <LucideShoppingCart class="w-5 h-5" />
         </template>
@@ -25,7 +30,7 @@ await productsStore.fetchData()
 
     <!-- Loading state -->
     <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">
-      <span class="text-gray-500">Cargando productos...</span>
+      <UILoading :size="120" />
     </div>
     <!-- Error state -->
     <div v-else-if="productsStore.error" class="flex justify-center items-center py-8">
@@ -36,7 +41,10 @@ await productsStore.fetchData()
     <div v-else-if="productsStore.hasData" class="space-y-4">
       <ProductSearch />
 
-      <OrderList :orders="[mockOrder, mockOrder, mockOrder]" />
+      <!-- Orders list - Solo mostrar si hay usuario autenticado -->
+      <ClientOnly>
+        <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
+      </ClientOnly>
 
       <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
 

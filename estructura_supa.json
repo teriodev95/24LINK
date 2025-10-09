@@ -1,0 +1,938 @@
+[
+	{
+		"schema": "public",
+		"table": "categorias",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "nombre",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "descripcion",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "activa",
+				"data_type": "boolean",
+				"udt_name": "bool",
+				"is_nullable": "YES",
+				"column_default": "true"
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "27306_27339_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "categorias_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "categorias",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "categorias_nombre_key",
+				"constraint_type": "UNIQUE",
+				"column_name": "nombre",
+				"foreign_table": "categorias",
+				"foreign_column": "nombre"
+			},
+			{
+				"constraint_name": "27306_27339_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "categorias_nombre_key",
+				"index_def": "CREATE UNIQUE INDEX categorias_nombre_key ON public.categorias USING btree (nombre)"
+			},
+			{
+				"index_name": "categorias_pkey",
+				"index_def": "CREATE UNIQUE INDEX categorias_pkey ON public.categorias USING btree (id)"
+			}
+		]
+	},
+	{
+		"schema": "public",
+		"table": "direcciones",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "usuario_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "nombre",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "calle",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "numero_exterior",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "numero_interior",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "colonia",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "codigo_postal",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "latitud",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "longitud",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "referencias",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "es_predeterminada",
+				"data_type": "boolean",
+				"udt_name": "bool",
+				"is_nullable": "YES",
+				"column_default": "false"
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "27306_27324_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27324_8_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27324_7_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "direcciones_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "direcciones",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "27306_27324_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "direcciones_usuario_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "usuario_id",
+				"foreign_table": "usuarios",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "27306_27324_5_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27324_4_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27324_3_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "direcciones_pkey",
+				"index_def": "CREATE UNIQUE INDEX direcciones_pkey ON public.direcciones USING btree (id)"
+			}
+		]
+	},
+	{
+		"schema": "public",
+		"table": "pedido_detalles",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "pedido_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "producto_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "cantidad",
+				"data_type": "integer",
+				"udt_name": "int4",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "precio_unitario",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "descuento_aplicado",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "YES",
+				"column_default": "0"
+			},
+			{
+				"column_name": "subtotal",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "27306_27401_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27401_3_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27401_7_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "pedido_detalles_cantidad_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "pedido_detalles",
+				"foreign_column": "cantidad"
+			},
+			{
+				"constraint_name": "pedido_detalles_pedido_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "pedido_id",
+				"foreign_table": "pedidos",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "pedido_detalles_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "pedido_detalles",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "pedido_detalles_producto_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "producto_id",
+				"foreign_table": "productos",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "27306_27401_5_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27401_4_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27401_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "pedido_detalles_pkey",
+				"index_def": "CREATE UNIQUE INDEX pedido_detalles_pkey ON public.pedido_detalles USING btree (id)"
+			}
+		]
+	},
+	{
+		"schema": "public",
+		"table": "pedidos",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "usuario_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "direccion_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "repartidor_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "numero_pedido",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "estado",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": "'nuevo'::character varying"
+			},
+			{
+				"column_name": "medio_pago",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": "'efectivo'::character varying"
+			},
+			{
+				"column_name": "instrucciones_entrega",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "subtotal",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "descuento",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "YES",
+				"column_default": "0"
+			},
+			{
+				"column_name": "total",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "notas",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "fecha_entrega",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "costo_envio",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": "0"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "pedidos_numero_pedido_key",
+				"constraint_type": "UNIQUE",
+				"column_name": "numero_pedido",
+				"foreign_table": "pedidos",
+				"foreign_column": "numero_pedido"
+			},
+			{
+				"constraint_name": "pedidos_direccion_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "direccion_id",
+				"foreign_table": "direcciones",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "pedidos_estado_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "pedidos",
+				"foreign_column": "estado"
+			},
+			{
+				"constraint_name": "pedidos_medio_pago_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "pedidos",
+				"foreign_column": "medio_pago"
+			},
+			{
+				"constraint_name": "pedidos_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "pedidos",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "pedidos_repartidor_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "repartidor_id",
+				"foreign_table": "usuarios",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "pedidos_usuario_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "usuario_id",
+				"foreign_table": "usuarios",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "27306_27370_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_3_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_5_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_6_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_7_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_9_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_11_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27370_16_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "pedidos_numero_pedido_key",
+				"index_def": "CREATE UNIQUE INDEX pedidos_numero_pedido_key ON public.pedidos USING btree (numero_pedido)"
+			},
+			{
+				"index_name": "pedidos_pkey",
+				"index_def": "CREATE UNIQUE INDEX pedidos_pkey ON public.pedidos USING btree (id)"
+			}
+		]
+	},
+	{
+		"schema": "public",
+		"table": "productos",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "categoria_id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "nombre",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "descripcion",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "precio",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "porcentaje_descuento",
+				"data_type": "numeric",
+				"udt_name": "numeric",
+				"is_nullable": "YES",
+				"column_default": "0"
+			},
+			{
+				"column_name": "imagen_url",
+				"data_type": "text",
+				"udt_name": "text",
+				"is_nullable": "YES",
+				"column_default": null
+			},
+			{
+				"column_name": "stock",
+				"data_type": "integer",
+				"udt_name": "int4",
+				"is_nullable": "YES",
+				"column_default": "0"
+			},
+			{
+				"column_name": "activo",
+				"data_type": "boolean",
+				"udt_name": "bool",
+				"is_nullable": "YES",
+				"column_default": "true"
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "27306_27351_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27351_3_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27351_5_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27351_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "productos_stock_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "productos",
+				"foreign_column": "stock"
+			},
+			{
+				"constraint_name": "productos_porcentaje_descuento_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "productos",
+				"foreign_column": "porcentaje_descuento"
+			},
+			{
+				"constraint_name": "productos_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "productos",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "productos_categoria_id_fkey",
+				"constraint_type": "FOREIGN KEY",
+				"column_name": "categoria_id",
+				"foreign_table": "categorias",
+				"foreign_column": "id"
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "productos_pkey",
+				"index_def": "CREATE UNIQUE INDEX productos_pkey ON public.productos USING btree (id)"
+			}
+		]
+	},
+	{
+		"schema": "public",
+		"table": "usuarios",
+		"columns": [
+			{
+				"column_name": "id",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "telefono",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "nombre",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "tipo",
+				"data_type": "character varying",
+				"udt_name": "varchar",
+				"is_nullable": "NO",
+				"column_default": null
+			},
+			{
+				"column_name": "activo",
+				"data_type": "boolean",
+				"udt_name": "bool",
+				"is_nullable": "YES",
+				"column_default": "true"
+			},
+			{
+				"column_name": "created_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "updated_at",
+				"data_type": "timestamp with time zone",
+				"udt_name": "timestamptz",
+				"is_nullable": "YES",
+				"column_default": "now()"
+			},
+			{
+				"column_name": "pin",
+				"data_type": "character",
+				"udt_name": "bpchar",
+				"is_nullable": "NO",
+				"column_default": "'0000'::bpchar"
+			}
+		],
+		"constraints": [
+			{
+				"constraint_name": "27306_27313_2_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27313_3_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27313_4_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27313_8_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "27306_27313_1_not_null",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": null,
+				"foreign_column": null
+			},
+			{
+				"constraint_name": "usuarios_tipo_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "usuarios",
+				"foreign_column": "tipo"
+			},
+			{
+				"constraint_name": "usuarios_telefono_key",
+				"constraint_type": "UNIQUE",
+				"column_name": "telefono",
+				"foreign_table": "usuarios",
+				"foreign_column": "telefono"
+			},
+			{
+				"constraint_name": "usuarios_pkey",
+				"constraint_type": "PRIMARY KEY",
+				"column_name": "id",
+				"foreign_table": "usuarios",
+				"foreign_column": "id"
+			},
+			{
+				"constraint_name": "usuarios_pin_check",
+				"constraint_type": "CHECK",
+				"column_name": null,
+				"foreign_table": "usuarios",
+				"foreign_column": "pin"
+			}
+		],
+		"indexes": [
+			{
+				"index_name": "usuarios_pkey",
+				"index_def": "CREATE UNIQUE INDEX usuarios_pkey ON public.usuarios USING btree (id)"
+			},
+			{
+				"index_name": "usuarios_telefono_key",
+				"index_def": "CREATE UNIQUE INDEX usuarios_telefono_key ON public.usuarios USING btree (telefono)"
+			}
+		]
+	}
+]

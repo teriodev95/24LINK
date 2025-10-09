@@ -1,8 +1,16 @@
 import { ref } from 'vue'
-import { latLng, type LatLng } from 'leaflet'
+
+// Define LatLng type locally to avoid server-side Leaflet imports
+interface LatLng {
+  lat: number
+  lng: number
+}
+
+// Helper function to create LatLng object
+const createLatLng = (coords: { lat: number, lng: number }): LatLng => coords
 
 export default function useGeolocation() {
-  const $toast = useToast()
+  const { $toast } = useNuxtApp()
   const userLocation = ref<LatLng>()
   const locationError = ref<string>()
   const isLoading = ref(false)
@@ -32,7 +40,7 @@ export default function useGeolocation() {
     geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords
-        userLocation.value = latLng({ lat: latitude, lng: longitude })
+        userLocation.value = createLatLng({ lat: latitude, lng: longitude })
         console.log(`Precisión de la ubicación: ${accuracy} metros`)
         isLoading.value = false
         hasPermission.value = true
@@ -43,10 +51,7 @@ export default function useGeolocation() {
           locationError.value = 'Permisos de ubicación denegados'
           hasPermission.value = false
           locationError.value = 'Permisos de ubicación denegados. No se podrá guardar la ubicación.'
-          $toast.error({
-            title: 'Error',
-            message: 'Permisos de ubicación denegados. No se podrá guardar la ubicación.'
-          })
+          $toast.error('Permisos de ubicación denegados. No se podrá guardar la ubicación.')
         } else {
           // Otros errores (timeout, servicio no disponible, etc.)
           handleGeolocationError(`Error al obtener la ubicación: ${error.message}`)
@@ -67,7 +72,7 @@ export default function useGeolocation() {
     geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude, accuracy } = position.coords
-        userLocation.value = latLng({ lat: latitude, lng: longitude })
+        userLocation.value = createLatLng({ lat: latitude, lng: longitude })
         console.log(`Precisión de la ubicación: ${accuracy} metros`)
         isLoading.value = false
         hasPermission.value = true
@@ -83,10 +88,7 @@ export default function useGeolocation() {
   const handleGeolocationError = (message: string) => {
     console.error(message)
     locationError.value = message
-    $toast.error({
-      title: 'Error',
-      message
-    })
+    $toast.error(message)
   }
 
   const getUserLocation = async () => {
@@ -109,10 +111,7 @@ export default function useGeolocation() {
         // Permisos denegados - mostrar error apropiado
         hasPermission.value = false
         locationError.value = 'Permisos de ubicación denegados'
-        $toast.error({
-          title: 'Error',
-          message: 'Permisos de ubicación denegados. No se podrá guardar la ubicación.'
-        })
+        $toast.error('Permisos de ubicación denegados. No se podrá guardar la ubicación.')
       }
     } catch (error) {
       // Si no se puede verificar permisos, intentar obtener ubicación directamente
