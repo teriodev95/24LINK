@@ -14,8 +14,6 @@ const {
   tooltipContent,
   isLocationLoaded,
   isLoadingLocation,
-  locationError,
-  hasPermission,
   getUserPosition,
   updateMarkerPosition,
   resetLocation,
@@ -129,7 +127,8 @@ const initializeMap = () => {
     })
 
     // Escuchar cuando el mapa se mueve (solo cuando no está seleccionada la ubicación)
-    map.value.on('move', () => {
+    // Usar 'moveend' en lugar de 'move' para actualizar solo cuando termine el movimiento
+    map.value.on('moveend', () => {
       if (!selectedLocation.value && map.value) {
         const center = map.value.getCenter()
         updateMarkerPosition({
@@ -209,18 +208,11 @@ onBeforeUnmount(() => {
 
     <!-- Mapbox Container - Fullscreen -->
     <div class="absolute inset-0 w-full h-full">
-      <div
-        v-show="isLocationLoaded && !isLoadingLocation"
-        ref="mapContainer"
-        class="absolute inset-0 w-full h-full"
-      />
+      <div v-show="isLocationLoaded && !isLoadingLocation" ref="mapContainer" class="absolute inset-0 w-full h-full" />
 
       <!-- Location Picker - Centro exacto de la pantalla -->
-      <div
-        v-show="!selectedLocation && isLocationLoaded && !isLoadingLocation"
-        class="absolute pointer-events-none z-20"
-        style="left: 50%; top: 50%; transform: translate(-50%, -50%);"
-      >
+      <div v-show="!selectedLocation && isLocationLoaded && !isLoadingLocation"
+        class="absolute pointer-events-none z-20" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
         <!-- Círculos concéntricos animados -->
         <div class="relative flex items-center justify-center">
           <!-- Onda externa animada -->
@@ -245,28 +237,21 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Floating Back Button -->
-    <button
-      v-if="!selectedLocation && isLocationLoaded && !isLoadingLocation"
+    <button v-if="!selectedLocation && isLocationLoaded && !isLoadingLocation"
       class="absolute top-6 left-4 z-20 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
-      @click="$router.push('/detalles-orden')"
-    >
+      @click="$router.push('/detalles-orden')">
       <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
 
     <!-- Bottom Sheet -->
-    <div
-      v-if="routeInfo && !selectedLocation && isLocationLoaded && !isLoadingLocation"
+    <div v-if="routeInfo && !selectedLocation && isLocationLoaded && !isLoadingLocation"
       class="absolute bottom-0 left-0 right-0 z-30 bg-white rounded-t-3xl shadow-2xl transition-all duration-300"
-      :class="sheetExpanded ? 'h-96' : 'h-auto'"
-    >
+      :class="sheetExpanded ? 'h-96' : 'h-auto'">
       <!-- Sheet Handle -->
       <div class="flex justify-center pt-3 pb-2">
-        <button
-          class="w-12 h-1.5 bg-gray-300 rounded-full"
-          @click="sheetExpanded = !sheetExpanded"
-        />
+        <button class="w-12 h-1.5 bg-gray-300 rounded-full" @click="sheetExpanded = !sheetExpanded" />
       </div>
 
       <!-- Sheet Content -->
@@ -309,33 +294,27 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- Botón de acción -->
-        <UIButtonAction
-          label="Confirmar ubicación"
-          class-name="w-full"
-          @click="() => {
-            if (routeInfo && route) {
-              // Guardar ubicación y costo en el store
-              orderStore.setDeliveryLocation({
-                lat: markerPosition.lat,
-                lng: markerPosition.lng
-              })
-              orderStore.setDeliveryCost(Math.round(routeInfo.cost.totalCost))
-              orderStore.setDeliveryDistance(route.distance)
-              orderStore.setDeliveryDuration(route.duration)
+        <UIButtonAction label="Confirmar ubicación" class-name="w-full" @click="() => {
+          if (routeInfo && route) {
+            // Guardar ubicación y costo en el store
+            orderStore.setDeliveryLocation({
+              lat: markerPosition.lat,
+              lng: markerPosition.lng
+            })
+            orderStore.setDeliveryCost(Math.round(routeInfo.cost.totalCost))
+            orderStore.setDeliveryDistance(route.distance)
+            orderStore.setDeliveryDuration(route.duration)
 
-              // Actualizar totales del carrito con el nuevo costo de envío
-              cartStore.updateCartTotals()
-            }
-            selectedLocation = true
-          }"
-        />
+            // Actualizar totales del carrito con el nuevo costo de envío
+            cartStore.updateCartTotals()
+          }
+          selectedLocation = true
+        }" />
       </div>
     </div>
 
     <!-- Overlay Panel (cuando se confirma) -->
-    <LocationForm
-      v-if="selectedLocation && isLocationLoaded && !isLoadingLocation"
-      @action:location-selection="selectedLocation = false"
-    />
+    <LocationForm v-if="selectedLocation && isLocationLoaded && !isLoadingLocation"
+      @action:location-selection="selectedLocation = false" />
   </div>
 </template>
