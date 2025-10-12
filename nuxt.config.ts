@@ -6,21 +6,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 	css: ['@/assets/css/main.css'],
-	modules: [
+	vite: {
+		plugins: [tailwindcss()],
+	},
+  modules: [
 		'@nuxt/eslint',
 		'@nuxt/image',
 		'@nuxt/fonts',
 		'@pinia/nuxt',
 		"nuxt-lucide-icons",
 		"@nuxtjs/leaflet",
-	],
-	vite: {
-		build: {
-			cssMinify: true,
-			minify: true,
-		},
-		plugins: [tailwindcss()],
-	},
+		],
   build: {
     transpile: ['@lottiefiles/dotlottie-vue']
   },
@@ -30,9 +26,7 @@ export default defineNuxtConfig({
     },
     rollupConfig: {
       external: ['leaflet/dist/images/marker-icon-2x.png', 'leaflet/dist/images/marker-icon.png', 'leaflet/dist/images/marker-shadow.png']
-    },
-		compressPublicAssets: true,
-		minify: true,
+    }
   },
   runtimeConfig: {
     // Private keys (only available on server-side)
@@ -47,27 +41,27 @@ export default defineNuxtConfig({
       deliveryCostPerMinute: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_MINUTE) || 1.5
     }
   },
-	image: {
-		domains: ["https://db.el24.cc"],
-		dir: "public",
-		format: ["webp"],
-		quality: 80,
-	},
-	fonts: {
-		families: [
-			{
-				name: "Fira Sans",
-				provider: "google",
-				weights: [300, 400, 500, 600, 700, 800],
-				styles: ["normal"],
-				subsets: ["latin"],
-				global: true,
-			},
-		],
-		defaults: {
-			fallbacks: {
-				"sans-serif": ["Arial", "Helvetica", "sans-serif"],
-			},
+image: {
+	domains: ["https://db.el24.cc"],
+	dir: "public",
+	format: ["webp"],
+	quality: 80,
+},
+fonts: {
+	families: [
+		{
+			name: "Fira Sans",
+			provider: "google",
+			weights: [300, 400, 500, 600, 700, 800],
+			styles: ["normal"],
+			subsets: ["latin"],
+			global: true,
+		},
+	],
+	defaults: {
+		fallbacks: {
+			"sans-serif": ["Arial", "Helvetica", "sans-serif"],
 		},
 	},
+},
 })
