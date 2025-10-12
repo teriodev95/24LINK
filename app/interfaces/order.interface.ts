@@ -1,14 +1,34 @@
 
 export interface Address {
-  id: string
-  street: string
   colony: string
+  id: string
+  reference?: string
+  street: string
 }
 
+export interface SupabaseAdress {
+  calle: string
+  colonia: string
+  id: string
+  numero_exterior: string
+  numero_interior?: string
+  referencias?: string
+}
+
+export interface SaveAddressData {
+  calle: string
+  colonia: string
+  latitud: number
+  longitud: number
+  numero_exterior: string
+  referencias?: string
+}
+
+
 export interface PaymentMethod {
-  type: Method
-  title: string
   description: string
+  title: string
+  type: Method
 }
 
 export interface DeliveryMethod {
@@ -40,4 +60,23 @@ export interface Order {
   total: number
   created_at: string
   direccion: AddressSummary
+}
+
+export interface CreateOrderResponse {
+  id: string;
+  usuario_id: string;
+  direccion_id: string;
+  repartidor_id: string | null;
+  numero_pedido: string;
+  estado: string;
+  medio_pago: string;
+  instrucciones_entrega: string;
+  subtotal: number;
+  descuento: number;
+  total: number;
+  notas: string | null;
+  fecha_entrega: string | null;
+  created_at: string;
+  updated_at: string;
+  costo_envio: number;
 }

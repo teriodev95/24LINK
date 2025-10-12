@@ -11,7 +11,7 @@ defineEmits<Emits>()
 
 const orderStore = useOrderStore()
 const router = useRouter()
-const { saveAddress, isSaving } = useSaveAddress()
+const { saveAddress, isSaving } = useAddresses()
 
 const address = ref('')
 const phone = ref('')

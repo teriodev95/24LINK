@@ -53,7 +53,7 @@ export function useSupabaseApi() {
     url: string,
     options: {
       method?: string
-      body?: Record<string, unknown> | string | null
+      body?: Record<string, unknown> | Record<string, unknown>[] | string | null
       additionalHeaders?: Record<string, string>
       query?: Record<string, unknown>
     } = {}

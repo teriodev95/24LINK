@@ -2,7 +2,7 @@
 import type { Address } from '~/interfaces'
 
 const orderStore = useOrderStore()
-const { addresses, isLoading, loadAddresses } = useUserAddresses()
+const { addresses, isLoading, loadAddresses } = useAddresses()
 const { recalculateOnAddressChange, isCalculating } = useDeliveryCalculator()
 const { userPhone } = useAuth()
 const route = useRoute()

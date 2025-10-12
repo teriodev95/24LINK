@@ -113,9 +113,8 @@ export default function useGeolocation() {
         locationError.value = 'Permisos de ubicación denegados'
         $toast.error('Permisos de ubicación denegados. No se podrá guardar la ubicación.')
       }
-    } catch (error) {
-      // Si no se puede verificar permisos, intentar obtener ubicación directamente
-      console.warn('No se pudo verificar permisos, intentando obtener ubicación directamente')
+    } catch (error: unknown) {
+      console.warn('No se pudo verificar permisos, intentando obtener ubicación directamente: ', error)
       getLocation()
     }
   }
@@ -127,9 +126,6 @@ export default function useGeolocation() {
     isLoading.value = false
     hasPermission.value = false
   }
-
-  // NOTA: Se quitaron onMounted y onUnmounted para permitir control manual
-  // desde el composable que lo use (useMapLocation)
 
   return {
     userLocation,
