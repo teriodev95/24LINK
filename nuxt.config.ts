@@ -21,11 +21,6 @@ export default defineNuxtConfig({
 		},
 		plugins: [tailwindcss()],
 	},
-		webpack: {
-		optimization: {
-			minimize: true,
-		},
-	},
   build: {
     transpile: ['@lottiefiles/dotlottie-vue']
   },
