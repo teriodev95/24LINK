@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
-const { order, isLoading, error, loadOrderByNumber } = useOrderDetails()
+const { order, isLoading, error, loadOrderByNumber } = useOrderApi()
 const cartStore = useCartStore()
 
 // Obtener número de pedido de la URL
@@ -17,6 +17,7 @@ onMounted(async () => {
 
   await loadOrderByNumber(orderNumber.value)
 
+  /*
   // Si el pedido se cargó correctamente, actualizar el cart store temporalmente para mostrar datos
   if (order.value) {
     // Simular estructura del carrito para el componente OrderDetailsCard
@@ -24,6 +25,7 @@ onMounted(async () => {
     cartStore.cart.costo_envio = order.value.costo_envio
     cartStore.cart.total = order.value.total
   }
+    */
 })
 
 // Formatear método de pago
@@ -69,12 +71,9 @@ const formatPaymentMethod = (method: string) => {
       <OrderStatusStepper :current-status="order.estado" />
 
       <!-- Delivery driver info (only when en_ruta) -->
-      <OrderDeliveryDriverCard
-        v-if="order.estado === 'en_ruta' && order.repartidor"
-        :driver-name="order.repartidor.nombre"
-        :driver-phone="order.repartidor.telefono"
-        :delivery-address="`${order.direccion.calle} ${order.direccion.numero_exterior}`"
-      />
+      <OrderDeliveryDriverCard v-if="order.estado === 'en_ruta' && order.repartidor"
+        :driver-name="order.repartidor.nombre" :driver-phone="order.repartidor.telefono"
+        :delivery-address="`${order.direccion.calle} ${order.direccion.numero_exterior}`" />
 
       <!-- Delivery info -->
       <UISection title="Información de entrega">

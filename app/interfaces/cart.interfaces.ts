@@ -1,10 +1,4 @@
-export interface CartProduct {
-  id: string;
-  nombre: string;
-  imagen_url: string;
-  cantidad: number;
-  precio_unitario: number;
-}
+import type { CartProduct } from "./product.interface";
 
 export interface Cart {
   productos: CartProduct[];

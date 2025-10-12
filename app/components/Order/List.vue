@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { Order } from '~/interfaces';
+import type { OrderWithAddress } from '~/interfaces';
 
 interface Props {
-  orders: Order[]
+  orders: OrderWithAddress[]
   isLoading?: boolean
 }
 withDefaults(defineProps<Props>(), {
@@ -10,7 +10,7 @@ withDefaults(defineProps<Props>(), {
 })
 
 // Formatear dirección
-const formatAddress = (direccion: Order['direccion']) => `${direccion.calle} #${direccion.numero_exterior}`;
+const formatAddress = (direccion: OrderWithAddress['direccion']) => `${direccion.calle} #${direccion.numero_exterior}`;
 </script>
 
 <template>

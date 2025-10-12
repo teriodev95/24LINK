@@ -2,7 +2,7 @@
 const router = useRouter()
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
-const { createOrder, isCreatingOrder } = useOrderApi()
+const { createOrder, isLoading } = useOrderApi()
 
 onMounted(() => {
   orderStore.initializeDefaults()
@@ -49,8 +49,8 @@ const handleCreateOrder = async () => {
     <UIButtonAction
       label="Ordenar"
       class-name="w-full"
-      :disabled="!orderStore.canPlaceOrder || isCreatingOrder"
-      :loading="isCreatingOrder"
+      :disabled="!orderStore.canPlaceOrder || isLoading"
+      :loading="isLoading"
       @click="handleCreateOrder"
     />
   </main>

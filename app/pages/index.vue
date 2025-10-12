@@ -2,7 +2,7 @@
 const productsStore = useProductsStore()
 const cartStore = useCartStore()
 const { isAuthenticated } = useAuth()
-const { orders, isLoading: isLoadingOrders } = useUserOrders()
+const { userOrders: orders, isLoading: isLoadingOrders, loadUserOrders } = useOrderApi()
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 const label = computed(() => {
@@ -15,7 +15,12 @@ const checkoutUrl = computed(() => {
   return isAuthenticated.value ? '/detalles-orden' : '/verificacion'
 })
 
-await productsStore.fetchData()
+onMounted(async () => {
+  await productsStore.fetchData()
+  if (isAuthenticated.value) {
+    await loadUserOrders()
+  }
+})
 </script>
 
 <template>

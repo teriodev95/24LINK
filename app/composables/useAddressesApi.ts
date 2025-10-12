@@ -31,7 +31,7 @@ export function useAddresses() {
 
   // Load addresses from database
   const loadAddresses = async (): Promise<void> => {
-    if (!userId.value) {
+    if (!userId.value) { 
       console.warn('No hay usuario autenticado')
       return
     }

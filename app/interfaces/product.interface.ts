@@ -8,11 +8,30 @@ export interface Product {
   imagen_url: string;
   stock: number;
   activo: boolean;
-  created_at: string; // ISO 8601 date string
-  updated_at: string; // ISO 8601 date string
+  created_at: string; 
+  updated_at: string; 
 }
 
 export interface Category {
   id: string;
   nombre: string;
+}
+
+export interface CartProduct {
+  id: string;
+  nombre: string;
+  imagen_url: string;
+  cantidad: number;
+  precio_unitario: number;
+}
+
+export interface OrderProductDetails extends CartProduct {
+  subtotal: number
+}
+
+export interface OrderProduct {
+  producto_id: string
+  cantidad: number
+  precio_unitario: number
+  subtotal: number
 }

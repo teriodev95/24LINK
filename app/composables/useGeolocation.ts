@@ -1,12 +1,10 @@
 import { ref } from 'vue'
 
-// Define LatLng type locally to avoid server-side Leaflet imports
 interface LatLng {
   lat: number
   lng: number
 }
 
-// Helper function to create LatLng object
 const createLatLng = (coords: { lat: number, lng: number }): LatLng => coords
 
 export default function useGeolocation() {
