@@ -6,9 +6,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 	css: ['@/assets/css/main.css'],
-	vite: {
-		plugins: [tailwindcss()],
-	},
   modules: [
 		'@nuxt/eslint',
 		'@nuxt/image',
@@ -17,10 +14,20 @@ export default defineNuxtConfig({
 		"nuxt-lucide-icons",
 		"@nuxtjs/leaflet",
 		],
-  build: {
-    transpile: ['@lottiefiles/dotlottie-vue']
-  },
+	vite: {
+		build: {
+			cssMinify: true,
+			minify: true,
+		},
+		plugins: [tailwindcss()],
+	},
+ 	build: {
+		transpile: [],
+		analyze: true,
+	},
   nitro: {
+		compressPublicAssets: true,
+		minify: true,
     experimental: {
       wasm: true
     },
@@ -28,6 +35,11 @@ export default defineNuxtConfig({
       external: ['leaflet/dist/images/marker-icon-2x.png', 'leaflet/dist/images/marker-icon.png', 'leaflet/dist/images/marker-shadow.png']
     }
   },
+	webpack: {
+		optimization: {
+			minimize: true,
+		},
+	},
   runtimeConfig: {
     // Private keys (only available on server-side)
     supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,
