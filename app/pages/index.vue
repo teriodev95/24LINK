@@ -15,7 +15,6 @@ const checkoutUrl = computed(() => {
   return isAuthenticated.value ? '/detalles-orden' : '/verificacion'
 })
 
-await productsStore.fetchData()
 await loadUserOrders()
 </script>
 

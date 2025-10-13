@@ -5,7 +5,6 @@ interface UserData {
   nombre: string
 }
 
-
 export function useOrderApi() {
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const cartStore = useCartStore()
@@ -54,8 +53,6 @@ export function useOrderApi() {
     error.value = null
 
     try {
-      console.log('🚀 Iniciando creación de pedido...')
-
       // 1. Validar todos los requisitos
       const { usuarioId, direccionId } = validateOrderRequirements()
 
@@ -78,8 +75,6 @@ export function useOrderApi() {
         instrucciones_entrega: orderStore.selectedDeliveryMethod?.title || ''
       }
 
-      console.log('🛒 Creando pedido:', pedidoPayload)
-
       // 4. Crear pedido
       const pedidoResult = await supabaseFetch<MainOrderDetails[]>('/pedidos', {
         method: 'POST',
@@ -89,9 +84,6 @@ export function useOrderApi() {
         }
       })
 
-      console.log('✅ Pedido creado:', pedidoResult)
-      console.log('📄 Obteniendo ID del pedido creado...')
-      
       const pedidoId = pedidoResult.length ? pedidoResult[0]!.id : null
 
       if (!pedidoId) {
@@ -110,9 +102,7 @@ export function useOrderApi() {
         }
       })
 
-      console.log('📦 Creando detalles del pedido:', detalles)
-
-      const detallesResult = await supabaseFetch('/pedido_detalles', {
+      await supabaseFetch('/pedido_detalles', {
         method: 'POST',
         body: detalles,
         additionalHeaders: {
@@ -120,11 +110,8 @@ export function useOrderApi() {
         }
       })
 
-      console.log('✅ Detalles creados:', detallesResult)
-
       // 7. Limpiar carrito
       cartStore.clearCart()
-      console.log('🎉 Pedido creado exitosamente!')
 
       return {
         success: true,
@@ -153,8 +140,6 @@ export function useOrderApi() {
     error.value = null
 
     try {
-      console.log('📦 Cargando pedido:', orderNumber)
-
       // 1. Obtener datos del pedido principal
       const orderDetails = await supabaseFetch<MainOrderDetails[]>(`/pedidos?numero_pedido=eq.${orderNumber}&select=*`)
 
@@ -178,8 +163,6 @@ export function useOrderApi() {
 
       // 4. Obtener detalles del pedido (productos)
       const detallesData = await supabaseFetch<OrderProduct[]>(`/pedido_detalles?pedido_id=eq.${firstOrder.id}&select=producto_id,cantidad,precio_unitario,subtotal`)
-
-      console.log('Detalles del pedido obtenidos:', detallesData)
 
       // 5. Obtener información de los productos
       const productos: OrderProductDetails[] = []
@@ -228,9 +211,6 @@ export function useOrderApi() {
         repartidor: repartidorData && repartidorData[0] ? repartidorData[0] : undefined,
         productos
       }
-
-      console.log('✅ Pedido cargado:', order.value)
-
       return order.value
     } catch (err: unknown) {
       console.error('❌ Error cargando pedido:', err)
@@ -252,14 +232,11 @@ export function useOrderApi() {
     error.value = null
 
     try {
-      console.log('📦 Cargando pedidos del usuario:', userId.value)
-
       // Obtener pedidos del usuario ordenados por fecha (más nuevos primero)
       const ordersData = await supabaseFetch<OrderSummary[]>(`/pedidos?usuario_id=eq.${userId.value}&select=id,numero_pedido,estado,total,created_at,direccion_id&order=created_at.desc`)
 
       if (!ordersData || ordersData.length === 0) {
         userOrders.value = []
-        console.log('ℹ️ No se encontraron pedidos')
         return
       }
 
@@ -287,7 +264,6 @@ export function useOrderApi() {
       }
 
       userOrders.value = ordersWithAddress
-      console.log(`✅ ${userOrders.value.length} pedidos cargados`)
     } catch (err: any) {
       console.error('❌ Error cargando pedidos:', err)
       error.value = err?.message || 'Error al cargar los pedidos'

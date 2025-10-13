@@ -33,8 +33,8 @@ function handleSendPin() {
   <main class="p-2 space-y-8">
     <UINavbar title="Verificación" to="/" />
 
-    <VerificationCard v-if="!showPinStep" type="phone" @verified="handlePhoneVerified" @send-pin="handleSendPin" />
+    <VerificationForm v-if="!showPinStep" type="phone" @verified="handlePhoneVerified" @send-pin="handleSendPin" />
 
-    <VerificationCard v-if="showPinStep" type="pin" @verified="handlePinVerified" />
+    <VerificationForm v-if="showPinStep" type="pin" @verified="handlePinVerified" />
   </main>
 </template>
