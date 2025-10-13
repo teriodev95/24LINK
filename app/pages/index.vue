@@ -17,6 +17,31 @@ const checkoutUrl = computed(() => {
 
 await productsStore.fetchData()
 await loadUserOrders()
+
+useSeoMeta({
+  title: "24 Horas de Fiesta - Servicio 24/7 de Bebidas y Botanas a Domicilio",
+  description: "¡La fiesta no para! Servicio de entrega 24 horas de bebidas alcohólicas, cerveza, tequila, vodka, brandy, botanas y todo lo esencial para tu fiesta. Entrega rápida y segura en Morelia.",
+  keywords: "bebidas domicilio 24 horas, cerveza domicilio, tequila entrega, vodka delivery, brandy a domicilio, botanas fiesta, bebidas alcohólicas 24/7, servicio nocturno Morelia, delivery alcohol",
+  author: "24 Horas de Fiesta",
+
+  // Open Graph
+  ogTitle: "24 Horas de Fiesta - Todo para tu Fiesta las 24 Horas",
+  ogDescription: "Cerveza, tequila, vodka, brandy, botanas y más. Servicio de entrega 24/7 para que tu fiesta nunca pare. ¡Pide ahora!",
+  ogType: "website",
+  ogUrl: "https://24link.pages.dev/",
+  ogImage: "./images/icono-24link.png",
+  ogSiteName: "24 Horas de Fiesta",
+
+  // Twitter Card
+  twitterCard: "summary_large_image",
+  twitterTitle: "24 Horas de Fiesta - Delivery 24/7",
+  twitterDescription: "Bebidas y botanas a domicilio las 24 horas. Corona, José Cuervo, Absolut, Doritos y más. ¡La fiesta no para!",
+  twitterImage: "./images/icono-24link.png",
+
+  // Structured data hints for search engines
+  robots: "index, follow",
+  viewport: "width=device-width, initial-scale=1",
+});
 </script>
 
 <template>
