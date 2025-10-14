@@ -16,16 +16,6 @@ onMounted(async () => {
   }
 
   await loadOrderByNumber(orderNumber.value)
-
-  /*
-  // Si el pedido se cargó correctamente, actualizar el cart store temporalmente para mostrar datos
-  if (order.value) {
-    // Simular estructura del carrito para el componente OrderDetailsCard
-    cartStore.cart.subtotal = order.value.subtotal
-    cartStore.cart.costo_envio = order.value.costo_envio
-    cartStore.cart.total = order.value.total
-  }
-    */
 })
 
 // Formatear método de pago

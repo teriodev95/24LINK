@@ -97,23 +97,6 @@ const getStepClasses = (step: StepData): string => {
     return 'bg-white border-gray-300'
   }
 }
-
-const getContentClasses = (step: StepData): string => {
-  const stepIndex = statusOrder[step.status]
-
-  // Current step: full opacity
-  if (isCurrentStep(step)) {
-    return 'opacity-100'
-  }
-  // Completed steps: full opacity
-  else if (isStepCompleted(stepIndex)) {
-    return 'opacity-100'
-  }
-  // Future steps: dimmed
-  else {
-    return 'opacity-40'
-  }
-}
 </script>
 
 <template>
@@ -121,7 +104,8 @@ const getContentClasses = (step: StepData): string => {
     <div v-for="(step, index) in visibleSteps" :key="step.status" class="relative flex items-start">
       <!-- Timeline line -->
       <div v-if="index < visibleSteps.length - 1" class="absolute left-3 top-6 w-0.5 bg-gray-200"
-        :class="{ 'bg-green-500': isStepCompleted(statusOrder[step.status]) }" :style="{ height: 'calc(100% + 1rem)' }" />
+        :class="{ 'bg-green-500': isStepCompleted(statusOrder[step.status]) }"
+        :style="{ height: 'calc(100% + 1rem)' }" />
 
       <!-- Status indicator -->
       <div class="relative flex h-6 w-6 flex-shrink-0 items-center justify-center z-10">
@@ -131,23 +115,6 @@ const getContentClasses = (step: StepData): string => {
         </div>
       </div>
 
-      <!-- Content -->
-      <div class="ml-4 flex-1 transition-opacity duration-300" :class="getContentClasses(step)">
-        <h3 class="text-primary">
-          {{ step.title }}
-        </h3>
-        <p class="mt-1 text-sm text-gray-600">
-          {{ step.description }}
-        </p>
-        <div v-if="step.status === 'en_ruta'">
-          <a href="tel:4438453190" class="btn-call">
-            <span>📞</span> Llamar al Repartidor
-          </a>
-          <a href="https://wa.me/4438453190" target="_blank" rel="noopener noreferrer" class="btn-whatsapp">
-            <span>💬</span> Abrir WhatsApp
-          </a>
-        </div>
-      </div>
     </div>
   </UISection>
 </template>
