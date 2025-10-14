@@ -111,8 +111,8 @@ export const useProductsStore = defineStore('products', () => {
 
     try {
       const [categoriesData, productsData] = await Promise.all([
-        api.fetchLazy<Category[]>('/categorias?activa=eq.true&select=id,nombre', { key: 'categories' }),
-        api.fetchLazy<Product[]>('/productos?activo=eq.true&select=*', { key: 'products' })
+        api.fetch<Category[]>('/categorias?activa=eq.true&select=id,nombre', { key: 'categories' }),
+        api.fetch<Product[]>('/productos?activo=eq.true&select=*', { key: 'products' })
       ])
 
       console.log('Categories response:', categoriesData)
