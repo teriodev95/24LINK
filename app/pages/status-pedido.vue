@@ -2,7 +2,6 @@
 const route = useRoute()
 const router = useRouter()
 const { order, isLoading, error, loadOrderByNumber } = useOrderApi()
-const cartStore = useCartStore()
 
 // Obtener número de pedido de la URL
 const orderNumber = computed(() => route.query.pedido as string)
@@ -27,6 +26,31 @@ const formatPaymentMethod = (method: string) => {
   }
   return methods[method] || method
 }
+
+useSeoMeta({
+  title: "Estado del Pedido - 24 Horas de Fiesta | Seguimiento de Entrega",
+  description: "Sigue el estado de tu pedido de bebidas y botanas en tiempo real. Conoce cuándo llegará tu entrega 24/7 a domicilio.",
+  keywords: "estado pedido, seguimiento entrega, tracking pedido, 24 horas fiesta, delivery bebidas, status orden",
+  author: "24 Horas de Fiesta",
+
+  // Open Graph
+  ogTitle: "Estado del Pedido - 24 Horas de Fiesta",
+  ogDescription: "Sigue el estado de tu pedido de bebidas y botanas en tiempo real. Conoce cuándo llegará tu entrega 24/7.",
+  ogType: "website",
+  ogUrl: "https://24link.pages.dev/status-pedido",
+  ogImage: "./images/icono-24link.png",
+  ogSiteName: "24 Horas de Fiesta",
+
+  // Twitter Card
+  twitterCard: "summary_large_image",
+  twitterTitle: "Estado del Pedido - 24 Horas de Fiesta",
+  twitterDescription: "Sigue el estado de tu pedido de bebidas y botanas en tiempo real.",
+  twitterImage: "./images/icono-24link.png",
+
+  // Structured data hints for search engines
+  robots: "noindex, follow",
+  viewport: "width=device-width, initial-scale=1",
+});
 </script>
 
 <template>

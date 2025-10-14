@@ -19,6 +19,31 @@ const handleCreateOrder = async () => {
     console.error('Error al crear el pedido:', result.error)
   }
 }
+
+useSeoMeta({
+  title: "Detalles del Pedido - 24 Horas de Fiesta | Confirmar Orden",
+  description: "Revisa y confirma tu pedido de bebidas y botanas antes de realizar la orden. Verifica dirección, productos y método de pago.",
+  keywords: "confirmar pedido, detalles orden, carrito compras, 24 horas fiesta, bebidas domicilio, checkout",
+  author: "24 Horas de Fiesta",
+
+  // Open Graph
+  ogTitle: "Detalles del Pedido - 24 Horas de Fiesta",
+  ogDescription: "Revisa y confirma tu pedido de bebidas y botanas antes de realizar la orden. Servicio 24/7.",
+  ogType: "website",
+  ogUrl: "https://24link.pages.dev/detalles-orden",
+  ogImage: "./images/icono-24link.png",
+  ogSiteName: "24 Horas de Fiesta",
+
+  // Twitter Card
+  twitterCard: "summary_large_image",
+  twitterTitle: "Detalles del Pedido - 24 Horas de Fiesta",
+  twitterDescription: "Revisa y confirma tu pedido de bebidas y botanas antes de realizar la orden.",
+  twitterImage: "./images/icono-24link.png",
+
+  // Structured data hints for search engines
+  robots: "noindex, follow",
+  viewport: "width=device-width, initial-scale=1",
+});
 </script>
 
 <template>
