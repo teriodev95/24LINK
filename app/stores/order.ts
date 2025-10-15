@@ -4,13 +4,7 @@ import type { Address, DeliveryMethod, PaymentMethod } from '~/interfaces'
 export const useOrderStore = defineStore('order', () => {
   const _phone = ref<string>('')
 
-  const _addressList = ref<Address[]>([
-    {
-      id: '1',
-      street: 'Av universidad #1050',
-      colony: 'Villa universidad'
-    },
-  ])
+  const _addressList = ref<Address[]>([])
   const _selectedAddress = ref<Address | null>(null)
 
   const _paymentMethods = ref<PaymentMethod[]>([
@@ -44,10 +38,26 @@ export const useOrderStore = defineStore('order', () => {
   const deliveryCost = computed(() => _deliveryCost.value)
   const deliveryDistance = computed(() => _deliveryDistance.value)
   const deliveryDuration = computed(() => _deliveryDuration.value)
+
+  // Validación de dirección
+  const isValidAddress = computed(() => {
+    if (!_selectedAddress.value) return false
+
+    const address = _selectedAddress.value
+    return !!(
+      address.id &&
+      address.street &&
+      address.colony &&
+      address.id !== '' &&
+      address.street !== '' &&
+      address.colony !== ''
+    )
+  })
+
   const canPlaceOrder = computed(() => {
     return !!(
       _phone.value &&
-      _selectedAddress.value &&
+      isValidAddress.value &&
       _selectedPaymentMethod.value &&
       _selectedDeliveryMethod.value
     )
@@ -100,9 +110,14 @@ export const useOrderStore = defineStore('order', () => {
 
   // Actions
   const initializeDefaults = () => {
-    if (_addressList.value.length > 0 && !_selectedAddress.value) {
-      console.log('🚚 Inicializando dirección por defecto:', _addressList.value[0])
-      _selectedAddress.value = _addressList.value[0]!
+    // Inicializar dirección con campos vacíos
+    if (!_selectedAddress.value) {
+      _selectedAddress.value = {
+        id: '',
+        street: '',
+        colony: '',
+        reference: ''
+      }
     }
     if (_paymentMethods.value.length > 0 && !_selectedPaymentMethod.value) {
       _selectedPaymentMethod.value = _paymentMethods.value[0]!
@@ -136,6 +151,7 @@ export const useOrderStore = defineStore('order', () => {
     deliveryCost,
     deliveryDistance,
     deliveryDuration,
+    isValidAddress,
     canPlaceOrder,
     // Setters
     setPhone,

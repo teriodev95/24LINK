@@ -36,21 +36,22 @@ const submitForm = async () => {
     return
   }
 
-  // Guardar dirección en la BD
-  const result = await saveAddress({
-    calle: address.value,
-    numero_exterior: phone.value,
-    colonia: reference.value || 'Sin referencia',
-    referencias: reference.value,
-    latitud: deliveryLocation.lat,
-    longitud: deliveryLocation.lng
-  })
+  try {
+    // Guardar dirección en la BD
+    await saveAddress({
+      calle: address.value,
+      numero_exterior: phone.value,
+      colonia: reference.value || 'Sin referencia',
+      referencias: reference.value,
+      latitud: deliveryLocation.lat,
+      longitud: deliveryLocation.lng
+    })
 
-  if (result.success) {
     $toast.success('Dirección guardada correctamente')
     router.push({ name: 'detalles-orden' })
-  } else {
-    $toast.error(result.error || 'Error al guardar la dirección')
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Error al guardar la dirección'
+    $toast.error(errorMessage)
   }
 }
 </script>

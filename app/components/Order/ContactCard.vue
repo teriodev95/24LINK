@@ -6,13 +6,30 @@ const { addresses, isLoading, loadAddresses } = useAddresses()
 const { recalculateOnAddressChange, isCalculating } = useDeliveryCalculator()
 const { userPhone } = useAuth()
 
+// Referencia para el scroll y animación
+const contactCardRef = ref<HTMLElement>()
+const showBorderAnimation = ref(false)
+
+// Función para hacer scroll al componente y mostrar animación
+const scrollToCardWithAnimation = () => {
+  if (contactCardRef.value) {
+    // Acceder al elemento DOM del componente usando $el
+    const element = contactCardRef.value.$el || contactCardRef.value
+    if (element && element.scrollIntoView) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      showBorderAnimation.value = true
+      setTimeout(() => {
+        showBorderAnimation.value = false
+      }, 2000)
+    }
+  }
+}
+
 const handleAddressSelection = async (address: Address) => {
   console.log('📍 Dirección seleccionada:', address)
 
-  // Actualizar dirección seleccionada
   orderStore.setSelectedAddress(address)
 
-  // Recalcular costo de envío basado en coordenadas de la dirección
   if (address.id) {
     await recalculateOnAddressChange(address.id)
   }
@@ -23,14 +40,11 @@ watch(addresses, (newAddresses) => {
   console.log('🔄 Direcciones actualizadas:', newAddresses.length)
   if (newAddresses.length > 0) {
     orderStore.setAddressList(newAddresses)
-    // Si no hay dirección seleccionada, seleccionar la primera y calcular costo
-    console.log('🏠 Dirección seleccionada actualmente:', orderStore.selectedAddress)
-    if (!orderStore.selectedAddress) {
-      console.log('📍 Dirección seleccionada por defecto:', newAddresses[0])
-      handleAddressSelection(newAddresses[0]!)
-    }
   }
 }, { immediate: true })
+
+// Exponer la función para uso externo
+defineExpose({ scrollToCardWithAnimation })
 
 onMounted(() => {
   console.log('🚀 ContactCard montado, cargando direcciones...')
@@ -44,7 +58,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <UISection title="Datos del Contacto">
+  <UISection ref="contactCardRef" title="Datos del Contacto" :class="{ 'border-error-animation': showBorderAnimation }"
+    class="transition-all duration-200">
     <div class="space-y-2">
       <label for="phone" class="text-secondary">Télefono Celular 📱</label>
       <div class="relative">
@@ -92,3 +107,25 @@ onMounted(() => {
     </div>
   </UISection>
 </template>
+
+<style scoped>
+.border-error-animation {
+  border: 2px solid #001954;
+  box-shadow: 0 0 10px rgba(0, 25, 84, 0.5);
+  animation: pulse-border 2s ease-in-out;
+}
+
+@keyframes pulse-border {
+
+  0%,
+  100% {
+    border-color: #001954;
+    box-shadow: 0 0 10px rgba(0, 25, 84, 0.5);
+  }
+
+  50% {
+    border-color: #003d99;
+    box-shadow: 0 0 20px rgba(0, 25, 84, 0.8);
+  }
+}
+</style>

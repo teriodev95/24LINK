@@ -1,15 +1,8 @@
 import type { Address, SupabaseAdress, SaveAddressData } from '~/interfaces'
 
-interface SaveAddressResult {
-  success: boolean
-  address?: Address
-  error?: string
-}
-
 export function useAddresses() {
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const { userId } = useAuth()
-  const orderStore = useOrderStore()
 
   // State
   const addresses = ref<Address[]>([])
@@ -58,11 +51,11 @@ export function useAddresses() {
   }
 
   // Save new address to database
-  const saveAddress = async (data: SaveAddressData): Promise<SaveAddressResult> => {
+  const saveAddress = async (data: SaveAddressData) => {
     if (!userId.value) {
       const errorMsg = 'No hay usuario autenticado'
       error.value = errorMsg
-      return { success: false, error: errorMsg }
+      throw new Error(errorMsg)
     }
 
     isSaving.value = true
@@ -71,7 +64,7 @@ export function useAddresses() {
     try {
       console.log('💾 Guardando dirección en BD:', data)
 
-      const newAddressResult = await supabaseFetch<SupabaseAdress[]>('/direcciones', {
+      await supabaseFetch<SupabaseAdress[]>('/direcciones', {
         method: 'POST',
         body: {
           usuario_id: userId.value,
@@ -90,39 +83,12 @@ export function useAddresses() {
         }
       })
 
-      if (!newAddressResult || newAddressResult.length === 0) {
-        throw new Error('No se pudo guardar la dirección')
-      }
-
-      const savedAddress = newAddressResult[0]!
-      console.log('✅ Dirección guardada:', savedAddress)
-
-      // Format address for UI
-      const formattedAddress = formatAddress(savedAddress)
-
-      // Update local state
-      addresses.value = [formattedAddress, ...addresses.value]
-
-      // Update order store
-      orderStore.setAddressList([
-        formattedAddress,
-        ...orderStore.addressList
-      ])
-      orderStore.setSelectedAddress(formattedAddress)
-
-      return {
-        success: true,
-        address: formattedAddress
-      }
+      console.log('✅ Dirección guardada exitosamente')
     } catch (err: unknown) {
       console.error('❌ Error guardando dirección:', err)
       const errorMsg = (err as Error)?.message || 'Error al guardar la dirección'
       error.value = errorMsg
-
-      return {
-        success: false,
-        error: errorMsg
-      }
+      throw new Error(errorMsg)
     } finally {
       isSaving.value = false
     }

@@ -38,7 +38,7 @@ export function useVerificationApi() {
 
     try {
       // Concatenar 52 (código de país México) al número
-      const fullNumber = `52${phoneNumber}`
+      const fullNumber = `${phoneNumber}`
 
       console.log('📞 Enviando PIN a:', fullNumber)
 
@@ -76,7 +76,7 @@ export function useVerificationApi() {
 
     try {
       // Concatenar 52 (código de país México) al número
-      const fullNumber = `52${phoneNumber}`
+      const fullNumber = `${phoneNumber}`
 
       console.log('🔍 DEBUG - Verificando PIN:', {
         phoneValue: phoneNumber,

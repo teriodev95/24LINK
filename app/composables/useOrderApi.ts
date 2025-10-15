@@ -6,6 +6,7 @@ interface UserData {
 }
 
 export function useOrderApi() {
+  const { $toast } = useNuxtApp()
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const cartStore = useCartStore()
   const orderStore = useOrderStore()
@@ -23,19 +24,9 @@ export function useOrderApi() {
 
   const validateOrderRequirements = () => {
     if (!cartStore.cart.productos.length) throw new Error('El carrito está vacío')
-    
-    if (!orderStore.canPlaceOrder) throw new Error('Faltan datos para crear el pedido')
-
-    const usuarioId = userId.value
-    if (!usuarioId) throw new Error('No hay sesión de usuario activa. Por favor verifica tu teléfono.')
-
-    const selectedAddress = orderStore.selectedAddress
-    if (!selectedAddress?.id) throw new Error('No hay dirección seleccionada para el pedido')
-
-    return {
-      usuarioId,
-      direccionId: selectedAddress.id
-    }
+    if (!orderStore.isValidAddress) throw new Error('Selecciona una dirección de entrega para continuar.')
+    if (!orderStore.canPlaceOrder) throw new Error('No se cumplen los requisitos para realizar el pedido')
+    if (!userId.value) throw new Error('No hay sesión de usuario activa. Por favor verifica tu teléfono.')
   }
 
   const mapPaymentMethod = (type: string): string => {
@@ -54,7 +45,7 @@ export function useOrderApi() {
 
     try {
       // 1. Validar todos los requisitos
-      const { usuarioId, direccionId } = validateOrderRequirements()
+      validateOrderRequirements()
 
       // 2. Generar número de pedido único (máx 20 caracteres)
       const timestamp = Date.now().toString().slice(-8)
@@ -63,8 +54,8 @@ export function useOrderApi() {
 
       // 3. Preparar datos del pedido (sin id, se genera automáticamente)
       const pedidoPayload = {
-        usuario_id: usuarioId,
-        direccion_id: direccionId,
+        usuario_id: userId.value,
+        direccion_id: orderStore.selectedAddress?.id,
         numero_pedido: numeroPedido,
         estado: 'nuevo',
         medio_pago: mapPaymentMethod(orderStore.selectedPaymentMethod?.type || 'cash'),
@@ -118,13 +109,10 @@ export function useOrderApi() {
         pedidoId,
         numeroPedido
       }
-    } catch (error: unknown) {
-      console.error('❌ Error creating order:', error)
-      console.error('Error details:', error)
-
-      const errorMessage = (error as { data?: { message?: string } })?.data?.message || (error as Error)?.message || 'Error al crear el pedido'
+    } catch (errorCatch: unknown) {
+      const errorMessage = (errorCatch as { data?: { message?: string } })?.data?.message || (errorCatch as Error)?.message || 'Error al crear el pedido'
       error.value = errorMessage
-
+      $toast.error(errorMessage)
       return {
         success: false,
         error: errorMessage
@@ -211,7 +199,6 @@ export function useOrderApi() {
         repartidor: repartidorData && repartidorData[0] ? repartidorData[0] : undefined,
         productos
       }
-      return order.value
     } catch (err: unknown) {
       console.error('❌ Error cargando pedido:', err)
       error.value = (err as Error)?.message || 'Error al cargar el pedido'
@@ -264,9 +251,9 @@ export function useOrderApi() {
       }
 
       userOrders.value = ordersWithAddress
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Error cargando pedidos:', err)
-      error.value = err?.message || 'Error al cargar los pedidos'
+      error.value = (err as Error)?.message || 'Error al cargar los pedidos'
       userOrders.value = []
     } finally {
       isLoading.value = false

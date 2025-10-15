@@ -5,6 +5,9 @@ const cartStore = useCartStore()
 const { createOrder, isLoading } = useOrderApi()
 orderStore.initializeDefaults()
 
+// Referencia al componente ContactCard
+const contactCardRef = ref()
+
 const handleCreateOrder = async () => {
   const result = await createOrder()
 
@@ -12,7 +15,12 @@ const handleCreateOrder = async () => {
     // Redirigir a la página de estado del pedido
     router.push(`/status-pedido?pedido=${result.numeroPedido}`)
   } else {
-    // Mostrar error (puedes usar un toast notification)
+    // Si el error es relacionado con la dirección, hacer scroll al ContactCard
+    if (result.error?.includes('dirección') || result.error?.includes('address')) {
+      if (contactCardRef.value?.scrollToCardWithAnimation) {
+        contactCardRef.value.scrollToCardWithAnimation()
+      }
+    }
     console.error('Error al crear el pedido:', result.error)
   }
 }
@@ -62,13 +70,16 @@ useSeoMeta({
       </div>
     </div>
 
-    <OrderContactCard />
     <OrderPaymentCard />
     <ClientOnly>
       <OrderProductList :products="cartStore.cartItems" />
+    </ClientOnly>
+
+    <OrderContactCard ref="contactCardRef" />
+
+    <ClientOnly>
       <OrderDetailsCard />
     </ClientOnly>
-    <UIButtonAction label="Ordenar" class-name="w-full" :disabled="!orderStore.canPlaceOrder || isLoading"
-      :loading="isLoading" @click="handleCreateOrder" />
+    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" @click="handleCreateOrder" />
   </main>
 </template>
