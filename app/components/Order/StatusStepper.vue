@@ -72,27 +72,19 @@ const statusOrder: Record<OrderStatus, number> = {
   'cancelado': 4
 }
 
-const currentStepIndex = computed(() => {
-  return statusOrder[props.currentStatus]
-})
-
-const isStepCompleted = (stepIndex: number): boolean => {
-  return stepIndex < currentStepIndex.value
-}
-
-const isCurrentStep = (step: StepData): boolean => {
-  return step.status === props.currentStatus
-}
+const currentStepIndex = computed(() => statusOrder[props.currentStatus])
+const isStepCompleted = (stepIndex: number): boolean => stepIndex < currentStepIndex.value
+const isCurrentStep = (step: StepData): boolean => step.status === props.currentStatus
 
 const getStepClasses = (step: StepData): string => {
   const stepIndex = statusOrder[step.status]
 
   if (step.status === 'cancelado' && isCurrentStep(step)) {
-    return 'bg-red-500 border-red-500 animate-pulse'
+    return 'bg-red-500 border-red-500'
   } else if (isStepCompleted(stepIndex)) {
     return 'bg-green-500 border-green-500'
   } else if (isCurrentStep(step)) {
-    return 'bg-green-500 border-green-500 animate-pulse'
+    return 'bg-green-500 border-green-500'
   } else {
     return 'bg-white border-gray-300'
   }
@@ -113,6 +105,16 @@ const getStepClasses = (step: StepData): string => {
           <LucideCheck v-if="isStepCompleted(statusOrder[step.status])" class="h-3 w-3 text-white" />
           <div v-else-if="isCurrentStep(step)" class="h-2 w-2 rounded-full bg-white" />
         </div>
+      </div>
+
+      <!-- Step content -->
+      <div class="ml-4 flex-1 transition-opacity duration-300">
+        <h3 class="text-primary">
+          {{ step.title }}
+        </h3>
+        <p class="mt-1 text-sm text-gray-600">
+          {{ step.description }}
+        </p>
       </div>
 
     </div>
