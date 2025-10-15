@@ -147,7 +147,7 @@ export function useAddresses() {
 
   return {
     // State (readonly)
-    addresses: readonly(addresses),
+    addresses,
     isLoading: readonly(isLoading),
     isSaving: readonly(isSaving),
     error: readonly(error),

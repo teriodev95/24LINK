@@ -5,42 +5,7 @@ const orderStore = useOrderStore()
 const { addresses, isLoading, loadAddresses } = useAddresses()
 const { recalculateOnAddressChange, isCalculating } = useDeliveryCalculator()
 const { userPhone } = useAuth()
-const route = useRoute()
 
-// Cargar direcciones del usuario al montar el componente
-onMounted(() => {
-  console.log('📍 ContactCard: Montado, cargando direcciones...')
-
-  // Establecer el teléfono del usuario en sesión
-  if (userPhone.value && !orderStore.phone) {
-    orderStore.setPhone(userPhone.value)
-    console.log('📱 Teléfono establecido desde sesión:', userPhone.value)
-  }
-
-  loadAddresses()
-})
-
-// Recargar direcciones cuando el usuario vuelve a esta página
-watch(() => route.path, (newPath) => {
-  if (newPath === '/detalles-orden') {
-    console.log('🔄 ContactCard: Recargando direcciones porque volvió a detalles-orden')
-    loadAddresses()
-  }
-})
-
-// Sincronizar direcciones cargadas con el orderStore
-watch(addresses, (newAddresses) => {
-  if (newAddresses.length > 0) {
-    orderStore.setAddressList(newAddresses)
-    // Si no hay dirección seleccionada, seleccionar la primera y calcular costo
-    if (!orderStore.selectedAddress) {
-      handleAddressSelection(newAddresses[0]!)
-    }
-    console.log('✅ ContactCard: Direcciones sincronizadas:', newAddresses.length)
-  }
-}, { immediate: true })
-
-// Manejar selección de dirección y recalcular costo
 const handleAddressSelection = async (address: Address) => {
   console.log('📍 Dirección seleccionada:', address)
 
@@ -52,6 +17,30 @@ const handleAddressSelection = async (address: Address) => {
     await recalculateOnAddressChange(address.id)
   }
 }
+
+// Sincronizar direcciones cargadas con el orderStore
+watch(addresses, (newAddresses) => {
+  console.log('🔄 Direcciones actualizadas:', newAddresses.length)
+  if (newAddresses.length > 0) {
+    orderStore.setAddressList(newAddresses)
+    // Si no hay dirección seleccionada, seleccionar la primera y calcular costo
+    console.log('🏠 Dirección seleccionada actualmente:', orderStore.selectedAddress)
+    if (!orderStore.selectedAddress) {
+      console.log('📍 Dirección seleccionada por defecto:', newAddresses[0])
+      handleAddressSelection(newAddresses[0]!)
+    }
+  }
+}, { immediate: true })
+
+onMounted(() => {
+  console.log('🚀 ContactCard montado, cargando direcciones...')
+  if (userPhone.value && !orderStore.phone) {
+    orderStore.setPhone(userPhone.value)
+  }
+
+  loadAddresses()
+  console.log('📦 Direcciones en store:', orderStore.addressList)
+})
 </script>
 
 <template>

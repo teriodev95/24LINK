@@ -3,10 +3,7 @@ const router = useRouter()
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
 const { createOrder, isLoading } = useOrderApi()
-
-onMounted(() => {
-  orderStore.initializeDefaults()
-})
+orderStore.initializeDefaults()
 
 const handleCreateOrder = async () => {
   const result = await createOrder()
@@ -71,12 +68,7 @@ useSeoMeta({
       <OrderProductList :products="cartStore.cartItems" />
       <OrderDetailsCard />
     </ClientOnly>
-    <UIButtonAction
-      label="Ordenar"
-      class-name="w-full"
-      :disabled="!orderStore.canPlaceOrder || isLoading"
-      :loading="isLoading"
-      @click="handleCreateOrder"
-    />
+    <UIButtonAction label="Ordenar" class-name="w-full" :disabled="!orderStore.canPlaceOrder || isLoading"
+      :loading="isLoading" @click="handleCreateOrder" />
   </main>
 </template>

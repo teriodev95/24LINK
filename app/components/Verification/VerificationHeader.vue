@@ -3,7 +3,7 @@ interface Props {
   type: 'phone' | 'pin'
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const headerData = computed(() => ({
   phone: {

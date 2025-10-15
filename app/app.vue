@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
 
 const productsStore = useProductsStore()
 
@@ -21,7 +22,7 @@ useHead({
 
 <template>
   <div class="p-2  bg-[#FFFFFF] max-w-6xl mx-auto ">
-    <Toaster position="top-center" richColors />
+    <Toaster position="top-center" />
     <NuxtPage />
     <ClientOnly>
       <InstallPrompt />

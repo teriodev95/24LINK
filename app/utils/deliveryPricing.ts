@@ -40,15 +40,3 @@ export const calculateDeliveryCost = (
     formatted: `$${Math.round(totalCost)} MXN`
   }
 }
-
-/**
- * Formatea un precio en pesos mexicanos
- */
-export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount)
-}

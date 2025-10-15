@@ -101,6 +101,7 @@ export const useOrderStore = defineStore('order', () => {
   // Actions
   const initializeDefaults = () => {
     if (_addressList.value.length > 0 && !_selectedAddress.value) {
+      console.log('🚚 Inicializando dirección por defecto:', _addressList.value[0])
       _selectedAddress.value = _addressList.value[0]!
     }
     if (_paymentMethods.value.length > 0 && !_selectedPaymentMethod.value) {
