@@ -25,6 +25,10 @@ const handleCreateOrder = async () => {
   }
 }
 
+onMounted(() => {
+  orderStore.clearSelectedAddress()
+})
+
 useSeoMeta({
   title: "Detalles del Pedido - 24 Horas de Fiesta | Confirmar Orden",
   description: "Revisa y confirma tu pedido de bebidas y botanas antes de realizar la orden. Verifica dirección, productos y método de pago.",

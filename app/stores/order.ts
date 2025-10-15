@@ -24,7 +24,6 @@ export const useOrderStore = defineStore('order', () => {
   const _deliveryLocation = ref<{ lat: number; lng: number } | null>(null)
   const _deliveryCost = ref<number>(50) // Default cost
   const _deliveryDistance = ref<number>(0)
-  const _deliveryDuration = ref<number>(0)
 
   // Getters
   const phone = computed(() => _phone.value)
@@ -37,7 +36,6 @@ export const useOrderStore = defineStore('order', () => {
   const deliveryLocation = computed(() => _deliveryLocation.value)
   const deliveryCost = computed(() => _deliveryCost.value)
   const deliveryDistance = computed(() => _deliveryDistance.value)
-  const deliveryDuration = computed(() => _deliveryDuration.value)
 
   // Validación de dirección
   const isValidAddress = computed(() => {
@@ -104,20 +102,11 @@ export const useOrderStore = defineStore('order', () => {
     _deliveryDistance.value = distance
   }
 
-  const setDeliveryDuration = (duration: number) => {
-    _deliveryDuration.value = duration
-  }
-
   // Actions
   const initializeDefaults = () => {
-    // Inicializar dirección con campos vacíos
+    // Inicializar dirección con campos vacíos si no existe
     if (!_selectedAddress.value) {
-      _selectedAddress.value = {
-        id: '',
-        street: '',
-        colony: '',
-        reference: ''
-      }
+      clearSelectedAddress()
     }
     if (_paymentMethods.value.length > 0 && !_selectedPaymentMethod.value) {
       _selectedPaymentMethod.value = _paymentMethods.value[0]!
@@ -125,6 +114,19 @@ export const useOrderStore = defineStore('order', () => {
     if (_deliveryMethods.value.length > 0 && !_selectedDeliveryMethod.value) {
       _selectedDeliveryMethod.value = _deliveryMethods.value[0]!
     }
+  }
+
+  const clearSelectedAddress = () => {
+    _selectedAddress.value = {
+      id: '',
+      street: '',
+      colony: '',
+      reference: ''
+    }
+    // También limpiar datos de delivery cuando se limpia la dirección
+    _deliveryLocation.value = null
+    _deliveryCost.value = 0 // Reset to default
+    _deliveryDistance.value = 0
   }
 
   const addNewAddress = (address: string, reference: string) => {
@@ -150,7 +152,6 @@ export const useOrderStore = defineStore('order', () => {
     deliveryLocation,
     deliveryCost,
     deliveryDistance,
-    deliveryDuration,
     isValidAddress,
     canPlaceOrder,
     // Setters
@@ -164,9 +165,9 @@ export const useOrderStore = defineStore('order', () => {
     setDeliveryLocation,
     setDeliveryCost,
     setDeliveryDistance,
-    setDeliveryDuration,
     // Actions
     initializeDefaults,
+    clearSelectedAddress,
     addNewAddress
   }
 })

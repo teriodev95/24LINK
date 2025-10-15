@@ -268,7 +268,7 @@ export function useOrderApi() {
     isLoading: readonly(isLoading),
     error: readonly(error),
     // Data
-    order: readonly(order),
+    order,
     userOrders: computed(() => userOrders.value)
   }
 }

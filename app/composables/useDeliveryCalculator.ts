@@ -12,7 +12,6 @@ export function useDeliveryCalculator() {
   const config = useRuntimeConfig()
   const { $fetch: supabaseFetch } = useSupabaseApi()
   const orderStore = useOrderStore()
-  const cartStore = useCartStore()
 
   const isCalculating = ref(false)
   const calculationError = ref<string | null>(null)
@@ -55,18 +54,17 @@ export function useDeliveryCalculator() {
         })
         orderStore.setDeliveryCost(result.cost)
         orderStore.setDeliveryDistance(result.distance)
-        orderStore.setDeliveryDuration(result.duration)
 
-        // 4. Actualizar totales del carrito
-        cartStore.updateCartTotals()
+        // 4. Los totales del carrito se actualizarán automáticamente cuando sea necesario
+        // ya que updateCartTotals() verifica si hay una dirección válida
 
         console.log('✅ Cálculo completado:', result)
       }
 
       return result
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('❌ Error calculando envío:', error)
-      calculationError.value = error?.message || 'Error al calcular el costo de envío'
+      calculationError.value = (error as Error)?.message || 'Error al calcular el costo de envío'
       return null
     } finally {
       isCalculating.value = false
