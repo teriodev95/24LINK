@@ -3,6 +3,12 @@ const productsStore = useProductsStore()
 const cartStore = useCartStore()
 const { isAuthenticated } = useAuth()
 const { userOrders: orders, isLoading: isLoadingOrders, loadUserOrders } = useOrderApi()
+const {
+  isModalVisible,
+  navigateToProducts,
+  openStoreLocation,
+  isCartDisabled
+} = useStoreStatus()
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 const label = computed(() => {
@@ -46,12 +52,22 @@ useSeoMeta({
 
 <template>
   <div class="min-h-screen relative pb-12">
-    <ClientOnly class="fixed bottom-4 right-4 left-4 z-50">
-      <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" class-name="mx-auto">
-        <template #icon>
-          <LucideShoppingCart class="w-5 h-5" />
-        </template>
-      </UIButtonAction>
+    <!-- Store Status Modal -->
+    <ClientOnly>
+      <UIStoreStatusModal v-if="isModalVisible" @navigate-to-products="navigateToProducts"
+        @open-store-location="openStoreLocation" />
+    </ClientOnly>
+    <ClientOnly>
+
+
+      <div class="fixed bottom-4 right-4 left-4 z-40">
+        <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" class-name="mx-auto"
+          :disabled="isCartDisabled">
+          <template #icon>
+            <LucideShoppingCart class="w-5 h-5" />
+          </template>
+        </UIButtonAction>
+      </div>
     </ClientOnly>
 
     <!-- Loading state -->

@@ -2,87 +2,79 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Overview
+
+**"24 Horas de Fiesta"** is a Nuxt 3-based Progressive Web App for a 24/7 alcohol and snacks delivery service in Morelia, Mexico. The application enables users to browse products, place orders, track deliveries, and manage their account through a mobile-first interface.
+
+## Technology Stack
+
+- **Nuxt 3** (v4.1.2) with TypeScript
+- **Vue 3** with Composition API
+- **Tailwind CSS v4** for styling
+- **Pinia** for state management
+- **Supabase** for backend (via custom API client)
+- **Mapbox GL JS** + **Leaflet** for maps
+- **Vue Sonner** for notifications
+
 ## Development Commands
 
-### Common Development Tasks
 ```bash
-npm run dev         # Start development server
-npm run build       # Production build
-npm run generate    # Static site generation
-npm run preview     # Preview production build
-npm run lint        # Run ESLint
-npm run lint:fix    # Fix linting issues
+npm run dev          # Start development server (localhost:3000)
+npm run build        # Build for production
+npm run generate     # Generate static site
+npm run preview      # Preview production build
+npm run lint         # ESLint check
+npm run lint:fix     # ESLint auto-fix
 ```
 
-### Environment Setup
-Copy `.env.example` to `.env` and configure required variables:
-- `NUXT_SUPABASE_API_KEY` and `NUXT_SUPABASE_AUTH_TOKEN` for database access
-- `NUXT_PUBLIC_MAPBOX_TOKEN` for maps functionality
-- Delivery pricing variables for cost calculations
-
-## Architecture Overview
-
-This is a **24-hour delivery service frontend** ("24Link") built with **Nuxt 3** and **TypeScript**.
-
-### Key Technologies
-- **Framework**: Nuxt 3 with Vue 3 Composition API
-- **Styling**: Tailwind CSS v4.x with custom design system
-- **Database**: Supabase (PostgreSQL) with comprehensive schema
-- **Maps**: Mapbox GL JS and Leaflet integration
-- **State**: Pinia stores for cart, orders, and products
-- **PWA**: Progressive Web App with offline capabilities
+## Architecture
 
 ### Directory Structure
+- `/app/components/` - Vue components organized by feature (Category, Location, Order, Product, UI, Verification)
+- `/app/composables/` - Reusable Vue composables for shared logic
+- `/app/stores/` - Pinia stores (products, cart, order)
+- `/app/services/` - API client and core services
+- `/app/interfaces/` - TypeScript interfaces
+- `/app/pages/` - File-based routing pages
+- `/app/constants/` - App constants (store coordinates)
+
+### Key Architectural Patterns
+
+1. **State Management**: Pinia stores handle products, cart, and order state
+2. **API Layer**: Custom API client factory in `/services/core/` with Axios-based HTTP client
+3. **Composables**: Reusable logic for auth (`useAuth`), geolocation (`useGeolocation`), delivery calculations (`useDeliveryCalculator`)
+4. **Component Organization**: Feature-based components with shared UI components in `/UI` folder
+
+### Core Services
+- **Authentication**: Phone-based verification with session management
+- **Location Services**: Mapbox integration with geolocation and delivery area validation
+- **E-commerce**: Product catalog, cart management, order placement and tracking
+- **Delivery Calculation**: Distance and time-based pricing using store coordinates
+
+## Configuration
+
+### Environment Variables Required
 ```
-app/
-├── components/       # Feature-organized Vue components
-│   ├── Category/    # Product categorization
-│   ├── Location/    # Maps and geolocation
-│   ├── Order/       # Order management UI
-│   ├── Product/     # Product display and cart
-│   ├── UI/          # Reusable interface components
-│   └── Verification/ # User authentication flows
-├── composables/     # Business logic and API calls
-├── stores/          # Pinia state management
-├── pages/           # File-based routing
-├── services/        # API service layer
-├── interfaces/      # TypeScript type definitions
-└── utils/           # Utility functions
+NUXT_SUPABASE_API_KEY=        # Supabase anonymous key
+NUXT_SUPABASE_AUTH_TOKEN=     # Supabase service role key
+NUXT_PUBLIC_MAPBOX_TOKEN=     # Mapbox access token
+NUXT_PUBLIC_DELIVERY_BASE_COST=30
+NUXT_PUBLIC_DELIVERY_COST_PER_KM=7
+NUXT_PUBLIC_DELIVERY_COST_PER_MINUTE=1.5
 ```
 
-### State Management Pattern
-**Core Pinia Stores:**
-- `cart.ts` - Shopping cart state and operations
-- `order.ts` - Order lifecycle management
-- `products.ts` - Product catalog and categories
+### Database
+Uses Supabase with tables: `categorias`, `productos`, `pedidos`, `direcciones`, `usuarios` (see `estructura_supa.json`)
 
-### API Integration Pattern
-**Key Composables:**
-- `useOrderApi.ts` - Order CRUD operations
-- `useAddressesApi.ts` - Address management
-- `useVerificationApi.ts` - SMS/phone verification
-- `useSupabaseApi.ts` - Base database operations
-- `useDeliveryCalculator.ts` - Real-time delivery pricing
+## Development Notes
 
-### Database Schema
-The Supabase database includes tables for categories, products, orders, addresses, and user verification. Reference `estructura_supa.json` for complete schema details.
+- **No testing framework** currently configured
+- **ESLint** configured with Nuxt preset for linting
+- **Leaflet markers** excluded from build bundle (configured in nuxt.config.ts)
+- **Mobile-first** responsive design approach
+- **File-based routing** with Nuxt pages
+- **Auto-imports** enabled for composables and components
+- Store location coordinates hardcoded in `/constants/` (Morelia, Mexico)
 
-### Performance Considerations
-- Build output is minified with compression enabled
-- Images are optimized to WebP format
-- Google Fonts are preloaded with fallbacks
-- Bundle analysis is available via build process
-
-## Development Patterns
-
-### Component Organization
-Components are grouped by feature domain rather than type. Each feature folder contains related components, composables, and types.
-
-### TypeScript Usage
-All components and composables use strict TypeScript. Interface definitions are in `/interfaces/` with global types in `/types/`.
-
-### API Error Handling
-API calls use standardized error handling through composables. Check existing patterns in `useSupabaseApi.ts` before creating new API integrations.
-
-### Delivery Calculation
-Delivery costs are calculated using geolocation distance and time estimates. The system supports both immediate and scheduled deliveries with dynamic pricing.
+## Key Store Coordinates
+The delivery service is based in Morelia, Mexico with store coordinates defined in `/app/constants/index.ts`
