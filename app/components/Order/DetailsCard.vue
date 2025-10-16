@@ -8,7 +8,6 @@ interface Props {
 
 defineProps<Props>()
 
-// Formatear distancia
 const formattedDistance = computed(() => {
   if (!orderStore.deliveryDistance) return '0 km'
   const km = orderStore.deliveryDistance / 1000
