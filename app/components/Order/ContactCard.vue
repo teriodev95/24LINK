@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import type { Address } from '~/interfaces'
 
-const orderStore = useOrderStore()
 const { addresses, isLoading, loadAddresses } = useAddresses()
 const { recalculateOnAddressChange, isCalculating } = useDeliveryCalculator()
 const { userPhone } = useAuth()
+const orderStore = useOrderStore()
 
-// Referencia para el scroll y animación
 const contactCardRef = ref<HTMLElement>()
 const showBorderAnimation = ref(false)
 
-// Función para hacer scroll al componente y mostrar animación
 const scrollToCardWithAnimation = () => {
   if (contactCardRef.value) {
     // Acceder al elemento DOM del componente usando $el
@@ -26,34 +24,20 @@ const scrollToCardWithAnimation = () => {
 }
 
 const handleAddressSelection = async (address: Address) => {
-  console.log('📍 Dirección seleccionada:', address)
-
   orderStore.setSelectedAddress(address)
 
-  if (address.id) {
-    await recalculateOnAddressChange(address.id)
-  }
+  if (address.id) await recalculateOnAddressChange(address.id)
 }
 
-// Sincronizar direcciones cargadas con el orderStore
 watch(addresses, (newAddresses) => {
-  console.log('🔄 Direcciones actualizadas:', newAddresses.length)
-  if (newAddresses.length > 0) {
-    orderStore.setAddressList(newAddresses)
-  }
+  if (newAddresses.length > 0) orderStore.setAddressList(newAddresses)
 }, { immediate: true })
 
-// Exponer la función para uso externo
 defineExpose({ scrollToCardWithAnimation })
 
-onMounted(() => {
-  console.log('🚀 ContactCard montado, cargando direcciones...')
-  if (userPhone.value && !orderStore.phone) {
-    orderStore.setPhone(userPhone.value)
-  }
-
-  loadAddresses()
-  console.log('📦 Direcciones en store:', orderStore.addressList)
+onMounted(async () => {
+  if (userPhone.value && !orderStore.phone) orderStore.setPhone(userPhone.value)
+  await loadAddresses()
 })
 </script>
 

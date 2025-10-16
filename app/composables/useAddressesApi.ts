@@ -17,7 +17,7 @@ export function useAddresses() {
   // Helper function to format address from DB to UI
   const formatAddress = (dir: SupabaseAdress): Address => ({
     id: dir.id,
-    street: `${dir.calle} ${dir.numero_exterior}${dir.numero_interior ? ' ' + dir.numero_interior : ''}`,
+    street: `${dir.calle} #${dir.numero_exterior} ${dir.numero_interior ? ' ' + dir.numero_interior : ''}`,
     colony: dir.colonia,
     reference: dir.referencias
   })

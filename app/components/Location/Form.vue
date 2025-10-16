@@ -6,29 +6,48 @@ interface Emits {
   (e: 'action:location-selection'): void
 }
 
+interface IForm {
+  colony: string
+  street: string
+  number: string
+  reference: string
+}
+
 defineEmits<Emits>()
 
 const orderStore = useOrderStore()
 const router = useRouter()
 const { saveAddress, isSaving } = useAddresses()
 
-const address = ref('')
-const phone = ref('')
-const reference = ref('')
+const form = ref<IForm>({
+  colony: '',
+  street: '',
+  number: '',
+  reference: ''
+})
+
+const validateForm = (): boolean => {
+  if (!form.value.street.trim()) {
+    $toast.error('La dirección es requerida')
+    return false
+  }
+
+  if (!form.value.number.trim()) {
+    $toast.error('El número es requerido')
+    return false
+  }
+
+  if (!form.value.colony.trim()) {
+    $toast.error('La colonia es requerida')
+    return false
+  }
+
+  return true
+}
 
 const submitForm = async () => {
-  // Validar campos
-  if (!address.value.trim()) {
-    $toast.error('La dirección es requerida')
-    return
-  }
+  if (!validateForm()) return
 
-  if (!phone.value.trim()) {
-    $toast.error('El número es requerido')
-    return
-  }
-
-  // Obtener coordenadas de la ubicación seleccionada
   const deliveryLocation = orderStore.deliveryLocation
 
   if (!deliveryLocation) {
@@ -39,10 +58,10 @@ const submitForm = async () => {
   try {
     // Guardar dirección en la BD
     await saveAddress({
-      calle: address.value,
-      numero_exterior: phone.value,
-      colonia: reference.value || 'Sin referencia',
-      referencias: reference.value,
+      calle: `${form.value.street}`,
+      numero_exterior: form.value.number,
+      colonia: form.value.colony,
+      referencias: form.value.reference,
       latitud: deliveryLocation.lat,
       longitud: deliveryLocation.lng
     })
@@ -65,10 +84,10 @@ const submitForm = async () => {
 
 
     <div class="space-y-2">
-      <UIFormInput id="address" v-model="address" :disabled="isSaving" label="Dirección"
-        placeholder="Dirección de entrega" />
-      <UIFormInput id="phone" v-model="phone" :disabled="isSaving" label="Num #" placeholder="#" />
-      <UIFormInput id="reference" v-model="reference" :disabled="isSaving" label="Referencia"
+      <UIFormInput id="colony" v-model="form.colony" :disabled="isSaving" label="Colonia" placeholder="Colonia" />
+      <UIFormInput id="street" v-model="form.street" :disabled="isSaving" label="Calle" placeholder="Calle" />
+      <UIFormInput id="number" v-model="form.number" :disabled="isSaving" type="number" label="Num #" placeholder="#" />
+      <UIFormInput id="reference" v-model="form.reference" :disabled="isSaving" label="Referencia" :required="false"
         secondary-label="Agrega datos de ayuda que le permitan a nuestro repartidor entregar tu pedido más rapido*"
         placeholder="Referencia" />
     </div>
