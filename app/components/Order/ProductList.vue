@@ -12,7 +12,7 @@ defineProps<Props>()
   <UISection title="Productos">
     <div v-for="product in products" :key="product.id" class="grid grid-cols-7 items-center gap-2 text-center">
       <figure>
-        <NuxtImg :src="product.imagen_url" height="72" />
+        <img :src="product.imagen_url" height="72" loading="lazy" />
       </figure>
       <span class="col-span-3 text-sm text-left">{{ product.nombre }}</span>
       <span>x {{ product.cantidad }}</span>

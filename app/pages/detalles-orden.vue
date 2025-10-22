@@ -3,12 +3,28 @@ const router = useRouter()
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
 const { createOrder, isLoading } = useOrderApi()
+const { calculationError } = useDeliveryCalculator()
 orderStore.initializeDefaults()
 
 // Referencia al componente ContactCard
 const contactCardRef = ref()
 
+// Validar si se puede realizar el pedido
+const canPlaceOrder = computed(() => {
+  // Debe tener dirección seleccionada y no debe haber error de cálculo
+  return orderStore.selectedAddress && !calculationError.value
+})
+
 const handleCreateOrder = async () => {
+  // Validación adicional antes de crear orden
+  if (!canPlaceOrder.value) {
+    console.warn('⚠️ No se puede crear el pedido: falta dirección o hay error de cálculo')
+    if (contactCardRef.value?.scrollToCardWithAnimation) {
+      contactCardRef.value.scrollToCardWithAnimation()
+    }
+    return
+  }
+
   const result = await createOrder()
 
   if (result.success) {
@@ -84,6 +100,30 @@ useSeoMeta({
     <ClientOnly>
       <OrderDetailsCard />
     </ClientOnly>
-    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" @click="handleCreateOrder" />
+
+    <!-- Mensaje de validación cuando no se puede ordenar -->
+    <div v-if="!canPlaceOrder" class="bg-red-50 border border-red-200 rounded-lg p-4">
+      <div class="flex items-start gap-3">
+        <LucideXCircle :size="20" class="text-red-600 flex-shrink-0 mt-0.5" />
+        <div>
+          <p class="text-red-900 font-semibold text-sm">
+            No puedes realizar el pedido
+          </p>
+          <p class="text-red-700 text-sm mt-1">
+            {{ !orderStore.selectedAddress
+              ? 'Debes seleccionar una dirección de entrega válida'
+              : 'La dirección seleccionada tiene problemas de cálculo de envío. Por favor, selecciona otra dirección' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <UIButtonAction
+      label="Ordenar"
+      class-name="w-full"
+      :loading="isLoading"
+      :disabled="!canPlaceOrder"
+      @click="handleCreateOrder"
+    />
   </main>
 </template>

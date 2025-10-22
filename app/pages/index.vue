@@ -70,23 +70,23 @@ useSeoMeta({
       </div>
     </ClientOnly>
 
+    <!-- Orders list - Solo mostrar si hay usuario autenticado (Fixed en la parte superior) -->
+    <ClientOnly>
+      <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
+    </ClientOnly>
+
     <!-- Loading state -->
-    <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8">
+    <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <UILoading :size="120" />
     </div>
     <!-- Error state -->
-    <div v-else-if="productsStore.error" class="flex justify-center items-center py-8">
+    <div v-else-if="productsStore.error" class="flex justify-center items-center py-8" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <span class="text-red-500">{{ productsStore.error }}</span>
     </div>
 
     <!-- Main content when data is available -->
-    <div v-else-if="productsStore.hasData" class="space-y-4">
+    <div v-else-if="productsStore.hasData" class="space-y-4" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <ProductSearch />
-
-      <!-- Orders list - Solo mostrar si hay usuario autenticado -->
-      <ClientOnly>
-        <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
-      </ClientOnly>
 
       <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
 
