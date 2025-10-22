@@ -50,11 +50,12 @@ export default defineNuxtConfig({
       mapboxToken: process.env.NUXT_PUBLIC_MAPBOX_TOKEN,
       deliveryBaseCost: Number(process.env.NUXT_PUBLIC_DELIVERY_BASE_COST) || 30,
       deliveryCostPerKm: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_KM) || 7,
-      deliveryCostPerMinute: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_MINUTE) || 1.5
+      deliveryCostPerMinute: Number(process.env.NUXT_PUBLIC_DELIVERY_COST_PER_MINUTE) || 1.5,
+      bypassStoreHours: process.env.NUXT_PUBLIC_BYPASS_STORE_HOURS === 'true'
     }
   },
 image: {
-	domains: ["https://db.el24.cc"],
+	domains: ["db.el24.cc"],
 	dir: "public",
 	format: ["webp"],
 	quality: 80,
