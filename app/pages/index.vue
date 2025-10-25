@@ -61,7 +61,8 @@ useSeoMeta({
 
 
       <div class="fixed bottom-4 right-4 left-4 z-40">
-        <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" class-name="mx-auto">
+        <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" class-name="mx-auto"
+          :disabled="isCartDisabled">
           <template #icon>
             <LucideShoppingCart class="w-5 h-5" />
           </template>
