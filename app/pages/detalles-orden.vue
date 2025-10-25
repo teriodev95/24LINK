@@ -6,17 +6,13 @@ const { createOrder, isLoading } = useOrderApi()
 const { calculationError } = useDeliveryCalculator()
 orderStore.initializeDefaults()
 
-// Referencia al componente ContactCard
 const contactCardRef = ref()
 
-// Validar si se puede realizar el pedido
 const canPlaceOrder = computed(() => {
-  // Debe tener dirección seleccionada y no debe haber error de cálculo
   return orderStore.selectedAddress && !calculationError.value
 })
 
 const handleCreateOrder = async () => {
-  // Validación adicional antes de crear orden
   if (!canPlaceOrder.value) {
     console.warn('⚠️ No se puede crear el pedido: falta dirección o hay error de cálculo')
     if (contactCardRef.value?.scrollToCardWithAnimation) {
@@ -28,10 +24,8 @@ const handleCreateOrder = async () => {
   const result = await createOrder()
 
   if (result.success) {
-    // Redirigir a la página de estado del pedido
     router.push(`/status-pedido?pedido=${result.numeroPedido}`)
   } else {
-    // Si el error es relacionado con la dirección, hacer scroll al ContactCard
     if (result.error?.includes('dirección') || result.error?.includes('address')) {
       if (contactCardRef.value?.scrollToCardWithAnimation) {
         contactCardRef.value.scrollToCardWithAnimation()
@@ -118,12 +112,7 @@ useSeoMeta({
       </div>
     </div>
 
-    <UIButtonAction
-      label="Ordenar"
-      class-name="w-full"
-      :loading="isLoading"
-      :disabled="!canPlaceOrder"
-      @click="handleCreateOrder"
-    />
+    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" :disabled="!canPlaceOrder"
+      @click="handleCreateOrder" />
   </main>
 </template>
