@@ -76,16 +76,19 @@ useSeoMeta({
     </ClientOnly>
 
     <!-- Loading state -->
-    <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+    <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8"
+      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <UILoading :size="120" />
     </div>
     <!-- Error state -->
-    <div v-else-if="productsStore.error" class="flex justify-center items-center py-8" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+    <div v-else-if="productsStore.error" class="flex justify-center items-center py-8"
+      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <span class="text-red-500">{{ productsStore.error }}</span>
     </div>
 
     <!-- Main content when data is available -->
-    <div v-else-if="productsStore.hasData" class="space-y-4" :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+    <div v-else-if="productsStore.hasData" class="space-y-4"
+      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
       <ProductSearch />
 
       <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
