@@ -103,16 +103,13 @@ onMounted(() => {
         </div>
 
         <!-- Lista de direcciones horizontal -->
-        <OrderAddressSelector
-          :addresses="orderStore.addressList"
-          :selected-address-id="orderStore.selectedAddress?.id"
-          :is-calculating="isCalculating"
-          @select-address="handleAddressSelection" />
+        <OrderAddressSelector :addresses="orderStore.addressList" :selected-address-id="orderStore.selectedAddress?.id"
+          :is-calculating="isCalculating" @select-address="handleAddressSelection" />
 
         <!-- Indicador de dirección seleccionada -->
-        <OrderSelectedAddressIndicator
-          v-if="orderStore.selectedAddress"
-          :address="orderStore.selectedAddress" />
+        <OrderSelectedAddressIndicator v-if="orderStore.selectedAddress?.id" :address="orderStore.selectedAddress" />
+
+        {{ orderStore.selectedAddress }}
 
         <!-- Error de cálculo de envío -->
         <OrderAddressErrorMessage :visible="hasAddressError" @dismiss="dismissAddressError" />
@@ -144,5 +141,4 @@ onMounted(() => {
     box-shadow: 0 0 20px rgba(0, 25, 84, 0.8);
   }
 }
-
 </style>

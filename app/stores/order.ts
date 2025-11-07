@@ -57,7 +57,8 @@ export const useOrderStore = defineStore('order', () => {
       _phone.value &&
       isValidAddress.value &&
       _selectedPaymentMethod.value &&
-      _selectedDeliveryMethod.value
+      _selectedDeliveryMethod.value && 
+      _deliveryCost.value >= 0
     )
   })
 

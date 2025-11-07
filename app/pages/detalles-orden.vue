@@ -3,17 +3,12 @@ const router = useRouter()
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
 const { createOrder, isLoading } = useOrderApi()
-const { calculationError } = useDeliveryCalculator()
 orderStore.initializeDefaults()
 
 const contactCardRef = ref()
 
-const canPlaceOrder = computed(() => {
-  return orderStore.selectedAddress && !calculationError.value
-})
-
 const handleCreateOrder = async () => {
-  if (!canPlaceOrder.value) {
+  if (!orderStore.canPlaceOrder) {
     console.warn('⚠️ No se puede crear el pedido: falta dirección o hay error de cálculo')
     if (contactCardRef.value?.scrollToCardWithAnimation) {
       contactCardRef.value.scrollToCardWithAnimation()
@@ -96,7 +91,7 @@ useSeoMeta({
     </ClientOnly>
 
     <!-- Mensaje de validación cuando no se puede ordenar -->
-    <div v-if="!canPlaceOrder" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div v-if="!orderStore.canPlaceOrder" class="bg-red-50 border border-red-200 rounded-lg p-4">
       <div class="flex items-start gap-3">
         <LucideXCircle :size="20" class="text-red-600 flex-shrink-0 mt-0.5" />
         <div>
@@ -112,7 +107,7 @@ useSeoMeta({
       </div>
     </div>
 
-    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" :disabled="!canPlaceOrder"
+    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" :disabled="!orderStore.canPlaceOrder"
       @click="handleCreateOrder" />
   </main>
 </template>
