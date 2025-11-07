@@ -109,8 +109,6 @@ onMounted(() => {
         <!-- Indicador de dirección seleccionada -->
         <OrderSelectedAddressIndicator v-if="orderStore.selectedAddress?.id" :address="orderStore.selectedAddress" />
 
-        {{ orderStore.selectedAddress }}
-
         <!-- Error de cálculo de envío -->
         <OrderAddressErrorMessage :visible="hasAddressError" @dismiss="dismissAddressError" />
       </div>

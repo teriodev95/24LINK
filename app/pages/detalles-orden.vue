@@ -2,6 +2,7 @@
 const router = useRouter()
 const orderStore = useOrderStore()
 const cartStore = useCartStore()
+const { $toast } = useNuxtApp()
 const { createOrder, isLoading } = useOrderApi()
 orderStore.initializeDefaults()
 
@@ -9,6 +10,7 @@ const contactCardRef = ref()
 
 const handleCreateOrder = async () => {
   if (!orderStore.canPlaceOrder) {
+    $toast.error('⚠️ No se puede crear el pedido: falta dirección o hay error de cálculo')
     console.warn('⚠️ No se puede crear el pedido: falta dirección o hay error de cálculo')
     if (contactCardRef.value?.scrollToCardWithAnimation) {
       contactCardRef.value.scrollToCardWithAnimation()
@@ -91,7 +93,7 @@ useSeoMeta({
     </ClientOnly>
 
     <!-- Mensaje de validación cuando no se puede ordenar -->
-    <div v-if="!orderStore.canPlaceOrder" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div v-if="!orderStore.isValidAddress" class="bg-red-50 border border-red-200 rounded-lg p-4">
       <div class="flex items-start gap-3">
         <LucideXCircle :size="20" class="text-red-600 flex-shrink-0 mt-0.5" />
         <div>
