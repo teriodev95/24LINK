@@ -11,6 +11,7 @@ onMounted(async () => {
   }
 })
 
+*/
 useHead({
   link: [
     { rel: 'manifest', href: '/manifest.json' }
@@ -19,7 +20,6 @@ useHead({
     { name: 'theme-color', content: '#001954' }
   ]
 })
-  */
 </script>
 
 <template>
