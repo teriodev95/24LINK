@@ -7,3 +7,5 @@ export const TEST_DEFAULT_CENTER = {
   lat: 19.701335,
   lng: -101.190223
 } as const;
+
+export const appVersion = '1.0.0';

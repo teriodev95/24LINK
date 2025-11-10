@@ -51,55 +51,58 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="min-h-screen relative pb-12">
-    <!-- Store Status Modal -->
-    <ClientOnly>
-      <UIStoreStatusModal v-if="isModalVisible" @navigate-to-products="navigateToProducts"
-        @open-store-location="openStoreLocation" />
-    </ClientOnly>
-    <ClientOnly>
+  <main>
+    <div class="min-h-screen relative pb-14">
+      <!-- Store Status Modal -->
+      <ClientOnly>
+        <UIStoreStatusModal v-if="isModalVisible" @navigate-to-products="navigateToProducts"
+          @open-store-location="openStoreLocation" />
+      </ClientOnly>
+      <ClientOnly>
 
 
-      <div class="fixed bottom-4 right-4 left-4 z-40">
-        <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" :disabled="isCartDisabled"
-          class-name="mx-auto">
-          <template #icon>
-            <LucideShoppingCart class="w-5 h-5" />
-          </template>
-        </UIButtonAction>
+        <div class="fixed bottom-8 right-4 left-4 z-40">
+          <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" :disabled="isCartDisabled"
+            class-name="mx-auto">
+            <template #icon>
+              <LucideShoppingCart class="w-5 h-5" />
+            </template>
+          </UIButtonAction>
+        </div>
+      </ClientOnly>
+
+      <!-- Orders list - Solo mostrar si hay usuario autenticado (Fixed en la parte superior) -->
+      <ClientOnly>
+        <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
+      </ClientOnly>
+
+      <!-- Loading state -->
+      <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8"
+        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        <UILoading :size="120" />
       </div>
-    </ClientOnly>
+      <!-- Error state -->
+      <div v-else-if="productsStore.error" class="flex justify-center items-center py-8"
+        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        <span class="text-red-500">{{ productsStore.error }}</span>
+      </div>
 
-    <!-- Orders list - Solo mostrar si hay usuario autenticado (Fixed en la parte superior) -->
-    <ClientOnly>
-      <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
-    </ClientOnly>
+      <!-- Main content when data is available -->
+      <div v-else-if="productsStore.hasData" class="space-y-4"
+        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        <ProductSearch />
 
-    <!-- Loading state -->
-    <div v-if="productsStore.isLoading" class="flex justify-center items-center py-8"
-      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
-      <UILoading :size="120" />
-    </div>
-    <!-- Error state -->
-    <div v-else-if="productsStore.error" class="flex justify-center items-center py-8"
-      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
-      <span class="text-red-500">{{ productsStore.error }}</span>
-    </div>
+        <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
 
-    <!-- Main content when data is available -->
-    <div v-else-if="productsStore.hasData" class="space-y-4"
-      :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
-      <ProductSearch />
+        <!-- Unified product list component -->
+        <ProductList v-if="productsStore.shouldShowAllProducts || productsStore.shouldShowFilteredProducts" />
 
-      <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
-
-      <!-- Unified product list component -->
-      <ProductList v-if="productsStore.shouldShowAllProducts || productsStore.shouldShowFilteredProducts" />
-
-      <!-- No category selected state -->
-      <div v-else class="flex justify-center items-center py-8">
-        <span class="text-gray-500">Selecciona una categoría para ver los productos</span>
+        <!-- No category selected state -->
+        <div v-else class="flex justify-center items-center py-8">
+          <span class="text-gray-500">Selecciona una categoría para ver los productos</span>
+        </div>
       </div>
     </div>
-  </div>
+    <UIFooter />
+  </main>
 </template>

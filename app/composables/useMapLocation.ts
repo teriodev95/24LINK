@@ -57,22 +57,12 @@ export const useMapLocation = () => {
   const hasPermission = computed(() => geoHasPermission.value)
 
   const mapCenter = computed((): [number, number] => {
-    console.log('🎯 Calculando centro del mapa...')
-    console.log('🔍 Estados:', {
-      userLocation: userLocation.value,
-      markerPosition: markerPosition.value,
-      isLocationLoaded: isLocationLoaded.value
-    })
-
     if (userLocation.value.lat && userLocation.value.lng && isLocationLoaded.value) {
-      console.log('✅ Usando ubicación del usuario:', [userLocation.value.lat, userLocation.value.lng])
       return [userLocation.value.lat, userLocation.value.lng]
     }
     if (markerPosition.value.lat && markerPosition.value.lng) {
-      console.log('📌 Usando posición del marcador:', [markerPosition.value.lat, markerPosition.value.lng])
       return [markerPosition.value.lat, markerPosition.value.lng]
     }
-    console.log('🏙️ Usando ubicación por defecto:', [defaultLocation.lat, defaultLocation.lng])
     return [defaultLocation.lat, defaultLocation.lng]
   })
 
@@ -85,43 +75,25 @@ export const useMapLocation = () => {
   // Watcher para sincronizar ubicación del usuario con marcador cuando se obtiene
   watch(geoUserLocation, (newLocation) => {
     if (newLocation) {
-      console.log('👀 Ubicación del usuario actualizada, sincronizando marcador...')
       markerPosition.value = {
         lat: newLocation.lat,
         lng: newLocation.lng
       }
       isLocationLoaded.value = true
-      console.log('✅ Marcador sincronizado con ubicación del usuario:', markerPosition.value)
     }
   }, { immediate: true })
 
   // Función para obtener posición (wrapper del composable de geolocalización)
   const getUserPosition = async (): Promise<void> => {
-    console.log('🗺️ useMapLocation: Iniciando obtención de ubicación...')
-
-    // Llamar al método del composable de geolocalización
     await geoGetUserLocation()
-
-    console.log('📍 useMapLocation: Proceso de geolocalización completado')
-    console.log('📊 Estados actuales:', {
-      geoUserLocation: geoUserLocation.value,
-      userLocation: userLocation.value,
-      markerPosition: markerPosition.value,
-      isLocationLoaded: isLocationLoaded.value,
-      isLoadingLocation: isLoadingLocation.value,
-      locationError: locationError.value,
-      hasPermission: hasPermission.value
-    })
   }
 
   const onMapMove = (event: { target: { getCenter: () => Position } }): void => {
     const { lat, lng } = event.target.getCenter()
-    console.log('🗺️ Mapa movido, nueva posición del marcador:', { lat, lng })
     markerPosition.value = { lat, lng }
   }
 
   const resetLocation = () => {
-    console.log('🔄 useMapLocation: Reseteando estado de ubicación...')
 
     // Resetear el estado del composable de geolocalización
     geoResetState()
@@ -129,8 +101,6 @@ export const useMapLocation = () => {
     // Resetear estados específicos del mapa
     markerPosition.value = { lat: 0, lng: 0 }
     isLocationLoaded.value = false
-
-    console.log('✅ useMapLocation: Estado de ubicación reseteado completamente')
   }
 
   return {
