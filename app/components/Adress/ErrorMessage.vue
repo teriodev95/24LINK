@@ -26,10 +26,8 @@ defineEmits<Emits>()
           favor, selecciona otra dirección o agrega una nueva con la ubicación correcta.
         </p>
         <div class="flex items-center gap-2">
-          <button
-            class="text-xs text-red-700 hover:text-red-900 font-medium underline transition-colors"
-            @click="$emit('dismiss')"
-          >
+          <button class="text-xs text-red-700 hover:text-red-900 font-medium underline transition-colors"
+            @click="$emit('dismiss')">
             Entendido, seleccionaré otra dirección
           </button>
         </div>

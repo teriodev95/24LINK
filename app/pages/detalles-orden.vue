@@ -109,7 +109,7 @@ useSeoMeta({
       </div>
     </div>
 
-    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading" :disabled="!orderStore.canPlaceOrder"
-      @click="handleCreateOrder" />
+    <UIButtonAction label="Ordenar" class-name="w-full" :loading="isLoading"
+      :disabled="!orderStore.canPlaceOrder || orderStore.calculatingDelivery" @click="handleCreateOrder" />
   </main>
 </template>

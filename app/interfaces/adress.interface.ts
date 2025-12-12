@@ -12,6 +12,8 @@ export interface SupabaseAdress {
   numero_exterior: string
   numero_interior?: string
   referencias?: string
+  latitud: number
+  longitud: number
 }
 
 export interface SaveAddressData {

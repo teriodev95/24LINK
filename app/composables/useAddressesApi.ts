@@ -34,12 +34,14 @@ export function useAddresses() {
 
     try {
       const result = await supabaseFetch<SupabaseAdress[]>(
-        `/direcciones?usuario_id=eq.${userId.value}&select=id,calle,numero_exterior,numero_interior,colonia,referencias&order=created_at.desc`
+        `/direcciones?usuario_id=eq.${userId.value}&select=id,calle,numero_exterior,numero_interior,colonia,referencias,latitud,longitud&order=created_at.desc`
       )
 
       if (result && result.length > 0) {
-        addresses.value = result.map(formatAddress)
-        console.log('✅ Direcciones cargadas:', addresses.value.length)
+        addresses.value = result
+          .filter(dir => dir.latitud && dir.longitud)
+          .map(formatAddress)
+        console.log('✅ Direcciones cargadas:', addresses.value.length,  addresses.value)
       }
     } catch (err: unknown) {
       console.error('Error loading addresses:', err)

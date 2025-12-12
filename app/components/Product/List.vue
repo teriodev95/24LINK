@@ -8,19 +8,15 @@ watch(() => productsStore.selectedCategory, collapse)
 <template>
   <!-- Grouped by categories -->
   <div v-if="productsStore.processedData.type === 'grouped'" class="space-y-3 px-6">
-    <EmptyState v-if="productsStore.processedData.data.length === 0">
+    <UIEmptyState v-if="productsStore.processedData.data.length === 0">
       <template #icon>
         <LucideCircleSlash2 :size="48" />
       </template>
-    </EmptyState>
+    </UIEmptyState>
     <article v-for="group in productsStore.processedData.data" :key="group.category.id">
       <h2 class="text-lg font-bold text-[#2B2C2C] mb-1">{{ group.category.nombre }}</h2>
-      <ProductGrid
-        :products="group.products"
-        :expanded-product-id="expandedProductId"
-        @action:expand="expand"
-        @action:collapse="collapse"
-      />
+      <ProductGrid :products="group.products" :expanded-product-id="expandedProductId" @action:expand="expand"
+        @action:collapse="collapse" />
     </article>
   </div>
 
@@ -29,17 +25,12 @@ watch(() => productsStore.selectedCategory, collapse)
     <h1 v-if="productsStore.selectedCategory?.nombre" class="text-lg font-bold text-[#2B2C2C] mb-1">
       {{ productsStore.selectedCategory.nombre }}
     </h1>
-    <EmptyState v-if="productsStore.processedData.data.length === 0">
+    <UIEmptyState v-if="productsStore.processedData.data.length === 0">
       <template #icon>
         <LucideCircleSlash2 :size="48" />
       </template>
-    </EmptyState>
-    <ProductGrid
-      v-else
-      :products="productsStore.processedData.data"
-      :expanded-product-id="expandedProductId"
-      @action:expand="expand"
-      @action:collapse="collapse"
-    />
+    </UIEmptyState>
+    <ProductGrid v-else :products="productsStore.processedData.data" :expanded-product-id="expandedProductId"
+      @action:expand="expand" @action:collapse="collapse" />
   </article>
 </template>

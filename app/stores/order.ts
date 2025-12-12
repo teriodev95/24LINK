@@ -24,6 +24,7 @@ export const useOrderStore = defineStore('order', () => {
   const _deliveryLocation = ref<{ lat: number; lng: number } | null>(null)
   const _deliveryCost = ref<number>(50) // Default cost
   const _deliveryDistance = ref<number>(0)
+  const _calculatingDelivery = ref(false)
 
   // Getters
   const phone = computed(() => _phone.value)
@@ -36,6 +37,7 @@ export const useOrderStore = defineStore('order', () => {
   const deliveryLocation = computed(() => _deliveryLocation.value)
   const deliveryCost = computed(() => _deliveryCost.value)
   const deliveryDistance = computed(() => _deliveryDistance.value)
+  const calculatingDelivery = computed(() => _calculatingDelivery.value)
 
   // Validación de dirección
   const isValidAddress = computed(() => {
@@ -103,6 +105,10 @@ export const useOrderStore = defineStore('order', () => {
     _deliveryDistance.value = distance
   }
 
+  const setCalculatingDelivery = (isCalculating: boolean) => {
+    _calculatingDelivery.value = isCalculating
+  }
+
   // Actions
   const initializeDefaults = () => {
     // Inicializar dirección con campos vacíos si no existe
@@ -155,17 +161,19 @@ export const useOrderStore = defineStore('order', () => {
     deliveryDistance,
     isValidAddress,
     canPlaceOrder,
+    calculatingDelivery,
     // Setters
-    setPhone,
     setAddressList,
-    setSelectedAddress,
-    setPaymentMethods,
-    setSelectedPaymentMethod,
-    setDeliveryMethods,
-    setSelectedDeliveryMethod,
-    setDeliveryLocation,
+    setCalculatingDelivery,
     setDeliveryCost,
     setDeliveryDistance,
+    setDeliveryLocation,
+    setDeliveryMethods,
+    setPaymentMethods,
+    setPhone,
+    setSelectedAddress,
+    setSelectedDeliveryMethod,
+    setSelectedPaymentMethod,
     // Actions
     initializeDefaults,
     clearSelectedAddress,

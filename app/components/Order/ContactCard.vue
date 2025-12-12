@@ -36,7 +36,9 @@ const handleAddressSelection = async (address: Address) => {
 
   if (!address.id) return
 
+  orderStore.setCalculatingDelivery(true)
   const result = await recalculateOnAddressChange(address.id)
+  orderStore.setCalculatingDelivery(false)
 
   if (!result && calculationError.value) {
     addressWithError.value = address.id
@@ -81,7 +83,7 @@ onMounted(() => {
       </div>
 
       <!-- Empty state - cuando no hay direcciones -->
-      <OrderEmptyAddressState v-if="orderStore.addressList.length === 0" />
+      <AdressEmpty v-if="orderStore.addressList.length === 0" />
 
       <!-- Addresses list - cuando hay direcciones -->
       <div v-else class="space-y-3">
@@ -103,14 +105,14 @@ onMounted(() => {
         </div>
 
         <!-- Lista de direcciones horizontal -->
-        <OrderAddressSelector :addresses="orderStore.addressList" :selected-address-id="orderStore.selectedAddress?.id"
+        <AdressSelector :addresses="orderStore.addressList" :selected-address-id="orderStore.selectedAddress?.id"
           :is-calculating="isCalculating" @select-address="handleAddressSelection" />
 
         <!-- Indicador de dirección seleccionada -->
         <OrderSelectedAddressIndicator v-if="orderStore.selectedAddress?.id" :address="orderStore.selectedAddress" />
 
         <!-- Error de cálculo de envío -->
-        <OrderAddressErrorMessage :visible="hasAddressError" @dismiss="dismissAddressError" />
+        <AdressErrorMessage :visible="hasAddressError" @dismiss="dismissAddressError" />
       </div>
 
       <!-- Calculating indicator -->
