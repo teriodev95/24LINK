@@ -7,62 +7,62 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Generar URL de WhatsApp
 const whatsappUrl = computed(() => {
   const cleanPhone = props.driverPhone.replace(/\D/g, '')
   return `https://wa.me/${cleanPhone}`
 })
 
-// Generar URL de llamada telefónica
 const phoneUrl = computed(() => {
   return `tel:${props.driverPhone}`
 })
 </script>
 
 <template>
-  <UISection>
-    <div class="flex gap-4">
-      <!-- Columna izquierda (2/3) -->
-      <div class="flex-1 space-y-3">
-        <!-- Descripción -->
-        <p class="text-primary font-semibold">
-          {{ driverName }} lleva tu pedido
-        </p>
+  <section>
+    <p class="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Repartidor</p>
 
-        <!-- Botones de contacto -->
-        <div class="flex gap-2">
-          <a
-            :href="whatsappUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="border border-[#E6E6E6] rounded-lg p-2 flex items-center justify-center hover:bg-[#F9F9F9] transition-colors"
-          >
-            <LucideMessageCircle :size="20" class="text-primary" />
-          </a>
-          <a
-            :href="phoneUrl"
-            class="border border-[#E6E6E6] rounded-lg p-2 flex items-center justify-center hover:bg-[#F9F9F9] transition-colors"
-          >
-            <LucidePhone :size="20" class="text-primary" />
-          </a>
+    <div class="bg-gray-50/80 rounded-2xl p-4">
+      <div class="flex gap-4">
+        <!-- Info -->
+        <div class="flex-1 space-y-3">
+          <p class="text-[14px] font-semibold text-[#001954]">
+            {{ driverName }} lleva tu pedido
+          </p>
+
+          <!-- Contact buttons -->
+          <div class="flex gap-2">
+            <a
+              :href="whatsappUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-10 h-10 rounded-xl bg-white flex items-center justify-center active:scale-95 transition-transform duration-150"
+            >
+              <Icon name="lucide:message-circle" size="18" class="text-[#001954]" />
+            </a>
+            <a
+              :href="phoneUrl"
+              class="w-10 h-10 rounded-xl bg-white flex items-center justify-center active:scale-95 transition-transform duration-150"
+            >
+              <Icon name="lucide:phone" size="18" class="text-[#001954]" />
+            </a>
+          </div>
+
+          <p class="text-[11px] text-gray-400">
+            Contáctalo solo si es necesario. Si no responde, puede estar manejando.
+          </p>
+
+          <!-- Delivery address -->
+          <div class="flex items-center gap-2">
+            <Icon name="lucide:map-pin" size="14" class="text-gray-400 shrink-0" />
+            <p class="text-[12px] text-gray-500">{{ deliveryAddress }}</p>
+          </div>
         </div>
 
-        <!-- Nota informativa -->
-        <p class="text-xs text-[#717272]">
-          Contáctalo solo si es necesario. Si no responde, puede estar manejando.
-        </p>
-
-        <!-- Dirección de entrega -->
-        <div class="flex items-start gap-2">
-          <LucideArrowRight :size="20" class="text-primary flex-shrink-0" />
-          <p class="text-secondary text-sm">{{ deliveryAddress }}</p>
+        <!-- Image -->
+        <div class="w-1/3 flex items-center justify-center">
+          <img src="/images/moto.webp" alt="Motocicleta" class="w-full h-auto object-contain">
         </div>
-      </div>
-
-      <!-- Columna derecha (1/3) - Imagen -->
-      <div class="w-1/3 flex items-center justify-center">
-        <img src="/images/moto.webp" alt="Motocicleta" class="w-full h-auto object-contain">
       </div>
     </div>
-  </UISection>
+  </section>
 </template>

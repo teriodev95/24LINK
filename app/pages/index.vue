@@ -2,11 +2,7 @@
 const productsStore = useProductsStore()
 const { isAuthenticated } = useAuth()
 const { userOrders: orders, isLoading: isLoadingOrders, loadUserOrders } = useOrderApi()
-const {
-  isModalVisible,
-  navigateToProducts,
-  openStoreLocation,
-} = useStoreStatus()
+
 
 await productsStore.fetchData()
 await loadUserOrders()
@@ -40,11 +36,6 @@ useSeoMeta({
 <template>
   <main>
     <div class="min-h-screen relative pb-36">
-      <!-- Store Status Modal -->
-      <ClientOnly>
-        <UIStoreStatusModal v-if="isModalVisible" @navigate-to-products="navigateToProducts"
-          @open-store-location="openStoreLocation" />
-      </ClientOnly>
 
       <!-- Orders list -->
       <ClientOnly>

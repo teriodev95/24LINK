@@ -4,9 +4,12 @@ import formatCurrency from '~/utils/formatCurrency'
 
 interface Props {
   products: CartProduct[]
+  readonly?: boolean
 }
 
-defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  readonly: false,
+})
 
 const cartStore = useCartStore()
 const productsStore = useProductsStore()
@@ -58,9 +61,8 @@ const handleDecrement = (productId: string) => {
           </p>
         </div>
 
-        <!-- Quantity controls + line total -->
-        <div class="flex flex-col items-end gap-1.5 shrink-0">
-          <!-- Controls -->
+        <!-- Editable: Quantity controls + line total -->
+        <div v-if="!readonly" class="flex flex-col items-end gap-1.5 shrink-0">
           <div class="flex items-center gap-0.5">
             <button
               class="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-150 cursor-pointer active:scale-90"
@@ -80,8 +82,14 @@ const handleDecrement = (productId: string) => {
               <Icon name="lucide:plus" size="14" />
             </button>
           </div>
+          <span class="text-[12px] font-semibold text-[#001954]">
+            MXN {{ formatCurrency(product.precio_unitario * product.cantidad) }}
+          </span>
+        </div>
 
-          <!-- Line total -->
+        <!-- Readonly: quantity badge + line total -->
+        <div v-else class="flex flex-col items-end gap-0.5 shrink-0">
+          <span class="text-[11px] text-gray-400">x{{ product.cantidad }}</span>
           <span class="text-[12px] font-semibold text-[#001954]">
             MXN {{ formatCurrency(product.precio_unitario * product.cantidad) }}
           </span>

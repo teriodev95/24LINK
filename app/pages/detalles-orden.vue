@@ -74,19 +74,37 @@ useSeoMeta({
       <ClientOnly>
         <div
           v-if="!isStoreOpen"
-          class="flex items-start gap-3 bg-[#001954]/5 rounded-2xl p-4"
+          class="bg-[#001954]/5 rounded-2xl p-5 space-y-4"
         >
-          <div class="w-10 h-10 rounded-full bg-[#001954]/10 flex items-center justify-center shrink-0">
-            <Icon name="lucide:moon" size="20" class="text-[#001954]" />
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-full bg-[#001954]/10 flex items-center justify-center shrink-0">
+              <span class="text-lg">💤</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[15px] font-bold text-[#001954] leading-tight">
+                Reparto en pausa 🔋
+              </p>
+              <p class="text-[12px] text-[#001954]/60 mt-1.5 leading-relaxed">
+                Nuestros repartidores se están preparando para llevar tus pomos toda la noche 🍻
+              </p>
+              <p class="text-[12px] text-[#001954]/60 mt-1 leading-relaxed">
+                Tu carrito está guardado y listo para cuando activemos el servicio.
+              </p>
+              <p class="text-[12px] font-semibold text-[#001954]/80 mt-1">
+                El servicio de entrega inicia por la noche. ¡Estamos casi listos!
+              </p>
+            </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-[14px] font-semibold text-[#001954] leading-tight">
-              Estamos descansando por ahora
-            </p>
-            <p class="text-[12px] text-[#001954]/60 mt-1 leading-relaxed">
-              No te preocupes, tu carrito está guardado. En cuanto abramos podrás completar tu pedido sin problemas.
-            </p>
-          </div>
+
+          <a
+            href="https://maps.app.goo.gl/vXZ7xbx5iS9YUsYLA"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 w-full h-11 bg-[#001954] text-white rounded-2xl text-[13px] font-semibold active:scale-[0.97] transition-all duration-150 shadow-[0_4px_20px_rgba(0,25,84,0.3)]"
+          >
+            <Icon name="lucide:map-pin" size="16" />
+            <span>Visitar el local</span>
+          </a>
         </div>
       </ClientOnly>
 
@@ -178,8 +196,7 @@ useSeoMeta({
           <span>Agrega productos</span>
         </template>
         <template v-else-if="!isStoreOpen">
-          <Icon name="lucide:moon" size="18" />
-          <span>Vuelve pronto</span>
+          <span>💤 Reparto no disponible aún</span>
         </template>
         <template v-else>
           <span>Ordenar</span>
