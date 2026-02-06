@@ -10,6 +10,10 @@ if (isAuthenticated.value) {
   loadUserOrders()
 }
 
+const hasActiveOrders = computed(() =>
+  orders.value.some(o => o.estado !== 'completado')
+)
+
 useSeoMeta({
   title: "24 Horas de Fiesta - Servicio 24/7 de Bebidas y Botanas a Domicilio",
   description: "¡La fiesta no para! Servicio de entrega 24 horas de bebidas alcohólicas, cerveza, tequila, vodka, brandy, botanas y todo lo esencial para tu fiesta. Entrega rápida y segura en Morelia.",
@@ -42,28 +46,28 @@ useSeoMeta({
 
       <!-- Orders list -->
       <ClientOnly>
-        <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
+        <OrderList v-if="isAuthenticated" :orders="orders" />
       </ClientOnly>
 
       <!-- Loading skeleton -->
       <div v-if="!productsStore.hasData && !productsStore.error"
-        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        :class="{ 'pt-14': hasActiveOrders }">
         <UIStoreSkeleton />
       </div>
       <!-- Error state -->
       <div v-else-if="productsStore.error" class="flex justify-center items-center py-8"
-        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        :class="{ 'pt-14': hasActiveOrders }">
         <span class="text-red-500">{{ productsStore.error }}</span>
       </div>
 
       <!-- Main content when data is available -->
       <div v-else-if="productsStore.hasData"
-        :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
+        :class="{ 'pt-14': hasActiveOrders }">
 
         <!-- Header -->
         <div class="px-5 pt-2 pb-1">
           <h1 class="text-[20px] font-bold text-[#001954] leading-tight">Tienda</h1>
-          <p class="text-[12px] text-gray-400 mt-0.5">Entrega 24/7 en Morelia</p>
+          <p class="text-[12px] text-gray-400 mt-0.5">Bebidas y botanas a domicilio</p>
         </div>
 
         <!-- Category filter -->
