@@ -8,4 +8,4 @@ export const TEST_DEFAULT_CENTER = {
   lng: -101.190223
 } as const;
 
-export const appVersion = '1.0.0';
+export const appVersion = '1.2.2';

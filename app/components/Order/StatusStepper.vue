@@ -132,8 +132,12 @@ const getTitleClasses = (step: StepData): string => {
 
         <!-- Status circle — fixed 40x40 -->
         <div class="relative z-10 shrink-0 w-10 h-10">
+          <span
+            v-if="isCurrentStep(step) && step.status !== 'cancelado' && step.status !== 'completado'"
+            class="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping"
+          />
           <div
-            class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+            class="relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
             :class="getCircleClasses(step)"
           >
             <Icon v-if="isStepCompleted(statusOrder[step.status])" name="lucide:check" size="18" />
