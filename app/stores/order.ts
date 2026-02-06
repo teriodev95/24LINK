@@ -55,11 +55,13 @@ export const useOrderStore = defineStore('order', () => {
   })
 
   const canPlaceOrder = computed(() => {
+    const cartStore = useCartStore()
     return !!(
+      cartStore.totalItems > 0 &&
       _phone.value &&
       isValidAddress.value &&
       _selectedPaymentMethod.value &&
-      _selectedDeliveryMethod.value && 
+      _selectedDeliveryMethod.value &&
       _deliveryCost.value >= 0
     )
   })
