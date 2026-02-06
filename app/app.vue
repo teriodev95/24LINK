@@ -4,9 +4,9 @@ import 'vue-sonner/style.css'
 
 const productsStore = useProductsStore()
 
-onMounted(() => {
-  if (!productsStore.hasData) productsStore.fetchData()
-})
+if (!productsStore.hasData && !productsStore.isLoading) {
+  productsStore.fetchData()
+}
 useHead({
   link: [
     { rel: 'manifest', href: '/manifest.json' }

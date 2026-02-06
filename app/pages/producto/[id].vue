@@ -8,9 +8,9 @@ const productsStore = useProductsStore()
 const productId = computed(() => route.params.id as string)
 
 // Ensure data is loaded for direct navigation
-onMounted(() => {
-  if (!productsStore.hasData) productsStore.fetchData()
-})
+if (!productsStore.hasData && !productsStore.isLoading) {
+  productsStore.fetchData()
+}
 
 const product = computed(() => productsStore.getProductById(productId.value))
 const productRef = computed(() => product.value!)

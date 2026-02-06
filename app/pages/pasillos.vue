@@ -3,9 +3,9 @@ import type { Category } from '~/interfaces/product.interface'
 
 const productsStore = useProductsStore()
 
-onMounted(() => {
-  if (!productsStore.hasData) productsStore.fetchData()
-})
+if (!productsStore.hasData && !productsStore.isLoading) {
+  productsStore.fetchData()
+}
 
 const getCategoryThumbs = (categoryId: string) => {
   return productsStore.products

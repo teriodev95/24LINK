@@ -3,10 +3,12 @@ const productsStore = useProductsStore()
 const { isAuthenticated } = useAuth()
 const { userOrders: orders, isLoading: isLoadingOrders, loadUserOrders } = useOrderApi()
 
-onMounted(() => {
-  if (!productsStore.hasData) productsStore.fetchData()
-  if (isAuthenticated.value) loadUserOrders()
-})
+if (!productsStore.hasData && !productsStore.isLoading) {
+  productsStore.fetchData()
+}
+if (isAuthenticated.value) {
+  loadUserOrders()
+}
 
 useSeoMeta({
   title: "24 Horas de Fiesta - Servicio 24/7 de Bebidas y Botanas a Domicilio",
@@ -44,7 +46,7 @@ useSeoMeta({
       </ClientOnly>
 
       <!-- Loading skeleton -->
-      <div v-if="productsStore.isLoading && !productsStore.hasData"
+      <div v-if="!productsStore.hasData && !productsStore.error"
         :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
         <UIStoreSkeleton />
       </div>
