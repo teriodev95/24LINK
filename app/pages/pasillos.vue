@@ -3,9 +3,9 @@ import type { Category } from '~/interfaces/product.interface'
 
 const productsStore = useProductsStore()
 
-if (!productsStore.hasData) {
-  await productsStore.fetchData()
-}
+onMounted(() => {
+  if (!productsStore.hasData) productsStore.fetchData()
+})
 
 const getCategoryThumbs = (categoryId: string) => {
   return productsStore.products
@@ -30,8 +30,17 @@ const handleSelect = (category: Category | { id: string; nombre: string }) => {
       <h1 class="text-[26px] font-bold text-[#001954] tracking-tight">Pasillos</h1>
     </div>
 
-    <div v-if="productsStore.isLoading" class="flex justify-center py-16">
-      <UILoading :size="64" />
+    <div v-if="productsStore.isLoading && !productsStore.hasData" class="px-4 space-y-2 animate-pulse">
+      <div class="h-14 rounded-[18px] bg-gray-200" />
+      <div v-for="i in 6" :key="i" class="flex items-center gap-4 rounded-[18px] bg-gray-100 px-4 py-3">
+        <div class="flex shrink-0">
+          <div v-for="j in 3" :key="j" class="w-10 h-10 rounded-full bg-gray-200" :class="j > 1 ? '-ml-4' : ''" />
+        </div>
+        <div class="flex-1 space-y-1.5">
+          <div class="h-4 w-24 bg-gray-200 rounded" />
+          <div class="h-3 w-16 bg-gray-200/60 rounded" />
+        </div>
+      </div>
     </div>
 
     <div v-else class="px-4 space-y-2">

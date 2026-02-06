@@ -2,16 +2,11 @@
 import { Toaster } from 'vue-sonner'
 import 'vue-sonner/style.css'
 
-/*
 const productsStore = useProductsStore()
 
-onMounted(async () => {
-  if (!productsStore.hasData) {
-    await productsStore.fetchData()
-  }
+onMounted(() => {
+  if (!productsStore.hasData) productsStore.fetchData()
 })
-
-*/
 useHead({
   link: [
     { rel: 'manifest', href: '/manifest.json' }

@@ -8,9 +8,9 @@ const router = useRouter()
 const query = ref('')
 const inputRef = ref<HTMLInputElement>()
 
-if (!productsStore.hasData) {
-  await productsStore.fetchData()
-}
+onMounted(() => {
+  if (!productsStore.hasData) productsStore.fetchData()
+})
 
 const hasItems = computed(() => cartStore.totalItems > 0)
 

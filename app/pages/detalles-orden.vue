@@ -74,24 +74,21 @@ useSeoMeta({
       <ClientOnly>
         <div
           v-if="!isStoreOpen"
-          class="bg-[#001954]/5 rounded-2xl p-5 space-y-4"
+          class="bg-gray-50/80 rounded-2xl p-5"
         >
-          <div class="flex items-start gap-3">
-            <div class="w-10 h-10 rounded-full bg-[#001954]/10 flex items-center justify-center shrink-0">
-              <span class="text-lg">💤</span>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-full bg-[#001954]/8 flex items-center justify-center shrink-0 mt-0.5">
+              <Icon name="lucide:moon" size="18" class="text-[#001954]/40" />
             </div>
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 space-y-1.5">
               <p class="text-[15px] font-bold text-[#001954] leading-tight">
-                Reparto en pausa 🔋
+                Reparto en pausa
               </p>
-              <p class="text-[12px] text-[#001954]/60 mt-1.5 leading-relaxed">
-                Nuestros repartidores se están preparando para llevar tus pomos toda la noche 🍻
+              <p class="text-[12px] text-gray-500 leading-relaxed">
+                Nuestros repartidores se están preparando. El servicio de entrega a domicilio inicia por la noche.
               </p>
-              <p class="text-[12px] text-[#001954]/60 mt-1 leading-relaxed">
+              <p class="text-[12px] text-gray-400 leading-relaxed">
                 Tu carrito está guardado y listo para cuando activemos el servicio.
-              </p>
-              <p class="text-[12px] font-semibold text-[#001954]/80 mt-1">
-                El servicio de entrega inicia por la noche. ¡Estamos casi listos!
               </p>
             </div>
           </div>
@@ -100,7 +97,7 @@ useSeoMeta({
             href="https://maps.app.goo.gl/vXZ7xbx5iS9YUsYLA"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center justify-center gap-2 w-full h-11 bg-[#001954] text-white rounded-2xl text-[13px] font-semibold active:scale-[0.97] transition-all duration-150 shadow-[0_4px_20px_rgba(0,25,84,0.3)]"
+            class="flex items-center justify-center gap-2 w-full h-11 bg-[#001954] text-white rounded-2xl text-[13px] font-semibold active:scale-[0.97] transition-all duration-150 shadow-[0_4px_20px_rgba(0,25,84,0.3)] mt-4"
           >
             <Icon name="lucide:map-pin" size="16" />
             <span>Visitar el local</span>
