@@ -16,24 +16,36 @@ defineEmits<Emits>()
 </script>
 
 <template>
-  <div class="flex overflow-x-auto gap-3 pb-2 scrollbar-hide">
-    <!-- Botón agregar nueva dirección -->
-    <NuxtLink to="/ubicacion"
-      class="flex-shrink-0 w-32 h-24 rounded-lg border-2 border-dashed border-gray-300 bg-white hover:border-[#001954] hover:bg-gray-50 transition-all duration-200 flex flex-col items-center justify-center gap-2 group">
-      <div
-        class="w-10 h-10 rounded-full bg-gray-100 group-hover:bg-[#001954] transition-colors flex items-center justify-center">
-        <LucidePlus :size="20" class="text-gray-600 group-hover:text-white transition-colors" />
+  <div class="flex overflow-x-auto gap-2 pb-1 scrollbar-hide">
+    <!-- Add new address -->
+    <NuxtLink
+      to="/ubicacion"
+      class="flex-shrink-0 w-[110px] h-[72px] rounded-xl bg-gray-100 flex flex-col items-center justify-center gap-1 active:scale-[0.97] transition-all duration-150"
+    >
+      <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+        <Icon name="lucide:plus" size="16" class="text-[#001954]" />
       </div>
-      <span class="text-xs text-gray-600 group-hover:text-[#001954] font-medium transition-colors">
-        Nueva dirección
-      </span>
+      <span class="text-[10px] text-gray-500 font-medium">Nueva dirección</span>
     </NuxtLink>
 
-    <!-- Direcciones guardadas -->
-    <UISelectionButton v-for="address in addresses" :key="address.id"
-      :item="{ title: address.street, description: address.colony }" :is-selected="selectedAddressId === address.id"
-      custom-class="flex-shrink-0 min-w-[160px] max-w-[240px]" :disabled="isCalculating"
-      @select="$emit('selectAddress', address)" />
+    <!-- Saved addresses -->
+    <button
+      v-for="address in addresses"
+      :key="address.id"
+      class="flex-shrink-0 min-w-[140px] max-w-[200px] h-[72px] rounded-xl p-3 text-left transition-all duration-150 active:scale-[0.97] border-2"
+      :class="selectedAddressId === address.id
+        ? 'bg-[#001954]/5 border-[#001954]'
+        : 'bg-gray-100 border-transparent'"
+      :disabled="isCalculating"
+      @click="$emit('selectAddress', address)"
+    >
+      <p class="text-[12px] font-semibold text-[#001954] truncate leading-tight">
+        {{ address.street }}
+      </p>
+      <p class="text-[10px] text-gray-400 line-clamp-2 mt-0.5">
+        {{ address.colony }}
+      </p>
+    </button>
   </div>
 </template>
 

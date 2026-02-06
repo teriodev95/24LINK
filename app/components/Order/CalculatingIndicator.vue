@@ -9,8 +9,10 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="flex items-center gap-2 p-2 text-sm text-gray-600">
-    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-[#001954]" />
-    <span>{{ message }}</span>
+  <div class="flex items-center gap-3 bg-gray-50/80 rounded-2xl p-3.5">
+    <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
+      <div class="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-[#001954]" />
+    </div>
+    <span class="text-[13px] text-gray-500">{{ message }}</span>
   </div>
 </template>

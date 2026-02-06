@@ -144,6 +144,22 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
+  const getProductById = (id: string) => {
+    return _products.value.find(product => product.id === id) || null
+  }
+
+  const getSimilarProducts = (productId: string, limit = 10) => {
+    const product = getProductById(productId)
+    if (!product) return []
+    return _products.value
+      .filter(p => p.categoria_id === product.categoria_id && p.id !== productId)
+      .slice(0, limit)
+  }
+
+  const getCategoryName = (categoryId: string) => {
+    return _categories.value.find(c => c.id === categoryId)?.nombre || ''
+  }
+
   const clearFilters = () => {
     setSelectedCategory({ id: 'all', nombre: 'Todas' })
     setSearchQuery('')
@@ -174,6 +190,9 @@ export const useProductsStore = defineStore('products', () => {
     setError,
     // Actions
     fetchData,
-    clearFilters
+    clearFilters,
+    getProductById,
+    getSimilarProducts,
+    getCategoryName
   }
 })

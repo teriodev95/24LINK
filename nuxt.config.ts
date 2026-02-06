@@ -5,29 +5,22 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-	css: ['@/assets/css/main.css'],
-  modules: [
-		'@nuxt/eslint',
-		'@nuxt/image',
-		'@nuxt/fonts',
-		'@pinia/nuxt',
-		"nuxt-lucide-icons",
-		"@nuxtjs/leaflet",
-		],
-	vite: {
-		build: {
-			cssMinify: true,
-			minify: true,
-		},
-		plugins: [tailwindcss()],
-	},
- 	build: {
-		transpile: [],
-		analyze: true,
-	},
+				css: ['@/assets/css/main.css'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/fonts', '@pinia/nuxt', "nuxt-lucide-icons", "@nuxtjs/leaflet", "@nuxt/icon"],
+				vite: {
+								build: {
+												cssMinify: true,
+												minify: true,
+								},
+								plugins: [tailwindcss()],
+				},
+				build: {
+								transpile: [],
+								analyze: true,
+				},
   nitro: {
-		compressPublicAssets: true,
-		minify: true,
+								compressPublicAssets: true,
+								minify: true,
     experimental: {
       wasm: true
     },
@@ -35,11 +28,11 @@ export default defineNuxtConfig({
       external: ['leaflet/dist/images/marker-icon-2x.png', 'leaflet/dist/images/marker-icon.png', 'leaflet/dist/images/marker-shadow.png']
     }
   },
-	webpack: {
-		optimization: {
-			minimize: true,
-		},
-	},
+				webpack: {
+								optimization: {
+												minimize: true,
+								},
+				},
   runtimeConfig: {
     // Private keys (only available on server-side)
     supabaseAuthToken: process.env.NUXT_SUPABASE_AUTH_TOKEN,
@@ -55,26 +48,26 @@ export default defineNuxtConfig({
     }
   },
 image: {
-	domains: ["db.el24.cc"],
-	dir: "public",
-	format: ["webp"],
-	quality: 80,
+				domains: ["db.el24.cc"],
+				dir: "public",
+				format: ["webp"],
+				quality: 80,
 },
 fonts: {
-	families: [
-		{
-			name: "Fira Sans",
-			provider: "google",
-			weights: [300, 400, 500, 600, 700, 800],
-			styles: ["normal"],
-			subsets: ["latin"],
-			global: true,
-		},
-	],
-	defaults: {
-		fallbacks: {
-			"sans-serif": ["Arial", "Helvetica", "sans-serif"],
-		},
-	},
+				families: [
+								{
+												name: "Fira Sans",
+												provider: "google",
+												weights: [300, 400, 500, 600, 700, 800],
+												styles: ["normal"],
+												subsets: ["latin"],
+												global: true,
+								},
+				],
+				defaults: {
+								fallbacks: {
+												"sans-serif": ["Arial", "Helvetica", "sans-serif"],
+								},
+				},
 },
 })

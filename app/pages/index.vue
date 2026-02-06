@@ -1,25 +1,12 @@
 <script setup lang="ts">
 const productsStore = useProductsStore()
-const cartStore = useCartStore()
 const { isAuthenticated } = useAuth()
 const { userOrders: orders, isLoading: isLoadingOrders, loadUserOrders } = useOrderApi()
 const {
   isModalVisible,
   navigateToProducts,
   openStoreLocation,
-  isCartDisabled
 } = useStoreStatus()
-
-const hasItems = computed(() => cartStore.totalItems > 0)
-const label = computed(() => {
-  const count = cartStore.totalItems
-  return count === 1 ? '1 Producto' : `${count} Productos`
-})
-
-// Determinar a dónde redirigir cuando el usuario quiere ver el carrito
-const checkoutUrl = computed(() => {
-  return isAuthenticated.value ? '/detalles-orden' : '/verificacion'
-})
 
 await productsStore.fetchData()
 await loadUserOrders()
@@ -52,26 +39,14 @@ useSeoMeta({
 
 <template>
   <main>
-    <div class="min-h-screen relative pb-14">
+    <div class="min-h-screen relative pb-36">
       <!-- Store Status Modal -->
       <ClientOnly>
         <UIStoreStatusModal v-if="isModalVisible" @navigate-to-products="navigateToProducts"
           @open-store-location="openStoreLocation" />
       </ClientOnly>
-      <ClientOnly>
 
-
-        <div class="fixed bottom-8 right-4 left-4 z-40">
-          <UIButtonAction v-if="hasItems" role="link" :label="label" :to="checkoutUrl" :disabled="isCartDisabled"
-            class-name="mx-auto">
-            <template #icon>
-              <LucideShoppingCart class="w-5 h-5" />
-            </template>
-          </UIButtonAction>
-        </div>
-      </ClientOnly>
-
-      <!-- Orders list - Solo mostrar si hay usuario autenticado (Fixed en la parte superior) -->
+      <!-- Orders list -->
       <ClientOnly>
         <OrderList v-if="isAuthenticated" :orders="orders" :is-loading="isLoadingOrders" />
       </ClientOnly>
@@ -88,21 +63,30 @@ useSeoMeta({
       </div>
 
       <!-- Main content when data is available -->
-      <div v-else-if="productsStore.hasData" class="space-y-4"
+      <div v-else-if="productsStore.hasData"
         :class="{ 'pt-14': isAuthenticated && (orders.length > 0 || isLoadingOrders) }">
-        <ProductSearch />
 
+        <!-- Header -->
+        <div class="px-5 pt-2 pb-1">
+          <h1 class="text-[20px] font-bold text-[#001954] leading-tight">Tienda</h1>
+          <p class="text-[12px] text-gray-400 mt-0.5">Entrega 24/7 en Morelia</p>
+        </div>
+
+        <!-- Category filter -->
         <CategoryFilter :category-list="productsStore.categories" :selected-category="productsStore.selectedCategory" />
 
         <!-- Unified product list component -->
-        <ProductList v-if="productsStore.shouldShowAllProducts || productsStore.shouldShowFilteredProducts" />
+        <div class="mt-4">
+          <ProductList v-if="productsStore.shouldShowAllProducts || productsStore.shouldShowFilteredProducts" />
 
-        <!-- No category selected state -->
-        <div v-else class="flex justify-center items-center py-8">
-          <span class="text-gray-500">Selecciona una categoría para ver los productos</span>
+          <!-- No category selected state -->
+          <div v-else class="flex justify-center items-center py-8">
+            <span class="text-[13px] text-gray-400">Selecciona una categoría para ver los productos</span>
+          </div>
         </div>
       </div>
     </div>
-    <UIFooter />
+
+    <UIBottomNav />
   </main>
 </template>

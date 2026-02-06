@@ -1,57 +1,52 @@
 <script setup lang="ts">
+import formatCurrency from '~/utils/formatCurrency'
+
 const cartStore = useCartStore()
 const orderStore = useOrderStore()
 
-interface Props {
-  showPaymentMethod?: boolean
-}
-
-defineProps<Props>()
-
 const formattedDistance = computed(() => {
-  if (!orderStore.deliveryDistance) return '0 km'
+  if (!orderStore.deliveryDistance) return null
   const km = orderStore.deliveryDistance / 1000
-  return `${km.toFixed(2)} km`
+  return `${km.toFixed(1)} km`
 })
 </script>
 
 <template>
-  <UISection title="Detalles del pago">
-    <div class="space-y-4">
-      <p class="flex justify-between">
-        <span class="text-secondary">Total en productos</span>
-        <span class="text-primary">{{ formatCurrency(cartStore.cart.subtotal) }}</span>
-      </p>
+  <section>
+    <p class="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Resumen</p>
 
-      <!-- Información de la ruta -->
-      <div v-if="orderStore.deliveryDistance" class="bg-blue-50 p-3 rounded-lg">
-        <p class="text-xs text-gray-600 mb-2 font-semibold">📍 Información de entrega</p>
-        <div class="flex justify-between text-sm mb-1">
-          <span class="text-gray-700">Distancia</span>
-          <span class="font-semibold text-blue-700">{{ formattedDistance }}</span>
-        </div>
-        <div class="flex justify-between text-sm">
-          <span class="text-gray-700">Tiempo de entrega estimado</span>
-          <span class="font-semibold text-blue-700">30 a 35 minutos</span>
-        </div>
+    <div class="bg-gray-50/80 rounded-2xl p-4 space-y-3">
+      <!-- Subtotal -->
+      <div class="flex justify-between items-center">
+        <span class="text-[13px] text-gray-500">Subtotal</span>
+        <span class="text-[13px] font-semibold text-[#001954]">MXN {{ formatCurrency(cartStore.cart.subtotal) }}</span>
       </div>
 
-      <p class="flex justify-between">
-        <span class="text-secondary">Tarifa de entrega</span>
-        <span class="text-primary">{{ formatCurrency(cartStore.cart.costo_envio || 0) }}</span>
-      </p>
+      <!-- Delivery info -->
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-1.5">
+          <span class="text-[13px] text-gray-500">Envío</span>
+          <span v-if="formattedDistance" class="text-[11px] text-gray-400">({{ formattedDistance }})</span>
+        </div>
+        <span class="text-[13px] font-semibold text-[#001954]">
+          MXN {{ formatCurrency(cartStore.cart.costo_envio || 0) }}
+        </span>
+      </div>
 
-      <p v-if="showPaymentMethod" class="flex justify-between">
-        <span class="text-primary text-xs">Método de pago</span>
-        <span class="text-primary text-xs">💳 Tarjeta</span>
-      </p>
+      <!-- ETA -->
+      <div v-if="orderStore.deliveryDistance" class="flex justify-between items-center">
+        <span class="text-[13px] text-gray-500">Tiempo estimado</span>
+        <span class="text-[13px] font-medium text-gray-500">30–35 min</span>
+      </div>
 
-      <hr class="border-t-2 border-[#898989]">
+      <!-- Divider -->
+      <div class="border-t border-gray-200" />
 
-      <p class="flex justify-between items-center">
-        <span class="text-secondary">Total</span>
-        <span class="text-lg font-bold">{{ formatCurrency(cartStore.cart.total) }}</span>
-      </p>
+      <!-- Total -->
+      <div class="flex justify-between items-center">
+        <span class="text-[15px] font-bold text-[#001954]">Total</span>
+        <span class="text-[17px] font-bold text-[#001954]">MXN {{ formatCurrency(cartStore.cart.total) }}</span>
+      </div>
     </div>
-  </UISection>
+  </section>
 </template>

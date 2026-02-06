@@ -1,27 +1,74 @@
 <script setup lang="ts">
 const orderStore = useOrderStore()
+
+const paymentIcons: Record<string, string> = {
+  card: 'lucide:credit-card',
+  cash: 'lucide:banknote',
+  mixed: 'lucide:wallet',
+}
+
+const deliveryIcons: Record<string, string> = {
+  outside: 'lucide:map-pin',
+  inside: 'lucide:door-open',
+}
 </script>
 
 <template>
-  <UISection title="Pago y entrega">
-    <div class="space-y-2">
-      <h3 class="text-secondary">Método de pago 💰</h3>
-
-      <div class="flex overflow-scroll gap-2 p-2">
-        <UISelectionButton v-for="method in orderStore.paymentMethods" :key="method.type" :item="method"
-          :is-selected="orderStore.selectedPaymentMethod?.type === method.type" custom-class="whitespace-nowrap"
-          @select="orderStore.setSelectedPaymentMethod(method)" />
+  <section class="space-y-5">
+    <!-- Payment methods -->
+    <div>
+      <p class="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Método de pago</p>
+      <div class="flex gap-2">
+        <button
+          v-for="method in orderStore.paymentMethods"
+          :key="method.type"
+          class="flex-1 flex flex-col items-center gap-1.5 py-3.5 rounded-2xl border-2 transition-all duration-150 cursor-pointer active:scale-[0.97]"
+          :class="orderStore.selectedPaymentMethod?.type === method.type
+            ? 'border-[#001954] bg-[#001954]/5'
+            : 'border-gray-100 bg-white'"
+          @click="orderStore.setSelectedPaymentMethod(method)"
+        >
+          <Icon
+            :name="paymentIcons[method.type] || 'lucide:circle'"
+            size="22"
+            :class="orderStore.selectedPaymentMethod?.type === method.type ? 'text-[#001954]' : 'text-gray-400'"
+          />
+          <span
+            class="text-[12px] font-semibold leading-tight"
+            :class="orderStore.selectedPaymentMethod?.type === method.type ? 'text-[#001954]' : 'text-gray-400'"
+          >
+            {{ method.title }}
+          </span>
+        </button>
       </div>
     </div>
 
-    <div class="space-y-2">
-      <h3 class="text-secondary">Método de entrega 🚚</h3>
-
-      <div class="flex gap-x-2 p-2">
-        <UISelectionButton v-for="method in orderStore.deliveryMethods" :key="method.type" :item="method"
-          :is-selected="orderStore.selectedDeliveryMethod?.type === method.type"
-          @select="orderStore.setSelectedDeliveryMethod(method)" />
+    <!-- Delivery methods -->
+    <div>
+      <p class="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Método de entrega</p>
+      <div class="flex gap-2">
+        <button
+          v-for="method in orderStore.deliveryMethods"
+          :key="method.type"
+          class="flex-1 flex items-center gap-3 px-4 py-3.5 rounded-2xl border-2 transition-all duration-150 cursor-pointer active:scale-[0.97]"
+          :class="orderStore.selectedDeliveryMethod?.type === method.type
+            ? 'border-[#001954] bg-[#001954]/5'
+            : 'border-gray-100 bg-white'"
+          @click="orderStore.setSelectedDeliveryMethod(method)"
+        >
+          <Icon
+            :name="deliveryIcons[method.type] || 'lucide:truck'"
+            size="20"
+            :class="orderStore.selectedDeliveryMethod?.type === method.type ? 'text-[#001954]' : 'text-gray-400'"
+          />
+          <span
+            class="text-[13px] font-semibold leading-tight"
+            :class="orderStore.selectedDeliveryMethod?.type === method.type ? 'text-[#001954]' : 'text-gray-400'"
+          >
+            {{ method.title }}
+          </span>
+        </button>
       </div>
     </div>
-  </UISection>
+  </section>
 </template>

@@ -1,32 +1,26 @@
 <template>
-  <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-dashed border-blue-200 rounded-xl p-6">
+  <div class="bg-gray-50/80 rounded-2xl p-5">
     <div class="flex flex-col items-center text-center space-y-3">
-      <!-- Icono de ubicación -->
-      <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm">
-        <LucideMapPin :size="32" class="text-[#001954]" />
+      <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+        <Icon name="lucide:map-pin" size="22" class="text-[#001954]" />
       </div>
 
-      <!-- Título -->
       <div>
-        <h4 class="text-[#001954] font-semibold text-base mb-1">
+        <p class="text-[13px] font-semibold text-[#001954] mb-0.5">
           Necesitamos tu dirección de entrega
-        </h4>
-        <p class="text-gray-600 text-sm leading-relaxed">
-          Agrega una dirección para calcular el costo de envío y completar tu pedido
+        </p>
+        <p class="text-[11px] text-gray-400 leading-relaxed">
+          Agrega una dirección para calcular el costo de envío
         </p>
       </div>
 
-      <!-- Botón de acción -->
-      <NuxtLink to="/ubicacion"
-        class="inline-flex items-center gap-2 bg-[#001954] text-white px-6 py-3 rounded-lg hover:bg-[#003d99] transition-colors duration-200 font-medium shadow-md hover:shadow-lg">
-        <LucidePlus :size="18" />
-        <span>Agregar dirección de entrega</span>
+      <NuxtLink
+        to="/ubicacion"
+        class="inline-flex items-center gap-2 bg-[#001954] text-white px-5 h-10 rounded-2xl text-[13px] font-semibold transition-all duration-150 active:scale-[0.97] shadow-[0_4px_20px_rgba(0,25,84,0.3)]"
+      >
+        <Icon name="lucide:plus" size="16" />
+        <span>Agregar dirección</span>
       </NuxtLink>
-
-      <!-- Nota adicional -->
-      <p class="text-xs text-gray-500 mt-2">
-        Podrás guardar múltiples direcciones para tus próximas compras
-      </p>
     </div>
   </div>
 </template>

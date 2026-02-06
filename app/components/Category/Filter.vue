@@ -19,17 +19,36 @@ const selectCategory = (category: Category) => {
 </script>
 
 <template>
-  <section class="flex gap-x-[10px] overflow-x-auto py-2 px-6 w-full">
+  <section class="flex gap-2 overflow-x-auto py-2 px-5 scrollbar-hide">
     <button
-      class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap flex-1 drop-shadow-lg transition-colors duration-200"
-      :class="[selectedCategory?.id === 'all' ? 'bg-[#CCD1DD]' : 'bg-white']"
-      @click="selectCategory({ id: 'all', nombre: 'Todas' })">
-      Todas las categorías
+      class="rounded-full px-4 h-9 text-[12px] font-semibold cursor-pointer whitespace-nowrap transition-all duration-150 active:scale-[0.97] shrink-0"
+      :class="selectedCategory?.id === 'all'
+        ? 'bg-[#001954] text-white shadow-[0_2px_10px_rgba(0,25,84,0.25)]'
+        : 'bg-gray-100 text-[#001954]'"
+      @click="selectCategory({ id: 'all', nombre: 'Todas' })"
+    >
+      Todas
     </button>
-    <button v-for="(category, index) in sortedCategories" :key="index"
-      class="rounded-lg p-2 text-center text-sm text-[#001954] font-bold cursor-pointer hover:bg-gray-200 whitespace-nowrap flex-1 drop-shadow-lg transition-colors duration-200"
-      :class="[selectedCategory?.id === category.id ? 'bg-[#CCD1DD]' : 'bg-white']" @click="selectCategory(category)">
+    <button
+      v-for="(category, index) in sortedCategories"
+      :key="index"
+      class="rounded-full px-4 h-9 text-[12px] font-semibold cursor-pointer whitespace-nowrap transition-all duration-150 active:scale-[0.97] shrink-0"
+      :class="selectedCategory?.id === category.id
+        ? 'bg-[#001954] text-white shadow-[0_2px_10px_rgba(0,25,84,0.25)]'
+        : 'bg-gray-100 text-[#001954]'"
+      @click="selectCategory(category)"
+    >
       {{ category.nombre }}
     </button>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+</style>

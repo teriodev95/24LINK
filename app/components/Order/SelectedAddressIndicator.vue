@@ -9,10 +9,12 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex items-start gap-2 px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
-    <LucideCheckCircle2 :size="16" class="text-green-600 flex-shrink-0 mt-0.5" />
-    <p class="text-green-800 text-xs font-medium line-clamp-2 flex-1">
-      Dirección seleccionada: {{ address.street }}, {{ address.colony }}
+  <div class="flex items-center gap-3 bg-emerald-50 rounded-2xl p-3.5">
+    <div class="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+      <Icon name="lucide:check-circle-2" size="18" class="text-emerald-600" />
+    </div>
+    <p class="text-[13px] font-medium text-emerald-800 leading-tight line-clamp-2 flex-1">
+      {{ address.street }}, {{ address.colony }}
     </p>
   </div>
 </template>

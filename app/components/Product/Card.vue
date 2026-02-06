@@ -37,11 +37,14 @@ watch(() => props.isExpanded, (newExpanded) => {
 </script>
 
 <template>
-  <div class="space-y-1 text-sm font-normal relative">
-    <ProductImage :src="product.imagen_url" :alt="product.nombre" />
-
-    <p>{{ product.nombre }}</p>
-    <p class="text-[#717272]">MXM {{ formatCurrency(product.precio) }}</p>
+  <div class="relative">
+    <NuxtLink :to="`/producto/${product.id}`" class="block space-y-1.5">
+      <ProductImage :src="product.imagen_url" :alt="product.nombre" />
+      <div>
+        <p class="text-[12px] font-medium text-[#001954] leading-tight line-clamp-2">{{ product.nombre }}</p>
+        <p class="text-[12px] text-gray-400 mt-0.5">MXN {{ formatCurrency(product.precio) }}</p>
+      </div>
+    </NuxtLink>
 
     <ClientOnly>
       <ProductQuantityControl :product="product" :is-expanded="isExpanded || false" @interaction="handleInteraction"
