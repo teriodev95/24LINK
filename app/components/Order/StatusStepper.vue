@@ -19,28 +19,28 @@ const props = withDefaults(defineProps<Props>(), {
     {
       status: 'nuevo',
       title: 'Pedido recibido',
-      description: 'Tu pedido fue levantado con éxito, a la espera de que se acepte en sucursal',
+      description: 'Tu pedido ya está con nosotros. Estamos arrancando para llevártelo, tú tranqui.',
       icon: 'lucide:package',
       time: ''
     },
     {
       status: 'aceptado',
       title: 'Aceptado',
-      description: 'Tu pedido fue aceptado en sucursal. En espera de que sea armado y embolsado',
+      description: 'Listo. Tu pedido quedó confirmado y ya lo estamos preparando.',
       icon: 'lucide:check-circle',
       time: ''
     },
     {
       status: 'en_ruta',
       title: 'En camino',
-      description: 'Tu pedido está en ruta hacia la dirección indicada',
+      description: 'Tu pedido ya va rumbo a ti. La fiesta está por llegar.',
       icon: 'lucide:bike',
       time: ''
     },
     {
       status: 'completado',
       title: 'Entregado',
-      description: 'Tu pedido fue completado con éxito',
+      description: 'Pedido entregado. Disfrútalo y que no se apague la noche.',
       icon: 'lucide:party-popper',
       time: ''
     },
@@ -78,13 +78,20 @@ const currentStepIndex = computed(() => statusOrder[props.currentStatus])
 const isStepCompleted = (stepIndex: number): boolean => stepIndex < currentStepIndex.value
 const isCurrentStep = (step: StepData): boolean => step.status === props.currentStatus
 
+const getCircleSize = (step: StepData): string => {
+  if (isCurrentStep(step)) {
+    return 'w-11 h-11'
+  }
+  return 'w-10 h-10'
+}
+
 const getCircleClasses = (step: StepData): string => {
   const stepIndex = statusOrder[step.status]
 
   if (step.status === 'cancelado' && isCurrentStep(step)) {
     return 'bg-red-500 text-white shadow-[0_0_0_4px_rgba(239,68,68,0.15)]'
   } else if (isCurrentStep(step)) {
-    return 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.15)]'
+    return 'bg-emerald-500 text-white shadow-[0_0_0_5px_rgba(16,185,129,0.15)]'
   } else if (isStepCompleted(stepIndex)) {
     return 'bg-emerald-500 text-white'
   } else {
@@ -121,42 +128,43 @@ const getTitleClasses = (step: StepData): string => {
         v-for="(step, index) in visibleSteps"
         :key="step.status"
         class="relative flex items-start"
-        :class="{ 'pb-6': index < visibleSteps.length - 1 }"
+        :class="{ 'pb-7': index < visibleSteps.length - 1 }"
       >
         <!-- Timeline line (centered on circle: left = 20px center, w-0.5) -->
         <div
           v-if="index < visibleSteps.length - 1"
-          class="absolute left-[19px] top-[40px] bottom-0 w-[2px] rounded-full"
+          class="absolute top-[44px] bottom-0 w-[2px] rounded-full"
           :class="getLineClasses(step)"
+          :style="{ left: isCurrentStep(step) ? '21px' : '19px' }"
         />
 
-        <!-- Status circle — fixed 40x40 -->
-        <div class="relative z-10 shrink-0 w-10 h-10">
+        <!-- Status circle -->
+        <div class="relative z-10 shrink-0" :class="getCircleSize(step)">
           <span
             v-if="isCurrentStep(step) && step.status !== 'cancelado' && step.status !== 'completado'"
             class="absolute inset-0 rounded-full bg-emerald-500/30 animate-ping"
           />
           <div
-            class="relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
-            :class="getCircleClasses(step)"
+            class="relative rounded-full flex items-center justify-center transition-all duration-300"
+            :class="[getCircleSize(step), getCircleClasses(step)]"
           >
-            <Icon v-if="isStepCompleted(statusOrder[step.status])" name="lucide:check" size="18" />
-            <Icon v-else :name="step.icon" size="18" />
+            <Icon v-if="isStepCompleted(statusOrder[step.status])" name="lucide:check" :size="isCurrentStep(step) ? '20' : '18'" />
+            <Icon v-else :name="step.icon" :size="isCurrentStep(step) ? '20' : '18'" />
           </div>
         </div>
 
         <!-- Step content — vertically centered with circle -->
         <div class="ml-4 flex-1 min-h-[40px] flex flex-col justify-center">
           <p
-            class="text-[14px] font-semibold leading-tight"
-            :class="getTitleClasses(step)"
+            class="font-semibold leading-tight"
+            :class="[isCurrentStep(step) ? 'text-[16px]' : 'text-[14px]', getTitleClasses(step)]"
           >
             {{ step.title }}
           </p>
           <p
             v-if="isCurrentStep(step)"
-            class="text-[12px] mt-1 leading-relaxed"
-            :class="step.status === 'cancelado' ? 'text-red-400' : 'text-gray-400'"
+            class="text-[13px] mt-1.5 leading-relaxed"
+            :class="step.status === 'cancelado' ? 'text-red-400' : 'text-gray-500'"
           >
             {{ step.description }}
           </p>
