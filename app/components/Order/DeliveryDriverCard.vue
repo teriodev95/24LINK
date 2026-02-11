@@ -80,9 +80,9 @@ const confirmContact = () => {
           </div>
 
           <!-- Motorcycle Image -->
-          <div class="relative h-20 w-24 flex items-center justify-center">
+          <div class="relative h-28 w-32 flex items-center justify-center">
              <NuxtImg
-               src="/images/moto.webp" 
+               src="/images/24hrs-reparto-moto.webp" 
                alt="Repartidor" 
                class="h-full w-full object-contain drop-shadow-xl transform translate-x-1" 
                @error="hasError = true"
