@@ -79,19 +79,17 @@ const confirmContact = () => {
             </div>
           </div>
 
-          <!-- Motorcycle Image (Styled) -->
-          <div class="relative h-24 w-24 shrink-0 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-white border border-blue-100/50 shadow-sm flex items-center justify-center group">
-             <!-- Background shine effect -->
-             <div class="absolute inset-0 bg-white/40 opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none"></div>
-             
+          <!-- Motorcycle Image -->
+          <div class="relative h-28 w-32 flex items-center justify-center">
              <NuxtImg
                src="/images/en_camino.webp" 
                alt="Repartidor" 
-               class="w-full h-full object-cover transform scale-105" 
+               class="h-full w-full object-contain drop-shadow-xl transform translate-x-1" 
                @error="hasError = true"
                v-if="!hasError"
              />
              
+             <!-- Fallback if NuxtImg fails to behave as expected visually or strictly for local dev reference -->
              <div v-if="hasError" class="absolute inset-0 flex items-center justify-center text-slate-200">
                 <Icon name="lucide:bike" size="32" />
              </div>

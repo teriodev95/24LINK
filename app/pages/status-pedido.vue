@@ -59,6 +59,44 @@ const statusDisplay = computed(() => {
   return map[order.value.estado] || { title: 'Estado Desconocido', desc: 'Consultando...' }
 })
 
+// Status Image Helper
+const statusImage = computed(() => {
+  if (!order.value) return null
+  const map: Record<string, string> = {
+    'nuevo': '/images/recibido.webp',
+    'aceptado': '/images/listo.webp',
+    'en_ruta': '/images/en-camino.webp',
+    'completado': '/images/entregado.webp',
+    // No image for canceled or others
+  }
+  return map[order.value.estado]
+})
+
+const statusBorderClass = computed(() => {
+  if (!order.value) return 'border-gray-200'
+  const map: Record<string, string> = {
+    'nuevo': 'border-blue-500',
+    'aceptado': 'border-orange-500',
+    'en_ruta': 'border-[#001954]',
+    'completado': 'border-emerald-500',
+    'cancelado': 'border-red-500'
+  }
+  return map[order.value.estado] || 'border-gray-200 shadow-gray-200/50'
+})
+
+// Add shadow color matching border roughly
+const statusShadowClass = computed(() => {
+   if (!order.value) return 'shadow-gray-200/50'
+   const map: Record<string, string> = {
+    'nuevo': 'shadow-blue-500/30',
+    'aceptado': 'shadow-orange-500/30',
+    'en_ruta': 'shadow-[#001954]/30',
+    'completado': 'shadow-emerald-500/30',
+    'cancelado': 'shadow-red-500/30'
+  }
+  return map[order.value.estado] || 'shadow-gray-200/50'
+})
+
 const loadOrder = async () => {
   if (!orderNumber.value) return
   await loadOrderByNumber(orderNumber.value)
@@ -143,7 +181,7 @@ useSeoMeta({
 
 <template>
   <main class="min-h-screen bg-[#F5F7FA] pb-32">
-    <!-- Back Button (outside stacking context) -->
+    <!-- Back Button -->
     <NuxtLink to="/" class="fixed top-4 left-4 z-40 w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-sm flex items-center justify-center active:scale-95 transition-all">
       <Icon name="lucide:arrow-left" size="20" class="text-[#001954]" />
     </NuxtLink>
@@ -190,17 +228,21 @@ useSeoMeta({
                   {{ statusDisplay?.title }}
                </h2>
             </div>
-
-            <!-- Motorcycle Icon Floating -->
-            <div v-if="order.estado === 'en_ruta'" class="mt-6 animate-bounce-slow">
-               <div class="w-16 h-16 rounded-full bg-[#001954] flex items-center justify-center shadow-lg shadow-[#001954]/40 border-4 border-white">
-                  <Icon name="lucide:bike" class="text-white" size="32" />
-               </div>
-            </div>
-             <!-- Preparation Icon Floating -->
-            <div v-else-if="order.estado === 'aceptado'" class="mt-6 animate-pulse">
-               <div class="w-16 h-16 rounded-full bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/40 border-4 border-white">
-                  <Icon name="lucide:package-open" class="text-white" size="32" />
+            
+            <!-- Dynamic Status Image Floating -->
+            <div 
+              v-if="statusImage" 
+              class="mt-8 animate-bounce-slow relative z-20"
+            >
+               <div 
+                 class="w-32 h-32 rounded-full bg-white flex items-center justify-center border-4 shadow-xl"
+                 :class="[statusBorderClass, statusShadowClass]"
+               >
+                  <img 
+                    :src="statusImage" 
+                    class="w-full h-full object-contain p-2 rounded-full" 
+                    alt="Status" 
+                  />
                </div>
             </div>
 
@@ -209,7 +251,7 @@ useSeoMeta({
     </div>
 
     <!-- Main Content Area -->
-    <div class="relative z-10 pt-[280px] px-4 space-y-5 max-w-lg mx-auto">
+    <div class="relative z-10 pt-[320px] px-4 space-y-5 max-w-lg mx-auto">
       
       <!-- Loading State -->
       <div v-if="isLoading && !isRefreshing" class="bg-white rounded-[24px] p-8 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center">
