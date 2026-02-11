@@ -19,7 +19,7 @@ const hasAddressError = computed(() => !!(calculationError.value && addressWithE
 
 // Función para hacer scroll al componente y mostrar animación
 const scrollToCardWithAnimation = () => {
-  const element = contactCardRef.value?.$el || contactCardRef.value
+  const element = contactCardRef.value
   if (element?.scrollIntoView) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' })
     showBorderAnimation.value = true
@@ -71,45 +71,51 @@ onMounted(() => {
 <template>
   <section
     ref="contactCardRef"
-    class="transition-all duration-200"
+    class="transition-all duration-300 scroll-mt-24"
     :class="{ 'highlight-animation': showBorderAnimation }"
   >
-    <p class="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-3 px-1">Contacto</p>
+    <div class="flex items-center gap-2 mb-4 px-1">
+      <h3 class="text-[12px] font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+        <Icon name="lucide:user" size="14" />
+        Contacto
+      </h3>
+    </div>
 
-    <div class="space-y-3">
+    <div class="bg-white rounded-[24px] p-6 shadow-sm border border-gray-100/60 space-y-6">
+      
+      <!-- Phone Section -->
       <UIPhoneInput :phone="currentPhone" readonly disabled />
 
-      <div class="space-y-2.5">
-        <p class="text-[13px] font-medium text-gray-500 px-1">Dirección de entrega</p>
+      <!-- Divider -->
+      <div class="h-px bg-gray-50 w-full"></div>
+
+      <!-- Address Section -->
+      <div class="space-y-4">
+        <label class="text-[13px] font-bold text-gray-500 flex items-center gap-2">
+          <Icon name="lucide:map-pin" size="14" />
+          Dirección de entrega
+        </label>
 
         <!-- Loading state -->
-        <div v-if="isLoading" class="flex items-center gap-3 bg-gray-50/80 rounded-2xl p-3.5">
-          <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
-            <div class="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-[#001954]" />
+        <div v-if="isLoading" class="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border border-gray-100">
+          <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shrink-0 shadow-sm border border-gray-100">
+            <div class="animate-spin rounded-full h-4 w-4 border-2 border-gray-200 border-t-[#001954]" />
           </div>
-          <span class="text-[13px] text-gray-500">Cargando direcciones...</span>
+          <span class="text-[13px] font-medium text-gray-500">Cargando direcciones...</span>
         </div>
 
         <!-- Empty state -->
         <AdressEmpty v-else-if="orderStore.addressList.length === 0" />
 
         <!-- Addresses list -->
-        <div v-else class="space-y-2.5">
-          <!-- Info hint -->
-          <div class="flex items-center gap-3 bg-blue-50 rounded-2xl p-3.5">
-            <div class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-              <Icon name="lucide:info" size="18" class="text-blue-600" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[13px] font-semibold text-blue-800 leading-tight">
-                {{ orderStore.selectedAddress ? 'Dirección seleccionada' : 'Selecciona una dirección' }}
-              </p>
-              <p class="text-[11px] text-blue-600 mt-0.5">
-                {{ orderStore.selectedAddress
-                  ? 'Enviaremos tu pedido a esta dirección'
-                  : 'Toca sobre una dirección para seleccionarla' }}
-              </p>
-            </div>
+        <div v-else class="space-y-4">
+          
+          <!-- Hint Banner (Only show if no address selected) -->
+          <div v-if="!orderStore.selectedAddress?.id" class="flex items-start gap-3 bg-blue-50/50 rounded-xl p-3.5 border border-blue-100/50">
+            <Icon name="lucide:info" size="16" class="text-blue-500 mt-0.5" />
+            <p class="text-[12px] text-blue-600 leading-relaxed font-medium">
+              Selecciona donde quieres recibir tu pedido.
+            </p>
           </div>
 
           <!-- Horizontal address list -->
@@ -120,17 +126,25 @@ onMounted(() => {
             @select-address="handleAddressSelection"
           />
 
-          <!-- Selected address indicator -->
-          <OrderSelectedAddressIndicator
-            v-if="orderStore.selectedAddress?.id"
-            :address="orderStore.selectedAddress"
-          />
+          <!-- Selected indicator with transition -->
+          <Transition
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 translate-y-2"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-2"
+          >
+            <div v-if="orderStore.selectedAddress?.id">
+               <OrderSelectedAddressIndicator :address="orderStore.selectedAddress" />
+            </div>
+          </Transition>
 
           <!-- Error message -->
           <AdressErrorMessage :visible="hasAddressError" @dismiss="dismissAddressError" />
         </div>
 
-        <!-- Calculating indicator -->
+        <!-- Price Calculation Indicator -->
         <OrderCalculatingIndicator v-if="isCalculating" />
       </div>
     </div>
@@ -139,17 +153,17 @@ onMounted(() => {
 
 <style scoped>
 .highlight-animation {
-  border-radius: 16px;
-  box-shadow: 0 0 0 2px #001954, 0 0 20px rgba(0, 25, 84, 0.3);
+  border-radius: 24px;
   animation: pulse-highlight 2s ease-in-out;
 }
 
 @keyframes pulse-highlight {
   0%, 100% {
-    box-shadow: 0 0 0 2px #001954, 0 0 20px rgba(0, 25, 84, 0.3);
+    box-shadow: 0 0 0 0 rgba(0, 25, 84, 0);
   }
   50% {
-    box-shadow: 0 0 0 2px #003d99, 0 0 30px rgba(0, 25, 84, 0.5);
+    box-shadow: 0 0 0 4px rgba(0, 25, 84, 0.1), 0 10px 30px rgba(0, 25, 84, 0.15);
+    transform: scale(1.01);
   }
 }
 </style>

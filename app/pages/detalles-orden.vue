@@ -55,41 +55,43 @@ useSeoMeta({
 </script>
 
 <template>
-  <main class="min-h-screen bg-white pb-28">
+  <main class="min-h-screen bg-[#F5F7FA] pb-32">
     <!-- Header -->
-    <div class="sticky top-0 z-10 bg-white/80 backdrop-blur-md px-5 py-4">
-      <div class="flex items-center gap-3">
+    <div class="sticky top-0 z-10 bg-[#F5F7FA]/90 backdrop-blur-md px-5 py-3 border-b border-gray-100/50">
+      <div class="flex items-center gap-4">
         <button
-          class="w-10 h-10 rounded-full flex items-center justify-center active:bg-gray-100 transition-colors cursor-pointer"
+          class="w-10 h-10 rounded-full bg-white flex items-center justify-center active:bg-gray-50 transition-all shadow-sm border border-gray-100 text-[#001954]"
           @click="router.back()"
         >
-          <Icon name="lucide:arrow-left" size="20" class="text-[#001954]" />
+          <Icon name="lucide:arrow-left" size="20" />
         </button>
-        <h1 class="text-[18px] font-bold text-[#001954]">Tu pedido</h1>
+        <h1 class="text-[17px] font-bold text-[#001954] -tracking-[0.01em]">Tu pedido</h1>
       </div>
     </div>
 
-    <div class="px-5 space-y-6">
+    <div class="px-5 space-y-6 pt-2">
       <!-- Store closed banner -->
       <ClientOnly>
         <div
           v-if="!isStoreOpen"
-          class="bg-gray-50/80 rounded-2xl p-5"
+          class="bg-white rounded-[24px] p-6 shadow-sm border border-gray-100"
         >
           <div class="flex items-start gap-4">
-            <div class="w-10 h-10 rounded-full bg-[#001954]/8 flex items-center justify-center shrink-0 mt-0.5">
-              <Icon name="lucide:moon" size="18" class="text-[#001954]/40" />
+            <div class="w-10 h-10 rounded-full bg-[#001954]/5 flex items-center justify-center shrink-0 mt-1">
+              <Icon name="lucide:moon" size="20" class="text-[#001954]" />
             </div>
-            <div class="flex-1 min-w-0 space-y-1.5">
-              <p class="text-[15px] font-bold text-[#001954] leading-tight">
+            <div class="flex-1 min-w-0 space-y-2">
+              <p class="text-[16px] font-bold text-[#001954] leading-tight">
                 Reparto en pausa
               </p>
-              <p class="text-[12px] text-gray-500 leading-relaxed">
+              <p class="text-[13px] text-gray-500 leading-relaxed">
                 Nuestros repartidores se están preparando. El servicio de entrega a domicilio inicia por la noche.
               </p>
-              <p class="text-[12px] text-gray-400 leading-relaxed">
-                Tu carrito está guardado y listo para cuando activemos el servicio.
-              </p>
+              <div class="bg-gray-50 rounded-xl p-3">
+                 <p class="text-[12px] text-gray-400 leading-relaxed font-medium">
+                   Tu carrito está guardado y listo para cuando activemos el servicio.
+                 </p>
+              </div>
             </div>
           </div>
 
@@ -97,9 +99,9 @@ useSeoMeta({
             href="https://maps.app.goo.gl/vXZ7xbx5iS9YUsYLA"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center justify-center gap-2 w-full h-11 bg-[#001954] text-white rounded-2xl text-[13px] font-semibold active:scale-[0.97] transition-all duration-150 shadow-[0_4px_20px_rgba(0,25,84,0.3)] mt-4"
+            class="flex items-center justify-center gap-2 w-full h-12 bg-[#001954] text-white rounded-xl text-[14px] font-bold active:scale-[0.98] transition-all duration-150 shadow-lg shadow-[#001954]/20 mt-5"
           >
-            <Icon name="lucide:map-pin" size="16" />
+            <Icon name="lucide:map-pin" size="18" />
             <span>Visitar el local</span>
           </a>
         </div>
@@ -108,37 +110,47 @@ useSeoMeta({
       <!-- Address alert -->
       <div
         v-if="!isCartEmpty && !orderStore.selectedAddress?.id && isStoreOpen"
-        class="flex items-center gap-3 bg-amber-50 rounded-2xl p-3.5"
+        class="flex items-center gap-4 bg-amber-50 rounded-[20px] p-4 border border-amber-100"
       >
-        <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
-          <Icon name="lucide:map-pin-off" size="18" class="text-amber-600" />
+        <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0 text-amber-600">
+          <Icon name="lucide:map-pin-off" size="20" />
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-[13px] font-semibold text-amber-800 leading-tight">Agrega una dirección</p>
-          <p class="text-[11px] text-amber-600 mt-0.5">Selecciona tu dirección en la sección de contacto</p>
+          <p class="text-[14px] font-bold text-amber-800 leading-tight">Agrega una dirección</p>
+          <p class="text-[12px] font-medium text-amber-600 mt-0.5">Selecciona tu dirección en la sección de contacto</p>
         </div>
       </div>
 
       <!-- Payment & Delivery methods -->
+      <!-- We don't wrap this because the buttons inside are cards themselves -->
       <OrderPaymentCard />
 
       <!-- Products (editable) -->
       <ClientOnly>
-        <OrderProductList v-if="!isCartEmpty" :products="cartStore.cartItems" />
+        <div v-if="!isCartEmpty" class="bg-white rounded-[24px] p-5 shadow-sm border border-gray-100/60 transition-all hover:shadow-md">
+           <div class="flex items-center gap-2 mb-4">
+              <Icon name="lucide:shopping-bag" size="16" class="text-gray-400" />
+              <h3 class="text-[12px] font-bold text-gray-400 uppercase tracking-widest">Productos</h3>
+           </div>
+           
+           <OrderProductList :products="cartStore.cartItems" />
+           
+           <!-- Empty cart state inside product list container would be weird, check logic -->
+        </div>
 
-        <!-- Empty cart state -->
-        <section v-else class="py-8">
+        <!-- Empty cart state (Fullscreen usually) -->
+        <section v-else class="py-12">
           <div class="flex flex-col items-center text-center">
-            <div class="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-3">
-              <Icon name="lucide:shopping-bag" size="24" class="text-gray-300" />
+            <div class="w-20 h-20 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center mb-6">
+              <Icon name="lucide:shopping-bag" size="32" class="text-gray-300" />
             </div>
-            <p class="text-[14px] font-semibold text-[#001954]">Tu carrito está vacío</p>
-            <p class="text-[12px] text-gray-400 mt-1">Agrega productos para continuar con tu pedido</p>
+            <p class="text-[18px] font-bold text-[#001954] mb-2">Tu carrito está vacío</p>
+            <p class="text-[14px] text-gray-400 mb-8 max-w-[240px]">Agrega tus bebidas y snacks favoritos para continuar.</p>
             <NuxtLink
               to="/"
-              class="mt-4 inline-flex items-center gap-2 bg-[#001954] text-white px-5 h-10 rounded-2xl text-[13px] font-semibold active:scale-[0.97] transition-all duration-150 shadow-[0_4px_20px_rgba(0,25,84,0.3)]"
+              class="inline-flex items-center gap-2 bg-[#001954] text-white px-8 h-12 rounded-full text-[14px] font-bold active:scale-[0.97] transition-all duration-150 shadow-lg shadow-[#001954]/20 hover:shadow-xl hover:shadow-[#001954]/30"
             >
-              <Icon name="lucide:store" size="16" />
+              <Icon name="lucide:store" size="18" />
               <span>Ir a la tienda</span>
             </NuxtLink>
           </div>
@@ -156,25 +168,24 @@ useSeoMeta({
       <!-- Validation error -->
       <div
         v-if="orderStore.selectedAddress?.id && !orderStore.isValidAddress"
-        class="flex items-center gap-3 bg-red-50 rounded-2xl p-3.5"
+        class="flex items-center gap-3 bg-red-50 rounded-2xl p-4 border border-red-100"
       >
         <div class="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center shrink-0">
           <Icon name="lucide:alert-circle" size="18" class="text-red-500" />
         </div>
-        <p class="text-[13px] text-red-700 leading-tight">
+        <p class="text-[13px] font-medium text-red-700 leading-tight">
           Hay un problema con la dirección seleccionada. Intenta con otra.
         </p>
       </div>
     </div>
 
     <!-- Fixed bottom CTA -->
-    <div class="fixed bottom-0 left-0 right-0 z-20 px-5 pb-5 pt-3">
-      <div class="absolute inset-0 bg-gradient-to-t from-white via-white/95 to-transparent pointer-events-none" />
+    <div class="fixed bottom-0 left-0 right-0 z-20 px-5 pb-6 pt-4 bg-gradient-to-t from-[#F5F7FA] via-[#F5F7FA]/95 to-transparent">
       <button
-        class="relative w-full h-[52px] rounded-2xl font-semibold text-[15px] flex items-center justify-center gap-2 transition-all duration-150 active:scale-[0.98] cursor-pointer"
+        class="relative w-full h-[56px] rounded-2xl font-bold text-[16px] flex items-center justify-center gap-3 transition-all duration-200 active:scale-[0.98] cursor-pointer shadow-xl shadow-[#001954]/25 hover:shadow-2xl hover:shadow-[#001954]/30"
         :class="isButtonDisabled
-          ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-          : 'bg-[#001954] text-white shadow-[0_4px_20px_rgba(0,25,84,0.3)]'"
+          ? 'bg-gray-200 text-gray-400 cursor-not-allowed shadow-none'
+          : 'bg-[#001954] text-white'"
         :disabled="isButtonDisabled"
         @click="handleCreateOrder"
       >
@@ -197,7 +208,7 @@ useSeoMeta({
         </template>
         <template v-else>
           <span>Ordenar</span>
-          <span class="text-white/40 mx-1">·</span>
+          <span class="text-white/30 font-light">|</span>
           <span>MXN {{ formatCurrency(cartStore.cart.total) }}</span>
         </template>
       </button>
