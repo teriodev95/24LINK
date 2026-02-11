@@ -143,28 +143,26 @@ useSeoMeta({
 
 <template>
   <main class="min-h-screen bg-[#F5F7FA] pb-32">
+    <!-- Back Button (outside stacking context) -->
+    <NuxtLink to="/" class="fixed top-4 left-4 z-40 w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-sm flex items-center justify-center active:scale-95 transition-all">
+      <Icon name="lucide:arrow-left" size="20" class="text-[#001954]" />
+    </NuxtLink>
+
     <!-- Map Header Background (Visual Certainty) -->
     <div class="fixed top-0 left-0 right-0 h-[320px] bg-slate-200 z-0 overflow-hidden">
       <!-- Simulated Map Pattern -->
-      <div class="absolute inset-0 opacity-40 bg-slate-100" 
+      <div class="absolute inset-0 opacity-40 bg-slate-100"
            style="background-image: radial-gradient(#94A3B8 1px, transparent 1px); background-size: 20px 20px;"></div>
-      
+
       <!-- Abstract Roads/Path -->
       <svg class="absolute inset-0 w-full h-full text-white/40 pointer-events-none" viewBox="0 0 400 300" preserveAspectRatio="none">
          <path d="M-10,150 Q100,100 200,150 T410,120" stroke="currentColor" stroke-width="12" fill="none" />
          <path d="M50,0 Q80,100 50,300" stroke="currentColor" stroke-width="8" fill="none" />
       </svg>
-      
+
       <!-- Gradient overlay for text readability -->
       <div class="absolute inset-0 bg-gradient-to-b from-[#001954]/5 via-transparent to-[#F5F7FA]" />
       <div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#F5F7FA] to-transparent" />
-      
-      <!-- Back Button -->
-      <div class="absolute top-4 left-4 z-20">
-        <NuxtLink to="/" class="w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-sm flex items-center justify-center active:scale-95 transition-all mb-4">
-          <Icon name="lucide:arrow-left" size="20" class="text-[#001954]" />
-        </NuxtLink>
-      </div>
 
       <!-- Live Status Island -->
       <div class="absolute top-[80px] left-0 right-0 px-6 flex flex-col items-center z-10 w-full">

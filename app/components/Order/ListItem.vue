@@ -7,37 +7,39 @@ interface Props {
 
 defineProps<Props>()
 
-// Formatear dirección
-const formatAddress = (direccion: OrderWithAddress['direccion']) => `${direccion.calle} #${direccion.numero_exterior}`;
+// Format address helper
+const formatAddress = (direccion: OrderWithAddress['direccion']) => {
+  if (!direccion) return 'En camino'
+  return `${direccion.calle} #${direccion.numero_exterior}`
+}
 </script>
 
 <template>
   <NuxtLink :to="`/status-pedido?pedido=${order.numero_pedido}`"
-    class="flex-shrink-0 min-w-full hover:bg-green-800/30 transition-all duration-200">
-    <div class="flex items-center justify-between px-4 py-3">
-      <!-- Contenido izquierdo -->
-      <div class="flex items-center gap-3 flex-1 min-w-0">
-        <!-- Punto titilante verde -->
-        <div class="relative flex-shrink-0">
-          <div class="w-3 h-3 bg-green-300 rounded-full animate-ping absolute" />
-          <div class="w-3 h-3 bg-green-200 rounded-full relative" />
-        </div>
-
-        <!-- Información del pedido -->
-        <div class="flex flex-col min-w-0 flex-1">
-          <span class="text-white font-semibold text-sm leading-tight truncate">
-            Pedido en curso • {{ formatCurrency(order.total) }}
-          </span>
-          <span class="text-green-100 text-xs leading-tight truncate">
-            {{ formatAddress(order.direccion) }} • {{ order.numero_pedido }}
-          </span>
-        </div>
+    class="flex-shrink-0 min-w-full h-full flex items-center justify-between px-4 hover:bg-white/10 transition-all duration-200">
+    
+    <!-- Left Content -->
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="flex items-center gap-2">
+         <div class="relative flex h-2.5 w-2.5">
+           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+           <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+         </div>
       </div>
-
-      <!-- Flecha derecha -->
-      <div class="flex-shrink-0">
-        <LucideChevronRight :size="24" class="text-white" />
+      
+      <div class="flex flex-col min-w-0">
+        <span class="text-white font-bold text-[13px] leading-tight truncate">
+          Pedido en curso • {{ formatCurrency(order.total) }}
+        </span>
+        <span class="text-white/80 text-[11px] leading-tight truncate">
+          {{ formatAddress(order.direccion) }} • {{ order.numero_pedido }}
+        </span>
       </div>
+    </div>
+
+    <!-- Right Arrow -->
+    <div class="pl-2">
+      <Icon name="lucide:chevron-right" size="18" class="text-white" />
     </div>
   </NuxtLink>
 </template>

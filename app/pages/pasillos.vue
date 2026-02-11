@@ -22,78 +22,120 @@ const handleSelect = (category: Category | { id: string; nombre: string }) => {
   productsStore.setSelectedCategory(category)
   navigateTo('/')
 }
+
+definePageMeta({
+  pageTransition: {
+    name: 'page',
+    mode: 'out-in'
+  }
+})
 </script>
 
 <template>
-  <main class="min-h-screen bg-white pb-36">
-    <div class="px-5 pt-6 pb-4">
-      <h1 class="text-[26px] font-bold text-[#001954] tracking-tight">Pasillos</h1>
+  <main class="min-h-screen bg-[#F5F7FA] pb-36">
+    <div class="px-5 pt-8 pb-6 animate-fade-in-down">
+      <h1 class="text-[28px] font-black text-[#001954] tracking-tight leading-none mb-1">Pasillos</h1>
+      <p class="text-gray-400 font-medium text-[14px]">Explora todas nuestras categorías</p>
     </div>
 
-    <div v-if="productsStore.isLoading && !productsStore.hasData" class="px-4 space-y-2 animate-pulse">
-      <div class="h-14 rounded-[18px] bg-gray-200" />
-      <div v-for="i in 6" :key="i" class="flex items-center gap-4 rounded-[18px] bg-gray-100 px-4 py-3">
-        <div class="flex shrink-0">
-          <div v-for="j in 3" :key="j" class="w-10 h-10 rounded-full bg-gray-200" :class="j > 1 ? '-ml-4' : ''" />
-        </div>
-        <div class="flex-1 space-y-1.5">
-          <div class="h-4 w-24 bg-gray-200 rounded" />
-          <div class="h-3 w-16 bg-gray-200/60 rounded" />
-        </div>
-      </div>
+    <div v-if="productsStore.isLoading && !productsStore.hasData" class="px-5 space-y-3 animate-pulse">
+      <div class="h-20 rounded-[20px] bg-gray-200" />
+      <div v-for="i in 6" :key="i" class="h-24 bg-gray-100 rounded-[20px]" />
     </div>
 
-    <div v-else class="px-4 space-y-2">
-      <!-- "Ver todo" -->
+    <div v-else class="px-5 space-y-3 pb-safe-bottom">
+      <!-- "Ver todo" Button -->
       <button
-        class="group w-full flex items-center justify-between bg-[#001954] rounded-[18px] px-4 py-3.5 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+        class="group w-full relative overflow-hidden bg-[#001954] rounded-[24px] p-5 text-left shadow-lg shadow-[#001954]/20 active:scale-[0.98] transition-all duration-300 hover:scale-[1.01] cursor-pointer mb-6 animate-slide-up"
+        style="animation-delay: 0ms;"
         @click="handleSelect({ id: 'all', nombre: 'Todas' })"
       >
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
-            <Icon name="lucide:sparkles" size="16" class="text-white" />
+        <!-- Decorative bg circle -->
+        <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors"></div>
+        
+        <div class="flex items-center justify-between relative z-10">
+          <div class="flex items-center gap-4">
+             <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/5 shadow-inner">
+               <Icon name="lucide:layers" size="24" class="text-emerald-400" />
+             </div>
+             <div>
+               <h3 class="text-white font-bold text-[17px] leading-tight mb-1">Todas las categorías</h3>
+               <p class="text-emerald-400/80 text-[12px] font-medium">{{ productsStore.products.length }} productos disponibles</p>
+             </div>
           </div>
-          <div class="text-left">
-            <p class="text-white font-semibold text-[15px] leading-tight">Ver todo</p>
-            <p class="text-white/40 text-[11px]">{{ productsStore.products.length }} productos</p>
+          <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+             <Icon name="lucide:arrow-right" size="20" class="text-white group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
-        <Icon name="lucide:chevron-right" size="16" class="text-white/30 group-active:translate-x-0.5 transition-transform duration-200" />
       </button>
 
-      <!-- Category cards -->
-      <button
-        v-for="category in productsStore.sortedCategories"
-        :key="category.id"
-        class="group w-full flex items-center gap-4 bg-gray-50/80 rounded-[18px] px-4 py-3 active:scale-[0.98] active:bg-gray-100 transition-all duration-200 cursor-pointer"
-        @click="handleSelect(category)"
-      >
-        <!-- Overlapping circles -->
-        <div
-          class="relative shrink-0 h-10"
-          :style="{ width: `${40 + (getCategoryThumbs(category.id).length - 1) * 24}px` }"
+      <!-- Category Grid -->
+      <div class="grid gap-3">
+        <button
+          v-for="(category, index) in productsStore.sortedCategories"
+          :key="category.id"
+          class="group w-full flex items-center gap-4 bg-white rounded-[20px] p-4 text-left shadow-sm border border-gray-100/50 hover:border-gray-200 active:scale-[0.98] transition-all duration-200 cursor-pointer animate-slide-up hover:shadow-md"
+          :style="{ animationDelay: `${(index + 1) * 50}ms` }"
+          @click="handleSelect(category)"
         >
-          <div
-            v-for="(src, i) in getCategoryThumbs(category.id)"
-            :key="i"
-            class="absolute top-0 w-10 h-10 rounded-full overflow-hidden ring-[2.5px] ring-white shadow-sm group-active:shadow-none transition-shadow duration-200"
-            :style="{ left: `${i * 24}px`, zIndex: 3 - i }"
-          >
-            <img :src="src" alt="" class="w-full h-full object-cover" loading="lazy">
+          <!-- Product Preview Circles -->
+          <div class="relative shrink-0 w-[88px] h-12 flex items-center">
+            <template v-if="getCategoryThumbs(category.id).length > 0">
+               <div
+                  v-for="(src, i) in getCategoryThumbs(category.id)"
+                  :key="i"
+                  class="absolute top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-[3px] border-white shadow-sm overflow-hidden bg-gray-50 group-hover:scale-110 transition-transform duration-300"
+                  :style="{ left: `${i * 22}px`, zIndex: 3 - i }"
+               >
+                  <img :src="src" class="w-full h-full object-contain p-1" />
+               </div>
+            </template>
+            <div v-else class="w-12 h-12 rounded-full bg-gray-50 border-[3px] border-white flex items-center justify-center">
+               <Icon name="lucide:package" size="20" class="text-gray-300" />
+            </div>
           </div>
-        </div>
 
-        <!-- Name + count -->
-        <div class="flex-1 text-left min-w-0">
-          <p class="text-[#001954] font-semibold text-[15px] leading-tight truncate">{{ category.nombre }}</p>
-          <p class="text-gray-400 text-[11px] mt-0.5">{{ getProductCount(category.id) }} productos</p>
-        </div>
+          <!-- Info -->
+          <div class="flex-1 min-w-0 pr-2">
+            <h3 class="text-[#001954] font-bold text-[15px] leading-tight truncate mb-1 group-hover:text-emerald-600 transition-colors">
+               {{ category.nombre }}
+            </h3>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-50 text-[11px] font-bold text-gray-400 border border-gray-100 group-hover:bg-emerald-50 group-hover:text-emerald-600 group-hover:border-emerald-100 transition-colors">
+               {{ getProductCount(category.id) }} productos
+            </span>
+          </div>
 
-        <!-- Arrow -->
-        <Icon name="lucide:chevron-right" size="16" class="text-gray-300 shrink-0 group-active:translate-x-0.5 transition-transform duration-200" />
-      </button>
+          <!-- Arrow -->
+          <Icon name="lucide:chevron-right" size="20" class="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+        </button>
+      </div>
     </div>
 
     <UIBottomNav />
   </main>
 </template>
+
+<style scoped>
+.pb-safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 20px);
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  opacity: 0;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>

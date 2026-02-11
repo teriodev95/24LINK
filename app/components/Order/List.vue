@@ -11,26 +11,21 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const filteredOrders = computed(() => props.orders.filter(order => order.estado !== 'completado'))
-
 </script>
 
 <template>
-  <!-- Orders list - only when there are active orders -->
-  <section v-if="filteredOrders.length > 0"
-    class="fixed top-0 left-0 right-0 z-50 shadow-md bg-gradient-to-r from-green-600 to-green-700">
-    <div class="flex overflow-x-auto scrollbar-hide">
+  <div v-if="filteredOrders.length > 0" class="fixed top-0 left-0 right-0 z-50 bg-[#10B981] shadow-md h-14">
+    <div class="flex overflow-x-auto scrollbar-hide h-full">
       <OrderListItem v-for="order in filteredOrders" :key="order.id" :order="order" />
     </div>
-  </section>
+  </div>
 </template>
 
 <style scoped>
-/* Ocultar scrollbar pero mantener funcionalidad */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
