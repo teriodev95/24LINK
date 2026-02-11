@@ -187,7 +187,8 @@ useSeoMeta({
     </NuxtLink>
 
     <!-- Map Header Background (Visual Certainty) -->
-    <div class="fixed top-0 left-0 right-0 h-[320px] bg-slate-200 z-0 overflow-hidden">
+    <!-- Increased height to 380px to accommodate larger status icons and avoid clipping -->
+    <div class="fixed top-0 left-0 right-0 h-[380px] bg-slate-200 z-0 overflow-hidden">
       <!-- Simulated Map Pattern -->
       <div class="absolute inset-0 opacity-40 bg-slate-100"
            style="background-image: radial-gradient(#94A3B8 1px, transparent 1px); background-size: 20px 20px;"></div>
@@ -251,7 +252,8 @@ useSeoMeta({
     </div>
 
     <!-- Main Content Area -->
-    <div class="relative z-10 pt-[320px] px-4 space-y-5 max-w-lg mx-auto">
+    <!-- Increased top padding to 380px to match new header height -->
+    <div class="relative z-10 pt-[380px] px-4 space-y-5 max-w-lg mx-auto">
       
       <!-- Loading State -->
       <div v-if="isLoading && !isRefreshing" class="bg-white rounded-[24px] p-8 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center">
