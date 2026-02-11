@@ -11,6 +11,9 @@ export const useProductsStore = defineStore('products', () => {
   const _searchQuery = ref<string>('')
   const _isLoading = ref(false)
   const _error = ref<string | null>(null)
+  const _lastFetchedAt = ref<number>(0)
+  const _isRefreshing = ref(false)
+  const STALE_AFTER_MS = 5 * 60 * 1000
 
   // Getters
   const products = computed(() => _products.value)
@@ -75,6 +78,10 @@ export const useProductsStore = defineStore('products', () => {
   })
 
   const hasData = computed(() => !!(_categories.value.length && _products.value.length))
+  const isStale = computed(() => {
+    if (!_lastFetchedAt.value) return true
+    return Date.now() - _lastFetchedAt.value > STALE_AFTER_MS
+  })
   const shouldShowFilteredProducts = computed(() =>
     hasData.value && _selectedCategory.value && !shouldShowAllProducts.value
   )
@@ -136,6 +143,7 @@ export const useProductsStore = defineStore('products', () => {
       if (productsData.data.value) {
         setProducts(productsData.data.value)
       }
+      _lastFetchedAt.value = Date.now()
     } catch (err) {
       console.error('Fetch error:', err)
       setError('Error al cargar los datos')
@@ -160,6 +168,30 @@ export const useProductsStore = defineStore('products', () => {
     return _categories.value.find(c => c.id === categoryId)?.nombre || ''
   }
 
+  const refreshData = async () => {
+    if (_isRefreshing.value) return
+    _isRefreshing.value = true
+    try {
+      const [categoriesData, productsData] = await Promise.all([
+        api.$fetch<Category[]>('/categorias?activa=eq.true&select=id,nombre'),
+        api.$fetch<Product[]>('/productos?activo=eq.true&select=*')
+      ])
+      if (categoriesData?.length) setCategories(categoriesData)
+      if (productsData?.length) setProducts(productsData)
+      _lastFetchedAt.value = Date.now()
+    } catch (err) {
+      console.error('Background refresh error:', err)
+    } finally {
+      _isRefreshing.value = false
+    }
+  }
+
+  const refreshIfStale = async () => {
+    if (hasData.value && isStale.value) {
+      await refreshData()
+    }
+  }
+
   const clearFilters = () => {
     setSelectedCategory({ id: 'all', nombre: 'Todas' })
     setSearchQuery('')
@@ -180,6 +212,7 @@ export const useProductsStore = defineStore('products', () => {
     filteredProducts,
     processedData,
     hasData,
+    isStale,
     shouldShowFilteredProducts,
     // Setters
     setProducts,
@@ -190,6 +223,8 @@ export const useProductsStore = defineStore('products', () => {
     setError,
     // Actions
     fetchData,
+    refreshData,
+    refreshIfStale,
     clearFilters,
     getProductById,
     getSimilarProducts,

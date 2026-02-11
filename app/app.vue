@@ -7,6 +7,8 @@ const productsStore = useProductsStore()
 if (!productsStore.hasData && !productsStore.isLoading) {
   productsStore.fetchData()
 }
+
+useProductRefresh()
 useHead({
   link: [
     { rel: 'manifest', href: '/manifest.json' }

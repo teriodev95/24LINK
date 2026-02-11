@@ -150,6 +150,24 @@ export const useCartStore = defineStore('cart', () => {
     saveProducts()
   }
 
+  const syncPrices = () => {
+    const productsStore = useProductsStore()
+    if (!productsStore.hasData) return
+
+    let changed = false
+    for (const item of productos.value) {
+      const current = productsStore.getProductById(item.id)
+      if (current && current.precio !== item.precio_unitario) {
+        item.precio_unitario = current.precio
+        changed = true
+      }
+    }
+    if (changed) saveProducts()
+  }
+
+  const productsStore = useProductsStore()
+  watch(() => productsStore.products, () => syncPrices())
+
   // Computed para compatibilidad con el código existente
   const cartItems = computed(() => productos.value)
   const totalAmount = computed(() => cart.value.total)
