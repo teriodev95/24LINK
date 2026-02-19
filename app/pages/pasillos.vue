@@ -74,30 +74,30 @@ definePageMeta({
         <button
           v-for="(category, index) in productsStore.sortedCategories"
           :key="category.id"
-          class="group w-full flex items-center gap-4 bg-white rounded-[20px] p-4 text-left shadow-sm border border-gray-100/50 hover:border-gray-200 active:scale-[0.98] transition-all duration-200 cursor-pointer animate-slide-up hover:shadow-md"
+          class="group w-full flex items-center gap-3 bg-white rounded-[20px] p-4 text-left shadow-sm border border-gray-100/50 hover:border-gray-200 active:scale-[0.98] transition-all duration-200 cursor-pointer animate-slide-up hover:shadow-md overflow-hidden"
           :style="{ animationDelay: `${(index + 1) * 50}ms` }"
           @click="handleSelect(category)"
         >
           <!-- Product Preview Circles -->
-          <div class="relative shrink-0 w-[88px] h-12 flex items-center">
+          <div class="relative shrink-0 w-[60px] h-10 flex items-center">
             <template v-if="getCategoryThumbs(category.id).length > 0">
                <div
-                  v-for="(src, i) in getCategoryThumbs(category.id)"
+                  v-for="(src, i) in getCategoryThumbs(category.id).slice(0, 2)"
                   :key="i"
-                  class="absolute top-1/2 -translate-y-1/2 w-12 h-12 rounded-full border-[3px] border-white shadow-sm overflow-hidden bg-gray-50 group-hover:scale-110 transition-transform duration-300"
-                  :style="{ left: `${i * 22}px`, zIndex: 3 - i }"
+                  class="absolute top-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gray-50"
+                  :style="{ left: `${i * 20}px`, zIndex: 2 - i }"
                >
-                  <img :src="src" class="w-full h-full object-contain p-1" />
+                  <img :src="src" class="w-full h-full object-contain p-0.5" />
                </div>
             </template>
-            <div v-else class="w-12 h-12 rounded-full bg-gray-50 border-[3px] border-white flex items-center justify-center">
-               <Icon name="lucide:package" size="20" class="text-gray-300" />
+            <div v-else class="w-10 h-10 rounded-full bg-gray-50 border-2 border-white flex items-center justify-center">
+               <Icon name="lucide:package" size="18" class="text-gray-300" />
             </div>
           </div>
 
           <!-- Info -->
-          <div class="flex-1 min-w-0 pr-2">
-            <h3 class="text-[#001954] font-bold text-[15px] leading-tight truncate mb-1 group-hover:text-emerald-600 transition-colors">
+          <div class="flex-1 min-w-0">
+            <h3 class="text-[#001954] font-bold text-[14px] leading-snug mb-1 group-hover:text-emerald-600 transition-colors line-clamp-2 break-words">
                {{ category.nombre }}
             </h3>
             <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-gray-50 text-[11px] font-bold text-gray-400 border border-gray-100 group-hover:bg-emerald-50 group-hover:text-emerald-600 group-hover:border-emerald-100 transition-colors">
@@ -106,7 +106,7 @@ definePageMeta({
           </div>
 
           <!-- Arrow -->
-          <Icon name="lucide:chevron-right" size="20" class="text-gray-300 group-hover:text-emerald-500 group-hover:translate-x-1 transition-all" />
+          <Icon name="lucide:chevron-right" size="18" class="shrink-0 text-gray-300 group-hover:text-emerald-500 transition-colors" />
         </button>
       </div>
     </div>
