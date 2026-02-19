@@ -32,7 +32,7 @@ definePageMeta({
 </script>
 
 <template>
-  <main class="min-h-screen bg-[#F5F7FA] pb-36">
+  <main class="min-h-screen bg-[#F5F7FA] pb-36 overflow-x-hidden">
     <div class="px-5 pt-8 pb-6 animate-fade-in-down">
       <h1 class="text-[28px] font-black text-[#001954] tracking-tight leading-none mb-1">Pasillos</h1>
       <p class="text-gray-400 font-medium text-[14px]">Explora todas nuestras categorías</p>
