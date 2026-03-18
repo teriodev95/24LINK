@@ -9,6 +9,13 @@ const { $toast } = useNuxtApp()
 const { createOrder, isLoading } = useOrderApi()
 const { addresses, refreshAddresses } = useAddresses()
 const { recalculateOnAddressChange } = useDeliveryCalculator()
+const { userPhone } = useAuth()
+
+// Asegurar que el store tenga phone y defaults inicializados
+orderStore.initializeDefaults()
+if (userPhone.value) {
+  orderStore.setPhone(userPhone.value)
+}
 
 const selectedId = ref<string | null>(null)
 const isCalculating = ref(false)
@@ -85,10 +92,8 @@ watch(addresses, (newAddresses) => {
 }, { immediate: true })
 
 onMounted(() => {
-  // Refresh para capturar direcciones nuevas (ej: al volver de /ubicacion)
-  if (addresses.value.length > 0) {
-    refreshAddresses()
-  }
+  // Siempre refrescar para capturar direcciones nuevas (ej: al volver de /ubicacion)
+  refreshAddresses()
 })
 
 useSeoMeta({
@@ -236,8 +241,11 @@ definePageMeta({
     <div class="fixed bottom-0 left-0 right-0 z-20">
       <div class="bg-white rounded-t-[24px] shadow-2xl shadow-black/10 border-t border-gray-100/50 px-5 pt-4 pb-6">
 
-        <!-- Mini resumen de productos -->
-        <div class="flex items-center gap-2 mb-3">
+        <!-- Mini resumen de productos (clickeable → vuelve a detalles-orden) -->
+        <button
+          class="flex items-center gap-2 mb-3 w-full text-left active:opacity-70 transition-opacity"
+          @click="navigateTo('/detalles-orden', { replace: true })"
+        >
           <div class="flex -space-x-2">
             <div
               v-for="(item, i) in cartStore.cartItems.slice(0, 4)"
@@ -257,10 +265,14 @@ definePageMeta({
               +{{ cartStore.cartItems.length - 4 }}
             </div>
           </div>
-          <span class="text-[12px] text-gray-400 font-medium">
+          <span class="text-[12px] text-gray-400 font-medium flex-1">
             {{ cartStore.totalItems }} {{ cartStore.totalItems === 1 ? 'producto' : 'productos' }}
           </span>
-        </div>
+          <span class="text-[11px] font-medium text-[#001954]/50 flex items-center gap-1">
+            Modificar
+            <Icon name="lucide:pencil" size="11" />
+          </span>
+        </button>
 
         <!-- Resumen de costos (visible cuando hay cálculo) -->
         <Transition
