@@ -4,6 +4,11 @@ import { STORE_LOCATION } from '~/constants'
 const selectedLocation = ref(false)
 const sheetExpanded = ref(false)
 const orderStore = useOrderStore()
+const route = useRoute()
+
+const backRoute = computed(() =>
+  route.query.from === 'order' ? '/seleccionar-direccion' : '/detalles-orden'
+)
 
 const {
   zoom,
@@ -76,7 +81,7 @@ useSeoMeta({
       :tooltip-content="tooltipContent" />
 
     <LocationFloatingBackButton v-if="!selectedLocation && isLocationLoaded && !isLoadingLocation"
-      @click="$router.push('/detalles-orden')" />
+      @click="$router.push(backRoute)" />
 
     <LocationBottomSheet v-if="!selectedLocation && isLocationLoaded && !isLoadingLocation"
       v-model:sheet-expanded="sheetExpanded" :tooltip-content="tooltipContent"

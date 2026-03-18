@@ -29,8 +29,8 @@ export const useMapLocation = () => {
   const isLocationLoaded = ref(false)
 
   const defaultLocation: Position = {
-    lat: 19.4326, // Mexico City as default
-    lng: -99.1332
+    lat: 19.702432,
+    lng: -101.192755
   }
 
   const tileProvider: TileProvider = {
@@ -82,6 +82,14 @@ export const useMapLocation = () => {
       isLocationLoaded.value = true
     }
   }, { immediate: true })
+
+  // Si el GPS falla pero hay permisos, abrir el mapa con ubicación por defecto
+  watch(geoLocationError, (error) => {
+    if (error && !isLocationLoaded.value) {
+      markerPosition.value = { ...defaultLocation }
+      isLocationLoaded.value = true
+    }
+  })
 
   // Función para obtener posición (wrapper del composable de geolocalización)
   const getUserPosition = async (): Promise<void> => {

@@ -99,8 +99,13 @@ const statusShadowClass = computed(() => {
 
 const loadOrder = async () => {
   if (!orderNumber.value) return
-  await loadOrderByNumber(orderNumber.value)
-  lastUpdated.value = new Date()
+  try {
+    await loadOrderByNumber(orderNumber.value)
+    lastUpdated.value = new Date()
+  } catch {
+    // Si el pedido no existe, detener todo
+    stopAutoRefresh()
+  }
 }
 
 const handleRefresh = async () => {
@@ -108,7 +113,10 @@ const handleRefresh = async () => {
   isRefreshing.value = true
   await loadOrder()
   isRefreshing.value = false
-  resetAutoRefresh()
+  // Solo reiniciar si hay un pedido activo
+  if (order.value) {
+    resetAutoRefresh()
+  }
 }
 
 const startAutoRefresh = () => {

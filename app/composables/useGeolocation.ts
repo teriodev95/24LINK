@@ -45,14 +45,15 @@ export default function useGeolocation() {
       },
       (error) => {
         if (error.code === 1) { // PERMISSION_DENIED
-          // Permisos realmente denegados
-          locationError.value = 'Permisos de ubicación denegados'
           hasPermission.value = false
-          locationError.value = 'Permisos de ubicación denegados. No se podrá guardar la ubicación.'
-          $toast.error('Permisos de ubicación denegados. No se podrá guardar la ubicación.')
+          locationError.value = 'Permisos de ubicación denegados'
+          $toast.error('Activa los permisos de ubicación en tu navegador')
         } else {
-          // Otros errores (timeout, servicio no disponible, etc.)
-          handleGeolocationError(`Error al obtener la ubicación: ${error.message}`)
+          // GPS no disponible (timeout, servicio caído, etc.) — no molestar con toast
+          // El mapa se abrirá con ubicación por defecto
+          hasPermission.value = true
+          locationError.value = 'GPS no disponible'
+          console.warn('GPS no disponible:', error.message)
         }
         isLoading.value = false
       },
