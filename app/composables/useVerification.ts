@@ -8,7 +8,7 @@ export const useVerification = () => {
   // Estado local de la instancia
   const phoneNumber = ref('')
   const pinCode = ref('')
-  const validationErrors = ref<{ phone?: string; pin?: string }>({})
+  const validationErrors = ref<{ name?: string; phone?: string; pin?: string }>({})
   const isPhoneNumberValid = ref(false)
   const isPinCodeValid = ref(false)
 
@@ -109,6 +109,37 @@ export const useVerification = () => {
     return true
   }
 
+  // Registro sin OTP (nombre + teléfono + confirmación de datos reales)
+  const registerWithoutOtp = async (inputName: string, inputPhoneNumber: string): Promise<boolean> => {
+    validationErrors.value = {}
+
+    const name = inputName.trim().replace(/\s+/g, ' ')
+    if (name.length < 3) {
+      validationErrors.value.name = 'Ingresa tu nombre completo'
+      return false
+    }
+
+    if (!/^\d{10}$/.test(inputPhoneNumber)) {
+      validationErrors.value.phone = 'El teléfono debe tener exactamente 10 dígitos'
+      return false
+    }
+
+    const result = await verificationApi.registerUser(inputPhoneNumber, name)
+    if (!result.success) {
+      validationErrors.value.phone = result.error || 'Error al registrar. Intenta de nuevo.'
+      return false
+    }
+
+    phoneNumber.value = inputPhoneNumber
+    isPhoneNumberValid.value = true
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(VERIFIED_PHONE_KEY, inputPhoneNumber)
+      sessionStorage.removeItem(TEMP_PHONE_KEY)
+    }
+    orderStore.setPhone(inputPhoneNumber)
+    return true
+  }
+
   const clearVerificationState = () => {
     phoneNumber.value = ''
     pinCode.value = ''
@@ -144,6 +175,7 @@ export const useVerification = () => {
     validatePhoneNumber,
     validatePinCode,
     sendVerificationCode,
+    registerWithoutOtp,
     clearVerificationState,
     clearUserSession
   }

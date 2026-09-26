@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { OTP_VERIFICATION_ENABLED } from '~/constants'
+
 const router = useRouter()
 const { isAuthenticated } = useAuth()
 
@@ -56,10 +58,14 @@ useSeoMeta({
 
 <template>
   <main class="p-2 space-y-8">
-    <UINavbar title="Verificación" to="/" />
+    <UINavbar :title="OTP_VERIFICATION_ENABLED ? 'Verificación' : 'Registro'" to="/" />
 
-    <VerificationForm v-if="!showPinStep" type="phone" @verified="handlePhoneVerified" @send-pin="handleSendPin" />
+    <VerificationRegisterForm v-if="!OTP_VERIFICATION_ENABLED" @registered="router.push('/detalles-orden')" />
 
-    <VerificationForm v-if="showPinStep" type="pin" @verified="handlePinVerified" />
+    <template v-else>
+      <VerificationForm v-if="!showPinStep" type="phone" @verified="handlePhoneVerified" @send-pin="handleSendPin" />
+
+      <VerificationForm v-if="showPinStep" type="pin" @verified="handlePinVerified" />
+    </template>
   </main>
 </template>

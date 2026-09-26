@@ -176,8 +176,61 @@ export function useVerificationApi() {
     }
   }
 
+  // Registro sin OTP: busca por teléfono o crea el usuario con el nombre capturado
+  const registerUser = async (phoneNumber: string, name: string): Promise<{ success: boolean; error?: string }> => {
+    isLoading.value = true
+    error.value = null
+
+    try {
+      const existingUsers = await supabaseFetch<ExistingUser[]>(`/usuarios?telefono=eq.${phoneNumber}&select=id,telefono,nombre,tipo`)
+      let user: ExistingUser | undefined
+
+      if (existingUsers && existingUsers.length > 0) {
+        user = existingUsers[0]!
+        if (user.nombre !== name) {
+          const updated = await supabaseFetch<ExistingUser[]>(`/usuarios?id=eq.${user.id}`, {
+            method: 'PATCH',
+            body: { nombre: name, updated_at: new Date().toISOString() },
+            additionalHeaders: { 'Prefer': 'return=representation' }
+          })
+          user = updated?.[0] ?? { ...user, nombre: name }
+        }
+      } else {
+        const created = await supabaseFetch<NewUser[]>('/usuarios', {
+          method: 'POST',
+          body: {
+            telefono: phoneNumber,
+            nombre: name,
+            tipo: 'cliente',
+            activo: true
+          },
+          additionalHeaders: { 'Prefer': 'return=representation' }
+        })
+        user = created?.[0]
+      }
+
+      if (!user) throw new Error('No se pudo registrar el usuario')
+
+      saveUser({
+        id: user.id,
+        telefono: user.telefono,
+        nombre: user.nombre,
+        tipo: user.tipo
+      })
+      return { success: true }
+    } catch (err: unknown) {
+      console.error('Error al registrar usuario:', err)
+      const errorMessage = err instanceof Error ? err.message : 'Error al registrar. Intenta de nuevo.'
+      error.value = errorMessage
+      return { success: false, error: errorMessage }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     sendPin,
+    registerUser,
     verifyPin,
     createOrFindUser,
     isLoading: readonly(isLoading),

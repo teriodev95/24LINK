@@ -9,3 +9,7 @@ export const TEST_DEFAULT_CENTER = {
 } as const;
 
 export const appVersion = '1.2.2';
+
+// Verificación por OTP (WhatsApp) pausada: se usa registro simple con nombre + teléfono.
+// Cambiar a true para reactivar el flujo de PIN.
+export const OTP_VERIFICATION_ENABLED = false;
